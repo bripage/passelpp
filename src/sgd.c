@@ -105,7 +105,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                 }
             }
         }
-    } else if (token_type > 3){
+    } else if (token_type < 3){
         while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
             utc = ATOMIC_SWAP(&up_token[n], 0);
             if (utc > 0) {
@@ -118,21 +118,21 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                 }
                 cilk_sync;
                 REMOTE_ADD(&up_token[upstream[n]], 1);
-                ATOMIC_SWAP(up_token[n], utc);
+                ATOMIC_SWAP(&up_token[n], utc);
             }
 
-            dtc = ATOMIC_SWAP(&up_token[n], 0);
+            dtc = ATOMIC_SWAP(&down_token[n], 0);
             if (dtc > 0) {
                 dtc -= 1;
                 for (i = 0; i < 16; i++) {
                     cilk_migrate_hint(&l_model_vec);
                     cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
-                    cilk_migrate_hint(&u_working_vec);
+                    cilk_migrate_hint(&d_working_vec);
                     cilk_spawn downstream_update(i, downstream[n], n);
                 }
                 cilk_sync;
-                REMOTE_ADD(&up_token[upstream[n]], 1);
-                ATOMIC_SWAP(up_token[n], utc);
+                REMOTE_ADD(&down_token[downstream[n]], 1);
+                ATOMIC_SWAP(&down_token[n], dtc);
             }
 
             sample = rand_state;
@@ -179,10 +179,10 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                 utc -= 1;
                 for (long t = 0; t < cluster_count; t++){
                     if (t == n) continue;
-                    rtc = ATOMIC_SWAP(&update_targets[t], 0);
+                    rtc = ATOMIC_SWAP(&update_targets[n][t], 0);
                     if (rtc > 0){
                         rtc -= 1;
-                        ATOMIC_SWAP(update_targets[i], rtc);
+                        ATOMIC_SWAP(&update_targets[n][t], rtc);
 
                         for (i = 0; i < 16; i++) {
                             cilk_migrate_hint(&l_model_vec);
@@ -204,7 +204,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
 
                         REMOTE_ADD(&update_targets[dtc][n], 1);
                         REMOTE_ADD(&up_token[dtc], 1);
-                        ATOMIC_SWAP(up_token[n], utc);
+                        ATOMIC_SWAP(&up_token[n], utc);
                     }
                 }
             }
