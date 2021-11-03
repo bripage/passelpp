@@ -36,7 +36,6 @@ replicated long token_type;
 replicated long token_count;
 replicated long token_initial_spacing;
 
-
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta
 double initial_step_decay;               // becomes gamma
@@ -47,7 +46,6 @@ char * class_data_path;                  // path to training sample class file
 char* test_feature_path;                 // path to accuracy testing file
 char* test_label_path;                   // path to accuracy testing sample class filez
 
-
 /// Data allocation and misc globals
 replicated long** working_vec;        // working vector for each node
 replicated long** model_vec;        // working vector for each node
@@ -56,6 +54,8 @@ replicated long** train_s; // training data sample id's
 replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 replicated long** train_v;          // training data values (non-zero values for all samples)
 replicated long** train_c; // training sample classes (single value for each sample)
+replicated long** update_targets;
+
 replicated long* test_s;
 replicated long* test_f;
 replicated long* test_v;
@@ -63,11 +63,13 @@ replicated long* test_c;
 replicated long** feat_deg_recip;
 replicated long* upstream;
 replicated long* downstream;
-extern replicated long* token;
+extern replicated long* up_token;
+extern replicated long* down_token;
 replicated long* total_evaluated_sample_count;
 replicated long* cluster_sample_start;
 replicated long* cluster_sample_end;
 replicated long* cluster_samples;
+
 
 void parse_args(int argc, char * argv[]);
 void init();

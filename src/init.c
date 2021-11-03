@@ -406,7 +406,23 @@ void populateTrainingData() {
 }
 
 void init_cluster(long n){
+    up_token[n] = 0;
+    down_token[n] = 0;
     cluster_samples[n] = 0;
+    upstream[n] = 0;
+    downstream[n] = 0;
+    total_evaluated_sample_count[n] = 0;
+    for (long i = 0; i < NUM_NODES(); i++){
+        update_targets[n][i] = 0;
+    }
+    for (long i = 0; i < featureSetSize; i++) {
+        working_vec[n][i] = 0;
+        model_vec[n][i] = 0;
+        update_vec[n][i] = 0;
+        feat_deg_recip[n][i] = 0;
+    }
+
+    // set update target (used for nearest neighbor update schemes)
     if (n != cluster_count-1 && cluster_count > 1) {
         upstream[n] = n+1;
     } else {
@@ -416,18 +432,6 @@ void init_cluster(long n){
         downstream[n] = n-1;
     } else {
         downstream[n] = cluster_count-1;
-    }
-    total_evaluated_sample_count[n] = 0;
-    for (long i = 0; i < featureSetSize; i++) {
-        working_vec[n][i] = 0;
-        model_vec[n][i] = 0;
-        update_vec[n][i] = 0;
-        feat_deg_recip[n][i] = 0;
-    }
-    if (n == 0){
-        token[n] = 1;
-    } else {
-        token[n] = 0;
     }
 }
 
@@ -484,6 +488,12 @@ void init() {
         *ptr = l2d_ptr;
     }
 
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&update_targets, nlet);
+        *ptr = l2d_ptr;
+    }
+
     long* l1d_ptr = (long *) mw_malloc1dlong(test_sample_count + 1);
     mw_replicated_init((long *) &test_s, (long) l1d_ptr);
 
@@ -503,7 +513,10 @@ void init() {
     mw_replicated_init((long *) &downstream, (long) l1d_ptr);
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &token, (long) l1d_ptr);
+    mw_replicated_init((long *) &up_token, (long) l1d_ptr);
+
+    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &down_token, (long) l1d_ptr);
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
@@ -525,6 +538,26 @@ void init() {
 	    cilk_spawn init_cluster(n);
 	}
 	cilk_sync;
+
+    if (token_type == 1){ // tokens passed in clockwise ring pattern
+        for (long i = 0; i < token_count; i+= cluster_count / token_count){
+            REMOTE_ADD(&up_token[i], 1);
+        }
+    } else if (token_type == 2){ // tokens passed in oppossing ring patters simultaneously
+        for (long i = 0; i < token_count; i+= cluster_count / token_count){
+            REMOTE_ADD(&up_token[i], 1);
+            REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
+        }
+        for (long i = (cluster_count / token_count) / 2; i < token_count; i+= cluster_count / token_count){
+            REMOTE_ADD(&up_token[i], 1);
+            REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
+        }
+    } else if (token_type == 3){ // random token target selection but with neighboring cluster update pairing
+
+    } else if (token_type == 4){ // random token target selection with random update peer
+
+    }
+
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
 

@@ -60,12 +60,14 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     long wv_temp;
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
+    long utc;
+    long dtc;
+    long rtc;
 
     //long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
 
     if (cluster_count == 1) {
         while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-
             sample = rand_state;
             sample ^= sample >> 12; // a
             sample ^= sample << 25; // b
@@ -102,23 +104,108 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                     l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                 }
             }
+        }
+    } else if (token_type > 3){
+        while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+            utc = ATOMIC_SWAP(&up_token[n], 0);
+            if (utc > 0) {
+                utc -= 1;
+                for (i = 0; i < 16; i++) {
+                    cilk_migrate_hint(&l_model_vec);
+                    cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                    cilk_migrate_hint(&u_working_vec);
+                    cilk_spawn downstream_update(i, upstream[n], n);
+                }
+                cilk_sync;
+                REMOTE_ADD(&up_token[upstream[n]], 1);
+                ATOMIC_SWAP(up_token[n], utc);
+            }
 
+            dtc = ATOMIC_SWAP(&up_token[n], 0);
+            if (dtc > 0) {
+                dtc -= 1;
+                for (i = 0; i < 16; i++) {
+                    cilk_migrate_hint(&l_model_vec);
+                    cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
+                    cilk_migrate_hint(&u_working_vec);
+                    cilk_spawn downstream_update(i, downstream[n], n);
+                }
+                cilk_sync;
+                REMOTE_ADD(&up_token[upstream[n]], 1);
+                ATOMIC_SWAP(up_token[n], utc);
+            }
+
+            sample = rand_state;
+            sample ^= sample >> 12; // a
+            sample ^= sample << 25; // b
+            sample ^= sample >> 27; // c
+            rand_state = sample;
+            sample *= UINT64_C(0x2545F4914F6CDD1D);
+            sample %= cluster_samples[n];
+
+            distance = 0;
+            start = l_train_s[sample];
+            stop = l_train_s[sample + 1];
+            class = l_train_c[sample];
+            for (i = start; i < stop; i++) {
+                feature = l_train_f[i];
+                distance += (l_train_v[i] * l_working_vec[feature]) >> 24;
+            }
+            distance *= class;
+
+            if (distance < 16777216) {
+                di = eta_gamma * class;
+                for (i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    l_temp = (di * l_train_v[i]) >> 24;
+                    wv_temp = l_working_vec[feature] + l_temp;
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }
+            } else {
+                for (i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    wv_temp = l_working_vec[feature];
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }
+            }
         }
     } else {
+        // performing updates that use random target determination
         while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-            if (thread_id == 0){
-                if (token[n] == 1){
-                    //printf("%ld Updating\n", n);
-                    //fflush(stdout);
-                    for (i = 0; i < 16; i++){
-                        cilk_migrate_hint(&l_model_vec);
-                        cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
-                        cilk_migrate_hint(&u_working_vec);
-                        cilk_spawn downstream_update(i, upstream[n], n);
+            utc = ATOMIC_SWAP(&up_token[n], 0);
+            if (utc > 0) {
+                utc -= 1;
+                for (long t = 0; t < cluster_count; t++){
+                    if (t == n) continue;
+                    rtc = ATOMIC_SWAP(&update_targets[t], 0);
+                    if (rtc > 0){
+                        rtc -= 1;
+                        ATOMIC_SWAP(update_targets[i], rtc);
+
+                        for (i = 0; i < 16; i++) {
+                            cilk_migrate_hint(&l_model_vec);
+                            cilk_spawn upstream_update(i, n, t, beta_gamma);
+                            cilk_migrate_hint(&u_working_vec);
+                            cilk_spawn downstream_update(i, t, n);
+                        }
+                        cilk_sync;
+
+                        do {
+                            sample = sample;
+                            sample ^= sample >> 12; // a
+                            sample ^= sample << 25; // b
+                            sample ^= sample >> 27; // c
+                            sample = sample;
+                            sample *= UINT64_C(0x2545F4914F6CDD1D);
+                            dtc = sample % cluster_count;
+                        } while (dtc != n);
+
+                        REMOTE_ADD(&update_targets[dtc][n], 1);
+                        REMOTE_ADD(&up_token[dtc], 1);
+                        ATOMIC_SWAP(up_token[n], utc);
                     }
-                    cilk_sync;
-                    token[upstream[n]] = 1;   // pass token to upstream cluster
-                    token[n] = 0;          // zero out my token
                 }
             }
 
@@ -157,8 +244,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                     l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                 }
             }
-
         }
     }
-
 }
