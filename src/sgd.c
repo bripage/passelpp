@@ -41,7 +41,6 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
     long* l_working_vec = working_vec[n];
-    long* u_working_vec = working_vec[upstream[n]];
     long* l_model_vec = model_vec[n];
     //long* l_update_vec = update_vec[n];
     long* l_train_s = train_s[n];
@@ -113,7 +112,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                 for (i = 0; i < 16; i++) {
                     cilk_migrate_hint(&l_model_vec);
                     cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
-                    cilk_migrate_hint(&u_working_vec);
+                    cilk_migrate_hint(&working_vec[upstream[n]]);
                     cilk_spawn downstream_update(i, upstream[n], n);
                 }
                 cilk_sync;
@@ -127,7 +126,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                 for (i = 0; i < 16; i++) {
                     cilk_migrate_hint(&l_model_vec);
                     cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
-                    cilk_migrate_hint(&d_working_vec);
+                    cilk_migrate_hint(&working_vec[downstream[n]]);
                     cilk_spawn downstream_update(i, downstream[n], n);
                 }
                 cilk_sync;
@@ -187,17 +186,17 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                         for (i = 0; i < 16; i++) {
                             cilk_migrate_hint(&l_model_vec);
                             cilk_spawn upstream_update(i, n, t, beta_gamma);
-                            cilk_migrate_hint(&u_working_vec);
+                            cilk_migrate_hint(&working_vec[upstream[n]][t]);
                             cilk_spawn downstream_update(i, t, n);
                         }
                         cilk_sync;
 
                         do {
-                            sample = sample;
+                            sample = rand_state;
                             sample ^= sample >> 12; // a
                             sample ^= sample << 25; // b
                             sample ^= sample >> 27; // c
-                            sample = sample;
+                            rand_state = sample;
                             sample *= UINT64_C(0x2545F4914F6CDD1D);
                             dtc = sample % cluster_count;
                         } while (dtc != n);
