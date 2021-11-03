@@ -561,7 +561,7 @@ void init() {
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
 
-    MIGRATE(&token[0]);
+    MIGRATE(&up_token[0]);
 	populateTrainingData();
 	populateTestData();
 

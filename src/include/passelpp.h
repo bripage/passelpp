@@ -20,6 +20,6 @@ replicated long beta;
 replicated long gamma;
 
 /// Data allocation and misc globals
-replicated long* token;
+replicated long* up_token;
 
 #endif //EMUSGD_WILDEBEEST_H

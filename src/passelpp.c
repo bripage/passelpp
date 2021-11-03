@@ -1,7 +1,7 @@
 //
 // Created by bpage1 on 7/26/21.
 //
-#include "include/hogwild.h"
+#include "include/passelpp.h"
 #include "include/sgd.h"
 #include "include/accuracy.h"
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
         if (cluster_count != 1) {
             for (long i = 0; i < cluster_count; i++) {
-                if (token[i] == 1) {
+                if (up_token[i] == 1) {
                     if (i == 0){
                         train_accuracy = get_trainData_accuracy(cluster_count-1);
                         test_accuracy = get_testData_accuracy(cluster_count-1);
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
                     }
                     //train_accuracy = get_trainData_accuracy(i);
                     //test_accuracy = get_testData_accuracy(i);
+                    break;
                 }
             }
         } else {
