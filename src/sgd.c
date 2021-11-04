@@ -106,22 +106,24 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         }
     } else if (token_type == 1){
         while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-            utc = ATOMIC_SWAP(&up_token[n], 0);
-            if (utc > 0) {
-                utc -= 1;
+            if (!thread_id) {
+                utc = ATOMIC_SWAP(&up_token[n], 0);
+                if (utc > 0) {
+                    utc -= 1;
 
-                printf("cluster %ld updating %ld\n", n, upstream[n]);
-                fflush(stdout);
+                    printf("cluster %ld updating %ld\n", n, upstream[n]);
+                    fflush(stdout);
 
-                for (i = 0; i < 16; i++) {
-                    cilk_migrate_hint(&l_model_vec);
-                    cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
-                    cilk_migrate_hint(&working_vec[upstream[n]]);
-                    cilk_spawn downstream_update(i, upstream[n], n);
+                    for (i = 0; i < 16; i++) {
+                        cilk_migrate_hint(&l_model_vec);
+                        cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                        cilk_migrate_hint(&working_vec[upstream[n]]);
+                        cilk_spawn downstream_update(i, upstream[n], n);
+                    }
+                    cilk_sync;
+                    REMOTE_ADD(&up_token[upstream[n]], 1);
+                    ATOMIC_SWAP(&up_token[n], utc);
                 }
-                cilk_sync;
-                REMOTE_ADD(&up_token[upstream[n]], 1);
-                ATOMIC_SWAP(&up_token[n], utc);
             }
 
             sample = rand_state;
@@ -162,32 +164,34 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         }
     } else if (token_type == 2){
         while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-            utc = ATOMIC_SWAP(&up_token[n], 0);
-            if (utc > 0) {
-                utc -= 1;
-                for (i = 0; i < 16; i++) {
-                    cilk_migrate_hint(&l_model_vec);
-                    cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
-                    cilk_migrate_hint(&working_vec[upstream[n]]);
-                    cilk_spawn downstream_update(i, upstream[n], n);
+            if (!thread_id) {
+                utc = ATOMIC_SWAP(&up_token[n], 0);
+                if (utc > 0) {
+                    utc -= 1;
+                    for (i = 0; i < 16; i++) {
+                        cilk_migrate_hint(&l_model_vec);
+                        cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                        cilk_migrate_hint(&working_vec[upstream[n]]);
+                        cilk_spawn downstream_update(i, upstream[n], n);
+                    }
+                    cilk_sync;
+                    REMOTE_ADD(&up_token[upstream[n]], 1);
+                    ATOMIC_SWAP(&up_token[n], utc);
                 }
-                cilk_sync;
-                REMOTE_ADD(&up_token[upstream[n]], 1);
-                ATOMIC_SWAP(&up_token[n], utc);
-            }
 
-            dtc = ATOMIC_SWAP(&down_token[n], 0);
-            if (dtc > 0) {
-                dtc -= 1;
-                for (i = 0; i < 16; i++) {
-                    cilk_migrate_hint(&l_model_vec);
-                    cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
-                    cilk_migrate_hint(&working_vec[downstream[n]]);
-                    cilk_spawn downstream_update(i, downstream[n], n);
+                dtc = ATOMIC_SWAP(&down_token[n], 0);
+                if (dtc > 0) {
+                    dtc -= 1;
+                    for (i = 0; i < 16; i++) {
+                        cilk_migrate_hint(&l_model_vec);
+                        cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
+                        cilk_migrate_hint(&working_vec[downstream[n]]);
+                        cilk_spawn downstream_update(i, downstream[n], n);
+                    }
+                    cilk_sync;
+                    REMOTE_ADD(&down_token[downstream[n]], 1);
+                    ATOMIC_SWAP(&down_token[n], dtc);
                 }
-                cilk_sync;
-                REMOTE_ADD(&down_token[downstream[n]], 1);
-                ATOMIC_SWAP(&down_token[n], dtc);
             }
 
             sample = rand_state;
