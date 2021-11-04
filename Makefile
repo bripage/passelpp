@@ -1,5 +1,5 @@
 CC=/tools/emu/chick-sw/emu-20.01/bin/emu-cc
-CFILES=$(wildcard *.c)
+CFILES=$(wildcard src/*.c)
 
 all:
 	$(CC) -lm -O3 -o passelpp.mwx $(CFILES)
