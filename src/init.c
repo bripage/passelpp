@@ -45,6 +45,9 @@ void parse_args(int argc, char * argv[]) {
     threads_per_cluster = 1;
     cluster_count = 1;
     samples_per_cluster = 1;
+    token_type = 1;
+    token_count = 1;
+    token_initial_spacing = 1;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
