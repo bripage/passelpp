@@ -34,6 +34,8 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
     if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
+            printf("update agent STARTING on %ld\n", n);
+            fflush(stdout);
             for (long i = 0; i < 16; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
@@ -41,6 +43,8 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
                 cilk_spawn downstream_update(i, upstream[n], n);
             }
             cilk_sync;
+            printf("update agent DONE on %ld -> %ld\n", n, upstream[n]);
+            fflush(stdout);
             MIGRATE(&model_vec[upstream[n]]);
         }
     } else if (updater_mig_type == 2) {
@@ -149,7 +153,10 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             }
         }
     }
-    for (i = 0; i < cluster_count; i++){
-        REMOTE_ADD(&epoch_running[i], -1);
+
+    if (thread_id == 0) {
+        for (i = 0; i < cluster_count; i++) {
+            REMOTE_ADD(&epoch_running[i], -1);
+        }
     }
 }

@@ -426,44 +426,44 @@ void init() {
     printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
     fflush(stdout);
 
-    long** l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    long** l2d_ptr = (long **) mw_malloc2d(NODELETS()(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&working_vec, nlet);
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    l2d_ptr = (long **) mw_malloc2d(NODELETS()(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&model_vec, nlet);
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    l2d_ptr = (long **) mw_malloc2d(NODELETS()(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    l2d_ptr = (long **) mw_malloc2d(NODELETS()(), (samples_per_cluster + 1) * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&train_s, nlet);
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    l2d_ptr = (long **) mw_malloc2d(NODELETS()(), samples_per_cluster * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&train_c, nlet);
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    l2d_ptr = (long **) mw_malloc2d(NODELETS()(), non_zeros_per_cluster * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&train_f, nlet);
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+    l2d_ptr = (long **) mw_malloc2d(NODELETS()(), non_zeros_per_cluster * sizeof(long));
+    for (long nlet = 0; nlet < NODELETS()(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&train_v, nlet);
         *ptr = l2d_ptr;
     }
@@ -480,25 +480,25 @@ void init() {
     l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
     mw_replicated_init((long *) &test_v, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &upstream, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &downstream, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &cluster_sample_start, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &cluster_sample_end, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &cluster_samples, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l1d_ptr = (long *) mw_malloc1dlong(NODELETS()());
     mw_replicated_init((long *) &epoch_running, (long) l1d_ptr);
 
 
