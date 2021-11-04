@@ -58,7 +58,6 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
     } else if (updater_mig_type == 3) {
         unsigned long rand_state = 13377331 + (1337 * NODE_ID()); // This will ran once at start.
                                                                   // Where node_id is the node the agent was spawned on
-        unsigned long target;
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
             for (long i = 0; i < 16; i++) {
@@ -69,7 +68,7 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
             }
             cilk_sync;
 
-            long target;
+            unsigned long target;
             do {
                 target = rand_state;
                 target ^= target >> 12; // a
