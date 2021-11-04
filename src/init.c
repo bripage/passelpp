@@ -412,7 +412,7 @@ void init_cluster(long n){
     upstream[n] = 0;
     downstream[n] = 0;
     total_evaluated_sample_count[n] = 0;
-    for (long i = 0; i < NUM_NODES(); i++){
+    for (long i = 0; i < cluster_count; i++){
         update_targets[n][i] = 0;
     }
     for (long i = 0; i < featureSetSize; i++) {
@@ -533,7 +533,7 @@ void init() {
 
     printf("--- Memmory Allocation Complete ---\n");
 	fflush(stdout);
-	for (long n = 0; n < NUM_NODES(); n++){
+	for (long n = 0; n < cluster_count; n++){
 	    cilk_migrate_hint(&model_vec[n]);
 	    cilk_spawn init_cluster(n);
 	}
@@ -552,10 +552,11 @@ void init() {
             REMOTE_ADD(&up_token[i], 1);
             REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
         }
-    } else if (token_type == 3){ // random token target selection but with neighboring cluster update pairing
-
-    } else if (token_type == 4){ // random token target selection with random update peer
-
+    } else if (token_type == 3 || token_type == 4){ // random token target selection but with neighboring cluster update pairing
+        for (long i = 0; i < token_count; i+= cluster_count / token_count){
+            REMOTE_ADD(&up_token[i], 1);
+            REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
+        }
     }
 
     printf("--- Memmory Initialization Complete ---\n");

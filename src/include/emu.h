@@ -13,7 +13,7 @@
 //#define DEBUG 0
 
 #ifndef CLOCK_RATE
-#define CLOCK_RATE 220000000
+#define CLOCK_RATE 210000000
 #endif
 
 #endif //EMU_H

@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
         }
         cilk_sync;
         total_time = CLOCK() - start_time;
-        epoch_time = (double) total_time / 175000000;
+        epoch_time = (double) total_time / 210000000;
 
         if (cluster_count != 1) {
             for (long i = 0; i < cluster_count; i++) {
