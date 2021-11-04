@@ -33,33 +33,36 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 void update_clusters(long updater_mig_type) {
     if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
-            for (i = 0; i < 16; i++) {
-                cilk_migrate_hint(&l_model_vec);
+            long n = NODE_ID();
+            for (long i = 0; i < 16; i++) {
+                cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
                 cilk_migrate_hint(&working_vec[upstream[n]]);
                 cilk_spawn downstream_update(i, upstream[n], n);
             }
             cilk_sync;
-            MIGRATE(&model_vec[upstream[NODE_ID()]]);
+            MIGRATE(&model_vec[upstream[n]]);
         }
     } else if (updater_mig_type == 2) {
         while (epoch_running[NODE_ID()] > 0) {
-            for (i = 0; i < 16; i++) {
-                cilk_migrate_hint(&l_model_vec);
+            long n = NODE_ID();
+            for (long i = 0; i < 16; i++) {
+                cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
                 cilk_migrate_hint(&working_vec[downstream[n]]);
                 cilk_spawn downstream_update(i, downstream[n], n);
             }
             cilk_sync;
-            MIGRATE(&model_vec[downstream[NODE_ID()]]);
+            MIGRATE(&model_vec[downstream[n]]);
         }
     } else if (updater_mig_type == 3) {
         unsigned long rand_state = 13377331 + (1337 * NODE_ID()); // This will ran once at start.
                                                                   // Where node_id is the node the agent was spawned on
         unsigned long target;
         while (epoch_running[NODE_ID()] > 0) {
-            for (i = 0; i < 16; i++) {
-                cilk_migrate_hint(&l_model_vec);
+            long n = NODE_ID();
+            for (long i = 0; i < 16; i++) {
+                cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, t, beta_gamma);
                 cilk_migrate_hint(&working_vec[upstream[n]][t]);
                 cilk_spawn downstream_update(i, t, n);
@@ -75,7 +78,7 @@ void update_clusters(long updater_mig_type) {
                 rand_state = target;
                 target *= UINT64_C(0x2545F4914F6CDD1D);
                 target %= cluster_count;
-            } while (target != NODE_ID());
+            } while (target != n);
             MIGRATE(&model_vec[target]);
         }
     }
