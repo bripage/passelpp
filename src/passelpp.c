@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     beta_gamma = beta;
     for (long epoch = 1; epoch <= epochs; epoch++) {
         printf("epoch %ld started\n", epoch);
-        fflush();
+        fflush(stdout);
         start_time = CLOCK();
         if (epoch > 1) {
             beta_gamma *= gamma;
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
         epoch_time = (double) total_time / 210000000;
 
         printf("epoch %ld done\n", epoch);
-        fflush();
+        fflush(stdout);
 
         if (cluster_count > 1){
             train_accuracy = get_trainData_accuracy(0);
