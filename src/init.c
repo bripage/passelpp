@@ -405,7 +405,6 @@ void init_cluster(long n){
     for (long i = 0; i < featureSetSize; i++) {
         working_vec[n][i] = 0;
         model_vec[n][i] = 0;
-        update_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
 
