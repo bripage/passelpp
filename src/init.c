@@ -145,23 +145,13 @@ void parse_args(int argc, char * argv[]) {
             //printf("Test #: %ld\n", test_id);
             //fflush(stdout);
             i++;
-        } else if (!strcmp(argv[i], "--token-type")) {
+        } else if (!strcmp(argv[i], "--update-type")) {
             num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&token_type, num_arg);
-            //printf("Test #: %ld\n", test_id);
-            //fflush(stdout);
+            mw_replicated_init(&update_type, num_arg);
             i++;
-        } else if (!strcmp(argv[i], "--token-count")) {
+        } else if (!strcmp(argv[i], "--updater-count")) {
             num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&token_count, num_arg);
-            //printf("Test #: %ld\n", test_id);
-            //fflush(stdout);
-            i++;
-        } else if (!strcmp(argv[i], "--token-spacing")) {
-            num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&token_initial_spacing, num_arg);
-            //printf("Test #: %ld\n", test_id);
-            //fflush(stdout);
+            mw_replicated_init(&updater_count, num_arg);
             i++;
         }
     }
@@ -415,6 +405,8 @@ void init_cluster(long n){
     upstream[n] = 0;
     downstream[n] = 0;
     total_evaluated_sample_count[n] = 0;
+    epoch_running[n] = 0;
+
     for (long i = 0; i < cluster_count; i++){
         update_targets[n][i] = 0;
     }
@@ -491,12 +483,6 @@ void init() {
         *ptr = l2d_ptr;
     }
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&update_targets, nlet);
-        *ptr = l2d_ptr;
-    }
-
     long* l1d_ptr = (long *) mw_malloc1dlong(test_sample_count + 1);
     mw_replicated_init((long *) &test_s, (long) l1d_ptr);
 
@@ -516,12 +502,6 @@ void init() {
     mw_replicated_init((long *) &downstream, (long) l1d_ptr);
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &up_token, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &down_token, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
@@ -533,6 +513,9 @@ void init() {
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &cluster_samples, (long) l1d_ptr);
 
+    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &epoch_running, (long) l1d_ptr);
+
 
     printf("--- Memmory Allocation Complete ---\n");
 	fflush(stdout);
@@ -541,26 +524,6 @@ void init() {
 	    cilk_spawn init_cluster(n);
 	}
 	cilk_sync;
-
-    if (token_type == 1){ // tokens passed in clockwise ring pattern
-        for (long i = 0; i < token_count; i+= cluster_count / token_count){
-            REMOTE_ADD(&up_token[i], 1);
-        }
-    } else if (token_type == 2){ // tokens passed in oppossing ring patters simultaneously
-        for (long i = 0; i < token_count; i+= cluster_count / token_count){
-            REMOTE_ADD(&up_token[i], 1);
-            REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
-        }
-        for (long i = (cluster_count / token_count) / 2; i < token_count; i+= cluster_count / token_count){
-            REMOTE_ADD(&up_token[i], 1);
-            REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
-        }
-    } else if (token_type == 3 || token_type == 4){ // random token target selection but with neighboring cluster update pairing
-        for (long i = 0; i < token_count; i+= cluster_count / token_count){
-            REMOTE_ADD(&up_token[i], 1);
-            REMOTE_ADD(&down_token[(cluster_count/2)+i], 1);
-        }
-    }
 
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);

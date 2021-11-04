@@ -27,34 +27,37 @@ int main(int argc, char **argv) {
             eta_gamma *= gamma;
             eta_gamma >>= 24;
         }
-
         for (long n = 0; n < cluster_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
+        }
+
+        if (update_type == 1){ // tokens passed in clockwise ring pattern
+            for (long i = 0; i < updater_count; i+= cluster_count / updater_count){
+                cilk_migrate_hint(&model_vec[i]);
+                cilk_spawn update_clusters(1);
+            }
+        } else if (update_type == 2){ // tokens passed in oppossing ring patters simultaneously
+            for (long i = 0; i < updater_count; i+= cluster_count / updater_count){
+                cilk_migrate_hint(&model_vec[i]);
+                cilk_spawn update_clusters(1);
+            }
+            for (long i = (cluster_count / updater_count) / 2; i < updater_count; i+= cluster_count / updater_count){
+                cilk_migrate_hint(&model_vec[i]);
+                cilk_spawn update_clusters(2);
+            }
+        } else if (update_type == 3){ // tokens passed in clockwise ring pattern
+            for (long i = 0; i < updater_count; i+= cluster_count / updater_count){
+                cilk_migrate_hint(&model_vec[i]);
+                cilk_spawn update_clusters(3);
+            }
         }
         cilk_sync;
         total_time = CLOCK() - start_time;
         epoch_time = (double) total_time / 210000000;
 
-        if (cluster_count != 1) {
-            for (long i = 0; i < cluster_count; i++) {
-                if (up_token[i] == 1) {
-                    if (i == 0){
-                        train_accuracy = get_trainData_accuracy(cluster_count-1);
-                        test_accuracy = get_testData_accuracy(cluster_count-1);
-                    } else {
-                        train_accuracy = get_trainData_accuracy(i-1);
-                        test_accuracy = get_testData_accuracy(i-1);
-                    }
-                    //train_accuracy = get_trainData_accuracy(i);
-                    //test_accuracy = get_testData_accuracy(i);
-                    break;
-                }
-            }
-        } else {
-            train_accuracy = get_single_trainData_accuracy(0);
-            test_accuracy = get_single_testData_accuracy(0);
-        }
+        train_accuracy = get_single_trainData_accuracy(0);
+        test_accuracy = get_single_testData_accuracy(0);
 
         printf("%ld,%ld,%lf,%lf,%lf\n", test_id, epoch, train_accuracy, test_accuracy, epoch_time);
         fflush(stdout);
@@ -62,3 +65,4 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
+

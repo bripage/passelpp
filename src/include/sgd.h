@@ -27,25 +27,22 @@ extern replicated long featureSetSize;
 extern replicated long samples_per_cluster;
 extern replicated long threads_per_cluster;
 extern replicated long total_train_points;
-extern replicated long token_type;
-
+extern replicated long update_type;
 
 /** Data allocation and misc globals */
 extern replicated long** working_vec;        // working vector for each node
 extern replicated long** model_vec;        // working vector for each node
-extern replicated long** update_vec;
 extern replicated long** feat_deg_recip;
 extern replicated long** train_s; // training data sample id's
 extern replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 extern replicated long** train_v;          // training data values (non-zero values for all samples)
 extern replicated long** train_c; // training sample classes (single value for each sample)
-extern replicated long** update_targets;
+
 extern replicated long* upstream;
 extern replicated long* downstream;
-extern replicated long* up_token;
-extern replicated long* down_token;
 extern replicated long* total_evaluated_sample_count;
 extern replicated long* cluster_samples;
+extern replicated long* epoch_running;
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);

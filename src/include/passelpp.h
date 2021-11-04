@@ -20,7 +20,8 @@ replicated long beta;
 replicated long gamma;
 
 /// Data allocation and misc globals
-replicated long* up_token;
-replicated long* down_token;
+replicated long* epoch_running;
+replicated long update_type;
+replicated long updater_count;
 
 #endif //EMUSGD_WILDEBEEST_H
