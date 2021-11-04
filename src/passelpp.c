@@ -28,28 +28,36 @@ int main(int argc, char **argv) {
             eta_gamma >>= 24;
         }
         for (long n = 0; n < cluster_count; n++) {
+            epoch_running[n] = cluster_count;
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
         }
 
-        if (update_type == 1){ // tokens passed in clockwise ring pattern
-            for (long i = 0; i < updater_count; i+= cluster_count / updater_count){
-                cilk_migrate_hint(&model_vec[i]);
-                cilk_spawn update_clusters(1);
-            }
-        } else if (update_type == 2){ // tokens passed in oppossing ring patters simultaneously
-            for (long i = 0; i < updater_count; i+= cluster_count / updater_count){
-                cilk_migrate_hint(&model_vec[i]);
-                cilk_spawn update_clusters(1);
-            }
-            for (long i = (cluster_count / updater_count) / 2; i < updater_count; i+= cluster_count / updater_count){
-                cilk_migrate_hint(&model_vec[i]);
-                cilk_spawn update_clusters(2);
-            }
-        } else if (update_type == 3){ // tokens passed in clockwise ring pattern
-            for (long i = 0; i < updater_count; i+= cluster_count / updater_count){
-                cilk_migrate_hint(&model_vec[i]);
-                cilk_spawn update_clusters(3);
+        if (cluster_count > 1) {
+            if (update_type == 1) { // tokens passed in clockwise ring pattern
+                for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
+                    cilk_migrate_hint(&model_vec[i]);
+                    cilk_spawn
+                    update_clusters(1);
+                }
+            } else if (update_type == 2) { // tokens passed in oppossing ring patters simultaneously
+                for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
+                    cilk_migrate_hint(&model_vec[i]);
+                    cilk_spawn
+                    update_clusters(1);
+                }
+                for (long i = (cluster_count / updater_count) / 2;
+                     i < updater_count; i += cluster_count / updater_count) {
+                    cilk_migrate_hint(&model_vec[i]);
+                    cilk_spawn
+                    update_clusters(2);
+                }
+            } else if (update_type == 3) { // tokens passed in clockwise ring pattern
+                for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
+                    cilk_migrate_hint(&model_vec[i]);
+                    cilk_spawn
+                    update_clusters(3);
+                }
             }
         }
         cilk_sync;

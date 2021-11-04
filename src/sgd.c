@@ -32,7 +32,7 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 
 void update_clusters(long updater_mig_type) {
     if (updater_mig_type == 1) {
-        while (epoch_running[NODE_ID()]) {
+        while (epoch_running[NODE_ID()] > 0) {
             for (i = 0; i < 16; i++) {
                 cilk_migrate_hint(&l_model_vec);
                 cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
@@ -43,7 +43,7 @@ void update_clusters(long updater_mig_type) {
             MIGRATE(&model_vec[upstream[NODE_ID()]]);
         }
     } else if (updater_mig_type == 2) {
-        while (epoch_running[NODE_ID()]) {
+        while (epoch_running[NODE_ID()] > 0) {
             for (i = 0; i < 16; i++) {
                 cilk_migrate_hint(&l_model_vec);
                 cilk_spawn upstream_update(i, n, downstream[n], beta_gamma);
@@ -57,7 +57,7 @@ void update_clusters(long updater_mig_type) {
         unsigned long rand_state = 13377331 + (1337 * NODE_ID()); // This will ran once at start.
                                                                   // Where node_id is the node the agent was spawned on
         unsigned long target;
-        while (epoch_running[NODE_ID()]) {
+        while (epoch_running[NODE_ID()] > 0) {
             for (i = 0; i < 16; i++) {
                 cilk_migrate_hint(&l_model_vec);
                 cilk_spawn upstream_update(i, n, t, beta_gamma);
@@ -146,5 +146,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                 l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
             }
         }
+    }
+    for (i = 0; i < cluster_count; i++){
+        REMOTE_ADD(&epoch_running[i], -1);
     }
 }

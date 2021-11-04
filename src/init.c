@@ -45,9 +45,6 @@ void parse_args(int argc, char * argv[]) {
     threads_per_cluster = 1;
     cluster_count = 1;
     samples_per_cluster = 1;
-    token_type = 1;
-    token_count = 1;
-    token_initial_spacing = 1;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -399,17 +396,12 @@ void populateTrainingData() {
 }
 
 void init_cluster(long n){
-    up_token[n] = 0;
-    down_token[n] = 0;
     cluster_samples[n] = 0;
     upstream[n] = 0;
     downstream[n] = 0;
     total_evaluated_sample_count[n] = 0;
     epoch_running[n] = 0;
 
-    for (long i = 0; i < cluster_count; i++){
-        update_targets[n][i] = 0;
-    }
     for (long i = 0; i < featureSetSize; i++) {
         working_vec[n][i] = 0;
         model_vec[n][i] = 0;
@@ -444,12 +436,6 @@ void init() {
     l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
     for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&model_vec, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&update_vec, nlet);
         *ptr = l2d_ptr;
     }
 
@@ -528,7 +514,7 @@ void init() {
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
 
-    MIGRATE(&up_token[0]);
+    MIGRATE(&model_vec[0]);
 	populateTrainingData();
 	populateTestData();
 
