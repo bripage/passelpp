@@ -30,7 +30,7 @@ void upstream_update(long i, long n, long u, long beta_gamma){
     }
 }
 
-void update_clusters(long updater_mig_type) {
+void update_clusters(long updater_mig_type, long beta_gamma) {
     if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
@@ -63,18 +63,18 @@ void update_clusters(long updater_mig_type) {
             long n = NODE_ID();
             for (long i = 0; i < 16; i++) {
                 cilk_migrate_hint(&model_vec[n]);
-                cilk_spawn upstream_update(i, n, t, beta_gamma);
-                cilk_migrate_hint(&working_vec[upstream[n]][t]);
-                cilk_spawn downstream_update(i, t, n);
+                cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                cilk_migrate_hint(&working_vec[upstream[n]]);
+                cilk_spawn downstream_update(i, upstream[n], n);
             }
             cilk_sync;
 
             long target;
             do {
                 target = rand_state;
-                target ^= sample >> 12; // a
-                target ^= sample << 25; // b
-                target ^= sample >> 27; // c
+                target ^= target >> 12; // a
+                target ^= target << 25; // b
+                target ^= target >> 27; // c
                 rand_state = target;
                 target *= UINT64_C(0x2545F4914F6CDD1D);
                 target %= cluster_count;
