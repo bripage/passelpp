@@ -99,6 +99,9 @@ double get_trainData_accuracy(long n){
         start = train_s[sample_node][local_sample_num];
         stop = train_s[sample_node][local_sample_num+1];
 
+        printf("start: %ld, stop: %ld\n", start, stop);
+        fflush(stdout);
+
         for (j = start; j < stop; j++) {
             feature = train_f[sample_node][j];
             dotProduct += (train_v[sample_node][j] * model_vec[n][feature]) >> 24;
