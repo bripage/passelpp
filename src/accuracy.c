@@ -90,6 +90,8 @@ double get_trainData_accuracy(long n){
     long local_sample_num;
 
     for (long i = 0; i < train_sample_count; i++) {
+        printf("evaluating model against trainData sample %ld\n", i);
+        fflush(stdout);
         sample_node = i/samples_per_cluster;
         local_sample_num = i % samples_per_cluster;
 
@@ -122,6 +124,8 @@ double get_testData_accuracy(long n){
     long feature;
 
     for (long i = 0; i < test_sample_count; i++) {
+        printf("evaluating model against testData sample %ld\n", i);
+        fflush(stdout);
         dotProduct = 0;
         start = test_s[i];
         stop = test_s[i+1];
