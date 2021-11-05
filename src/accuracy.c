@@ -128,8 +128,8 @@ double get_testData_accuracy(long n){
     long feature;
 
     for (long i = 0; i < test_sample_count; i++) {
-        printf("evaluating model against testData sample %ld\n", i);
-        fflush(stdout);
+        //printf("evaluating model against testData sample %ld\n", i);
+        //fflush(stdout);
         dotProduct = 0;
         start = test_s[i];
         stop = test_s[i+1];

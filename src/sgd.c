@@ -99,7 +99,6 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
         cilk_migrate_hint(&model_vec[n]);
         cilk_spawn train(i, n, eta_gamma, beta_gamma, end_sample_count);
     }
-    cilk_sync;
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
@@ -124,10 +123,11 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 
-    while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+    //while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+    for (sample = thread_id; sample < cluster_samples[n]; sample += threads_per_cluster){
         //printf("%ld\n",total_evaluated_sample_count[n]);
         //fflush(stdout);
-
+/*
         sample = rand_state;
         sample ^= sample >> 12; // a
         sample ^= sample << 25; // b
@@ -135,10 +135,13 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         rand_state = sample;
         sample *= UINT64_C(0x2545F4914F6CDD1D);
         sample %= cluster_samples[n];
-
+*/
         distance = 0;
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
+        if (start < 0 || stop < 0){
+            printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop)
+        }
 
         class = l_train_c[sample];
         for (i = start; i < stop; i++) {
