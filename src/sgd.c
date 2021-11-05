@@ -34,7 +34,7 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
     if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
-            printf("update agent STARTING on %ld\n", n);
+            printf("update agent STARTING on %ld (%ld)\n", n, epoch_running[NODE_ID()]);
             fflush(stdout);
             for (long i = 0; i < 16; i++) {
                 cilk_migrate_hint(&model_vec[n]);
