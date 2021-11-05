@@ -94,7 +94,8 @@ double get_trainData_accuracy(long n){
         fflush(stdout);
         sample_node = i/samples_per_cluster;
         local_sample_num = i % samples_per_cluster;
-
+        printf("sample_node: %ld, local_sample_num: %ld\n", sample_node, local_sample_num);
+        fflush(stdout);
         dotProduct = 0;
         start = train_s[sample_node][local_sample_num];
         stop = train_s[sample_node][local_sample_num+1];
