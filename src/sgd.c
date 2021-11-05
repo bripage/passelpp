@@ -13,7 +13,7 @@ void downstream_update(long i, long n, long d){
         REMOTE_ADD(&d_model_vec[j], (lambda * l_tmp) >> 24);
         REMOTE_ADD(&d_working_vec[j], (lambda * l_tmp) >> 24);
     }
-    printf("update thread %ld done on %ld\n", i, n);
+    printf("downstream thread %ld done on %ld\n", i, n);
     fflush(stdout);
 }
 void upstream_update(long i, long n, long u, long beta_gamma){
@@ -30,7 +30,7 @@ void upstream_update(long i, long n, long u, long beta_gamma){
         l_model_vec[j] += wv_temp;
         l_working_vec[j] = wv_temp;
     }
-    printf("update thread %ld done on %ld\n", i, n);
+    printf("upstream thread %ld done on %ld\n", i, n);
     fflush(stdout);
 }
 
@@ -103,6 +103,9 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
+    printf("train %ld on %ld start\n", thread_id, n);
+    fflush(stdout);
+
     long* l_working_vec = working_vec[n];
     long* l_train_s = train_s[n];
     long* l_train_c = train_c[n];
@@ -171,5 +174,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         printf("cluster %ld done\n", n);
         fflush(stdout);
     }
+    printf("train %ld on %ld done\n", thread_id, n);
+    fflush(stdout);
 
 }
