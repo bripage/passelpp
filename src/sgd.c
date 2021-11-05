@@ -49,7 +49,7 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
             cilk_sync;
             printf("update agent DONE on %ld -> %ld\n", n, upstream[n]);
             fflush(stdout);
-            //MIGRATE(&model_vec[upstream[n]]);
+            MIGRATE(&model_vec[upstream[n]]);
         }
     /*} else if (updater_mig_type == 2) {
         while (epoch_running[NODE_ID()] > 0) {
