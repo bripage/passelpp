@@ -140,7 +140,9 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
         if (start < 0 || stop < 0){
-            printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop)
+            printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop);
+            fflush(stdout);
+            exit(-1);
         }
 
         class = l_train_c[sample];
