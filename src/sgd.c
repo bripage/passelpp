@@ -85,6 +85,8 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
             MIGRATE(&model_vec[target]);
         }
     }
+    printf("update agent exiting \n");
+    fflush(stdout);
 }
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
