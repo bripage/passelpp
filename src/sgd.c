@@ -31,7 +31,7 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 }
 
 void update_clusters(long updater_mig_type, long beta_gamma) {
-    if (updater_mig_type == 1) {
+    //if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
             printf("update agent STARTING on %ld (%ld)\n", n, epoch_running[NODE_ID()]);
@@ -47,7 +47,7 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
             fflush(stdout);
             MIGRATE(&model_vec[upstream[n]]);
         }
-    } else if (updater_mig_type == 2) {
+    /*} else if (updater_mig_type == 2) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
             for (long i = 0; i < 16; i++) {
@@ -84,7 +84,7 @@ void update_clusters(long updater_mig_type, long beta_gamma) {
             } while (target != n);
             MIGRATE(&model_vec[target]);
         }
-    }
+    }*/
     printf("update agent exiting \n");
     fflush(stdout);
 }
