@@ -39,28 +39,26 @@ int main(int argc, char **argv) {
             if (update_type == 1) { // tokens passed in clockwise ring pattern
                 for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
                     cilk_migrate_hint(&model_vec[i]);
-                    cilk_spawn
-                    update_clusters(1, beta_gamma);
+                    cilk_spawn update_clusters(1, beta_gamma);
                 }
             } else if (update_type == 2) { // tokens passed in oppossing ring patters simultaneously
                 for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
                     cilk_migrate_hint(&model_vec[i]);
-                    cilk_spawn
-                    update_clusters(1, beta_gamma);
+                    cilk_spawn update_clusters(1, beta_gamma);
                 }
                 for (long i = (cluster_count / updater_count) / 2;
                      i < updater_count; i += cluster_count / updater_count) {
                     cilk_migrate_hint(&model_vec[i]);
-                    cilk_spawn
-                    update_clusters(2, beta_gamma);
+                    cilk_spawn update_clusters(2, beta_gamma);
                 }
             } else if (update_type == 3) { // tokens passed in clockwise ring pattern
                 for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
                     cilk_migrate_hint(&model_vec[i]);
-                    cilk_spawn
-                    update_clusters(3, beta_gamma);
+                    cilk_spawn update_clusters(3, beta_gamma);
                 }
             }
+            printf("updates done\n", epoch);
+            fflush(stdout);
         }
         cilk_sync;
         total_time = CLOCK() - start_time;
