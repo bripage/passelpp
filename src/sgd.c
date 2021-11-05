@@ -116,8 +116,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long sample;
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-        printf("%ld\n",total_evaluated_sample_count[n]);
-        fflush(stdout);
+        //printf("%ld\n",total_evaluated_sample_count[n]);
+        //fflush(stdout);
 
         sample = rand_state;
         sample ^= sample >> 12; // a
@@ -161,5 +161,9 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         for (i = 0; i < cluster_count; i++) {
             REMOTE_ADD(&epoch_running[i], -1);
         }
+
+        printf("cluster %ld done\n", n);
+        fflush(stdout);
     }
+
 }
