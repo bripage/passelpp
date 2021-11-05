@@ -74,8 +74,11 @@ int main(int argc, char **argv) {
             train_accuracy = get_single_trainData_accuracy(0);
             test_accuracy = get_single_testData_accuracy(0);
         }
-*/
+
         printf("%ld,%ld,%lf,%lf,%lf\n", test_id, epoch, train_accuracy, test_accuracy, epoch_time);
+        fflush(stdout);
+*/
+        printf("%ld,%ld,%lf\n", test_id, epoch, epoch_time);
         fflush(stdout);
     }
 
