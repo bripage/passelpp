@@ -13,6 +13,8 @@ void downstream_update(long i, long n, long d){
         REMOTE_ADD(&d_model_vec[j], (lambda * l_tmp) >> 24);
         REMOTE_ADD(&d_working_vec[j], (lambda * l_tmp) >> 24);
     }
+    printf("update thread %ld done on %ld\n", i, n);
+    fflush(stdout);
 }
 void upstream_update(long i, long n, long u, long beta_gamma){
     long* l_working_vec = working_vec[n];
@@ -28,6 +30,8 @@ void upstream_update(long i, long n, long u, long beta_gamma){
         l_model_vec[j] += wv_temp;
         l_working_vec[j] = wv_temp;
     }
+    printf("update thread %ld done on %ld\n", i, n);
+    fflush(stdout);
 }
 
 void update_clusters(long updater_mig_type, long beta_gamma) {
