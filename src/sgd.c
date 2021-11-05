@@ -123,18 +123,18 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 
-    while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-    //for (sample = thread_id; sample < cluster_samples[n]; sample += threads_per_cluster){
+    //while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+    for (sample = thread_id; sample < cluster_samples[n]; sample += threads_per_cluster){
         //printf("%ld\n",total_evaluated_sample_count[n]);
         //fflush(stdout);
 
-        sample = rand_state;
-        sample ^= sample >> 12; // a
-        sample ^= sample << 25; // b
-        sample ^= sample >> 27; // c
-        rand_state = sample;
-        sample *= UINT64_C(0x2545F4914F6CDD1D);
-        sample %= cluster_samples[n];
+        //sample = rand_state;
+        //sample ^= sample >> 12; // a
+        //sample ^= sample << 25; // b
+        //sample ^= sample >> 27; // c
+        //rand_state = sample;
+        //sample *= UINT64_C(0x2545F4914F6CDD1D);
+        //sample %= cluster_samples[n];
 
         if (sample == 0) sample = 1;
 
