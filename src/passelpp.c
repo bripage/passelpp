@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
         }
-        cilk_sync;
+
         if (cluster_count > 1) {
             if (update_type == 1) { // tokens passed in clockwise ring pattern
                 for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
