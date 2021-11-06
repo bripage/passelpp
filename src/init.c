@@ -193,7 +193,7 @@ void populateTrainingData() {
     long* sample_placement = (long*) malloc(cluster_count * sizeof(long));
     //long* data_placement = (long*) malloc(cluster_count * sizeof(long));
     for (n = 0; n < cluster_count; n++) {
-        data_placement[n] = 0;
+        //data_placement[n] = 0;
         sample_placement[n] = 0;
     }
     train_data = NULL;
@@ -401,6 +401,7 @@ void init_cluster(long n){
     downstream[n] = 0;
     total_evaluated_sample_count[n] = 0;
     epoch_running[n] = 0;
+    data_placement[n] = 0;
 
     for (long i = 0; i < featureSetSize; i++) {
         working_vec[n][i] = 0;
@@ -501,6 +502,8 @@ void init() {
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &epoch_running, (long) l1d_ptr);
 
+    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &data_placement, (long) l1d_ptr);
 
     printf("--- Memmory Allocation Complete ---\n");
 	fflush(stdout);
