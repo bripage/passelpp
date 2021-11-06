@@ -37,6 +37,7 @@ extern replicated long** train_s; // training data sample id's
 extern replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 extern replicated long** train_v;          // training data values (non-zero values for all samples)
 extern replicated long** train_c; // training sample classes (single value for each sample)
+extern replicated long** updater_last_node;
 
 extern replicated long* upstream;
 extern replicated long* downstream;

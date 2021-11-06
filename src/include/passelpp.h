@@ -23,5 +23,6 @@ replicated long gamma;
 replicated long* epoch_running;
 replicated long update_type;
 replicated long updater_count;
+replicated long** updater_last_node;
 
 #endif //EMUSGD_WILDEBEEST_H

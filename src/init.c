@@ -409,6 +409,10 @@ void init_cluster(long n){
         feat_deg_recip[n][i] = 0;
     }
 
+    for (long i = 0; i < updater_count; i++){
+        updater_last_node[n][i] = 0;
+    }
+
     // set update target (used for nearest neighbor update schemes)
     if (n != cluster_count-1 && cluster_count > 1) {
         upstream[n] = n+1;
@@ -466,6 +470,12 @@ void init() {
     l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
     for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&train_v, nlet);
+        *ptr = l2d_ptr;
+    }
+
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), updater_count * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&updater_last_node, nlet);
         *ptr = l2d_ptr;
     }
 
