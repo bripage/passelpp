@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
             if (epoch > 1) {
                 if (update_type == 1) { // tokens passed in clockwise ring pattern
                     for (long i = 0; i < updater_count; i++) {
-                        cilk_migrate_hint(&updater_last_node[i]);
+                        cilk_migrate_hint(&updater_last_node[0][i]);
                         cilk_spawn update_clusters(i, 1, beta_gamma);
                     }
                 } else if (update_type == 2) { // tokens passed in oppossing ring patters simultaneously
