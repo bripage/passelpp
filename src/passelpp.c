@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 
         //if (cluster_count > 1){
             //train_accuracy = get_trainData_accuracy(0);
-            test_accuracy = get_testData_accuracy(0);
+            test_accuracy = get_single_testData_accuracy(0);
         //} else {
         //    train_accuracy = get_single_trainData_accuracy(0);
         //    test_accuracy = get_single_testData_accuracy(0);

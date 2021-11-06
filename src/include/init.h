@@ -65,6 +65,7 @@ replicated long* cluster_sample_start;
 replicated long* cluster_sample_end;
 replicated long* cluster_samples;
 extern replicated long* epoch_running;
+replicated long* data_placement;
 
 
 void parse_args(int argc, char * argv[]);

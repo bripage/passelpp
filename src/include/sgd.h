@@ -43,6 +43,7 @@ extern replicated long* downstream;
 extern replicated long* total_evaluated_sample_count;
 extern replicated long* cluster_samples;
 extern replicated long* epoch_running;
+extern replicated long* data_placement;
 
 void update_clusters(long updater_mig_type, long beta_gamma);
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);

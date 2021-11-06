@@ -141,7 +141,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         distance = 0;
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
-        if (start < 0 || stop < 0){
+        if (start < 0 || start > data_placement[n] || stop < 0 || stop > data_placement[n]){
             printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop);
             fflush(stdout);
             exit(-1);

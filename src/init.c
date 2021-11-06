@@ -191,7 +191,7 @@ void populateTrainingData() {
     long sample_count = -1;
     long current_sample = -1;
     long* sample_placement = (long*) malloc(cluster_count * sizeof(long));
-    long* data_placement = (long*) malloc(cluster_count * sizeof(long));
+    //long* data_placement = (long*) malloc(cluster_count * sizeof(long));
     for (n = 0; n < cluster_count; n++) {
         data_placement[n] = 0;
         sample_placement[n] = 0;
