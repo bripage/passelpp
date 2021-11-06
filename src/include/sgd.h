@@ -46,7 +46,7 @@ extern replicated long* cluster_samples;
 extern replicated long* epoch_running;
 extern replicated long* data_placement;
 
-void update_clusters(long updater_mig_type, long beta_gamma);
+void update_clusters(long updater_id, long updater_mig_type, long beta_gamma);
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 #endif //EMUSGD_SGD_H
