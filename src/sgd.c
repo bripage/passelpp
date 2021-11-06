@@ -49,6 +49,7 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
             cilk_sync;
             printf("update agent DONE on %ld -> %ld\n", n, upstream[n]);
             fflush(stdout);
+            updater_last_node[0][updater_id] = upstream[n];
             MIGRATE(&model_vec[upstream[n]]);
         }
     /*} else if (updater_mig_type == 2) {
@@ -89,8 +90,6 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
             MIGRATE(&model_vec[target]);
         }
     }*/
-
-    updater_last_node[0][updater_id] = NODE_ID();
 
     printf("update agent exiting \n");
     fflush(stdout);
