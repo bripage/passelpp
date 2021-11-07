@@ -47,6 +47,7 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
                 cilk_spawn downstream_update(i, upstream[n], n);
             }
             cilk_sync;
+            updater_last_node[0][updater_id] = upstream[n];
             //printf("update agent DONE on %ld -> %ld\n", n, upstream[n]);
             //fflush(stdout);
             MIGRATE(&model_vec[upstream[n]]);
@@ -90,7 +91,6 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
         }
     }*/
 
-    updater_last_node[0][updater_id] = upstream[n];
     //printf("update agent exiting \n");
     //fflush(stdout);
 }
