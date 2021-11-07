@@ -35,7 +35,7 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 }
 
 void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
-    //if (updater_mig_type == 1) {
+    if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
             //printf("update agent STARTING on %ld (%ld)\n", n, epoch_running[NODE_ID()]);
@@ -52,7 +52,7 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
             //fflush(stdout);
             MIGRATE(&model_vec[upstream[n]]);
         }
-    /*} else if (updater_mig_type == 2) {
+    } else if (updater_mig_type == 2) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
             for (long i = 0; i < 16; i++) {
@@ -89,7 +89,7 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
             } while (target != n);
             MIGRATE(&model_vec[target]);
         }
-    }*/
+    }
 
     //printf("update agent exiting \n");
     //fflush(stdout);
@@ -125,29 +125,22 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 
-    //while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-    for (sample = thread_id; sample < cluster_samples[n]; sample += threads_per_cluster){
+    while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+    //for (sample = thread_id; sample < cluster_samples[n]; sample += threads_per_cluster){
         //printf("%ld\n",total_evaluated_sample_count[n]);
         //fflush(stdout);
 
-        //sample = rand_state;
-        //sample ^= sample >> 12; // a
-        //sample ^= sample << 25; // b
-        //sample ^= sample >> 27; // c
-        //rand_state = sample;
-        //sample *= UINT64_C(0x2545F4914F6CDD1D);
-        //sample %= cluster_samples[n];
-
-        //if (sample == 0) sample = 1;
+        sample = rand_state;
+        sample ^= sample >> 12; // a
+        sample ^= sample << 25; // b
+        sample ^= sample >> 27; // c
+        rand_state = sample;
+        sample *= UINT64_C(0x2545F4914F6CDD1D);
+        sample %= cluster_samples[n];
 
         distance = 0;
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
-        //if (start < 0 || start > data_placement[n] || stop < 0 || stop > data_placement[n]){
-        //    printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop);
-        //    fflush(stdout);
-        //    exit(-1);
-        //}
 
         class = l_train_c[sample];
         for (i = start; i < stop; i++) {
