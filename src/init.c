@@ -371,6 +371,7 @@ void populateTrainingData() {
 
         for (n = 0; n < cluster_count; n++) {
             train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
+            train_s[n][0] = 0;
         }
     }
 

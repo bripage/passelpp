@@ -38,8 +38,8 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
     //if (updater_mig_type == 1) {
         while (epoch_running[NODE_ID()] > 0) {
             long n = NODE_ID();
-            printf("update agent STARTING on %ld (%ld)\n", n, epoch_running[NODE_ID()]);
-            fflush(stdout);
+            //printf("update agent STARTING on %ld (%ld)\n", n, epoch_running[NODE_ID()]);
+            //fflush(stdout);
             for (long i = 0; i < 16; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
@@ -47,9 +47,8 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
                 cilk_spawn downstream_update(i, upstream[n], n);
             }
             cilk_sync;
-            printf("update agent DONE on %ld -> %ld\n", n, upstream[n]);
-            fflush(stdout);
-            updater_last_node[0][updater_id] = upstream[n];
+            //printf("update agent DONE on %ld -> %ld\n", n, upstream[n]);
+            //fflush(stdout);
             MIGRATE(&model_vec[upstream[n]]);
         }
     /*} else if (updater_mig_type == 2) {
@@ -91,8 +90,9 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
         }
     }*/
 
-    printf("update agent exiting \n");
-    fflush(stdout);
+    updater_last_node[0][updater_id] = upstream[n];
+    //printf("update agent exiting \n");
+    //fflush(stdout);
 }
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
@@ -138,16 +138,16 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         //sample *= UINT64_C(0x2545F4914F6CDD1D);
         //sample %= cluster_samples[n];
 
-        if (sample == 0) sample = 1;
+        //if (sample == 0) sample = 1;
 
         distance = 0;
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
-        if (start < 0 || start > data_placement[n] || stop < 0 || stop > data_placement[n]){
-            printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop);
-            fflush(stdout);
-            exit(-1);
-        }
+        //if (start < 0 || start > data_placement[n] || stop < 0 || stop > data_placement[n]){
+        //    printf("sample %ld, start: %ld, stop: %ld\n", sample, start, stop);
+        //    fflush(stdout);
+        //    exit(-1);
+        //}
 
         class = l_train_c[sample];
         for (i = start; i < stop; i++) {
@@ -179,9 +179,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         for (i = 0; i < cluster_count; i++) {
             REMOTE_ADD(&epoch_running[i], -1);
         }
-
-        printf("cluster %ld done\n", n);
-        fflush(stdout);
+        //printf("cluster %ld done\n", n);
+        //fflush(stdout);
     }
     //printf("train %ld on %ld done\n", thread_id, n);
     //fflush(stdout);

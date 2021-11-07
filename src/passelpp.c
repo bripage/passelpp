@@ -29,11 +29,6 @@ int main(int argc, char **argv) {
             eta_gamma *= gamma;
             eta_gamma >>= 24;
         }
-        for (long n = 0; n < cluster_count; n++) {
-            epoch_running[n] = cluster_count;
-            cilk_migrate_hint(&model_vec[n]);
-            cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
-        }
 
         if (cluster_count > 1) {
             if (epoch > 1) {
@@ -80,6 +75,12 @@ int main(int argc, char **argv) {
                     }
                 }
             }
+        }
+
+        for (long n = 0; n < cluster_count; n++) {
+            epoch_running[n] = cluster_count;
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
         }
         cilk_sync;
         total_time = CLOCK() - start_time;
