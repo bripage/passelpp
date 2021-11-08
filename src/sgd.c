@@ -43,6 +43,11 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
             for (long i = 0; i < 16; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                //cilk_migrate_hint(&working_vec[upstream[n]]);
+                //cilk_spawn downstream_update(i, upstream[n], n);
+            }
+            cilk_sync;
+            for (long i = 0; i < 16; i++) {
                 cilk_migrate_hint(&working_vec[upstream[n]]);
                 cilk_spawn downstream_update(i, upstream[n], n);
             }
