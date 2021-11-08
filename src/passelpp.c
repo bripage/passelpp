@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
         if (cluster_count > 1){
             for (long n = 0; n < cluster_count; n++) {
                 //train_accuracy = get_trainData_accuracy(0);
-                train_accuracy = get_single_testData_accuracy(n);
+                test_accuracy = get_single_testData_accuracy(n);
                 printf("%ld,%ld,%lf,%lf\n", test_id, epoch, test_accuracy, epoch_time);
                 fflush(stdout);
             }
