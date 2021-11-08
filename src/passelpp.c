@@ -92,16 +92,19 @@ int main(int argc, char **argv) {
         if (cluster_count > 1){
             for (long n = 0; n < cluster_count; n++) {
                 //train_accuracy = get_trainData_accuracy(0);
-                double tmp_acc = get_single_testData_accuracy(n);
-                if (tmp_acc > test_accuracy) test_accuracy = tmp_acc;
+                train_accuracy = get_single_testData_accuracy(n);
             }
+            printf("%ld,%ld,%lf,%lf\n", test_id, epoch, test_accuracy, epoch_time);
+            fflush(stdout);
         } else {
         //    train_accuracy = get_single_trainData_accuracy(0);
             test_accuracy = get_single_testData_accuracy(0);
+            printf("%ld,%ld,%lf,%lf\n", test_id, epoch, test_accuracy, epoch_time);
+            fflush(stdout);
         }
 
-        printf("%ld,%ld,%lf,%lf,%lf\n", test_id, epoch, train_accuracy, test_accuracy, epoch_time);
-        fflush(stdout);
+        //printf("%ld,%ld,%lf,%lf,%lf\n", test_id, epoch, train_accuracy, test_accuracy, epoch_time);
+        //fflush(stdout);
 
         //printf("%ld,%ld,%lf\n", test_id, epoch, epoch_time);
         //fflush(stdout);
