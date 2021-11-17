@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
     init();
 
     eta_gamma = eta;
+
     beta_gamma = beta;
     for (long epoch = 1; epoch <= epochs; epoch++) {
         printf("epoch %ld started\n", epoch);
@@ -54,7 +55,7 @@ int main(int argc, char **argv) {
                 }
             } else {
                 if (update_type == 1) { // tokens passed in clockwise ring pattern
-                    for (long i = 0; i < updater_count; i += cluster_count / updater_count) {
+                    for (long i = 0; i < updater_count; i++) {
                         cilk_migrate_hint(&model_vec[i]);
                         cilk_spawn update_clusters(i, 1, beta_gamma);
                     }
