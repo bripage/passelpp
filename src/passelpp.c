@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
             eta_gamma *= gamma;
             eta_gamma >>= 24;
         }
-
+/*
         if (cluster_count > 1) {
             if (epoch > 1) {
                 if (update_type == 1) { // tokens passed in clockwise ring pattern
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
                 }
             }
         }
-
+*/
         for (long n = 0; n < cluster_count; n++) {
             epoch_running[n] = cluster_count;
             cilk_migrate_hint(&model_vec[n]);
@@ -94,13 +94,13 @@ int main(int argc, char **argv) {
             for (long n = 0; n < cluster_count; n++) {
                 //train_accuracy = get_trainData_accuracy(0);
                 test_accuracy = get_single_testData_accuracy(n);
-                printf("%ld,%ld,%lf,%lf\n", test_id, epoch, test_accuracy, epoch_time);
+                printf("%ld,%ld,%lf,%lf\n", n, epoch, test_accuracy, epoch_time);
                 fflush(stdout);
             }
         } else {
         //    train_accuracy = get_single_trainData_accuracy(0);
             test_accuracy = get_single_testData_accuracy(0);
-            printf("%ld,%ld,%lf,%lf\n", test_id, epoch, test_accuracy, epoch_time);
+            printf("%ld,%ld,%lf,%lf\n", 0, epoch, test_accuracy, epoch_time);
             fflush(stdout);
         }
 

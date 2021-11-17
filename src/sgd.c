@@ -113,7 +113,7 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
     //printf("train %ld on %ld start\n", thread_id, n);
     //fflush(stdout);
-
+    cilk_spawn update_clusters(n, 1, beta_gamma);
     long* l_working_vec = working_vec[n];
     long* l_train_s = train_s[n];
     long* l_train_c = train_c[n];
