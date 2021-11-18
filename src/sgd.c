@@ -8,8 +8,8 @@ void downstream_update(long i, long n, long d){
     long* d_working_vec = working_vec[d];
     long* d_model_vec = model_vec[d];
     long l_tmp;
-    for (long j = i; j < featureSetSize; j+=16) {
-    //for (long j = 0; j < featureSetSize; j++) {
+    //for (long j = i; j < featureSetSize; j+=16) {
+    for (long j = 0; j < featureSetSize; j++) {
         l_tmp = l_working_vec[j];
         REMOTE_ADD(&d_model_vec[j], (lambda * l_tmp) >> 24);
         REMOTE_ADD(&d_working_vec[j], (lambda * l_tmp) >> 24);
@@ -22,8 +22,8 @@ void upstream_update(long i, long n, long u, long beta_gamma){
     long* u_working_vec = working_vec[u];
     long* l_model_vec = model_vec[n];
     long l_temp, wv_temp;
-    for (long j = i; j < featureSetSize; j+=16) {
-    //for (long j = 0; j < featureSetSize; j++) {
+    //for (long j = i; j < featureSetSize; j+=16) {
+    for (long j = 0; j < featureSetSize; j++) {
         l_temp = l_model_vec[j];
         l_model_vec[j] = 0;
         wv_temp = (beta_gamma * (l_working_vec[j] - l_temp)) >> 24;
@@ -42,11 +42,11 @@ void update_clusters(long updater_id, long updater_mig_type, long beta_gamma) {
             long n = NODE_ID();
             //printf("update agent STARTING on %ld (%ld)\n", n, epoch_running[NODE_ID()]);
             //fflush(stdout);
-            for (long i = 0; i < 16; i++) {
+            for (long i = 0; i < 1; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
             }
-            for (long i = 0; i < 16; i++) {
+            for (long i = 0; i < 1; i++) {
                 cilk_migrate_hint(&working_vec[upstream[n]]);
                 cilk_spawn downstream_update(i, upstream[n], n);
             }
