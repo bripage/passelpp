@@ -163,7 +163,7 @@ double get_single_trainData_accuracy(){
 
         for (j = start; j < stop; j++) {
             feature = train_f[0][j];
-            dotProduct += (train_v[0][j] * working_vec[0][feature]) >> 24;
+            dotProduct += (train_v[0][j] * model_vec[0][feature]) >> 24;
         }
 
         if (dotProduct * train_c[0][i] > 0){
