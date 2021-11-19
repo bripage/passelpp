@@ -7,14 +7,11 @@
 void update_clusters(long n, long beta_gamma) {
     long* l_model_vec = model_vec[n];
     long* r_model_vec;
-    long l_temp, wv_temp;
     for (long i = 0; i < cluster_count; i++) {
         if (i != n) {
             r_model_vec = model_vec[i];
             for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
-                l_temp = l_model_vec[j];
-                wv_temp = (beta_gamma * (l_working_vec[j] - l_temp)) >> 24;
-                REMOTE_ADD(&r_model_vec[j], wv_temp);
+                REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
                 //model_vec[i][j] = model_vec[n][j];
             }
         }
