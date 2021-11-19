@@ -5,6 +5,8 @@
 #include "include/sgd.h"
 
 void update_clusters(long n) {
+    printf("%ld updating\n"n);
+    fflush(stdout);
     for (long i = 0; i < cluster_count; i++) {
         if (i != n) {
             for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
@@ -43,7 +45,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long sample;
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-        if (total_evaluated_sample_count[n] % 100 == 0){
+        if (total_evaluated_sample_count[n] % 1000 == 0){
             cilk_spawn update_clusters(n);
         }
 
