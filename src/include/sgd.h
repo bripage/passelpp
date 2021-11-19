@@ -44,7 +44,6 @@ extern replicated long* downstream;
 extern replicated long* total_evaluated_sample_count;
 extern replicated long* cluster_samples;
 extern replicated long* epoch_running;
-extern replicated long* data_placement;
 extern replicated long* l_mv_start;
 extern replicated long* l_mv_stop;
 
