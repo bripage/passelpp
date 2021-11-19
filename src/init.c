@@ -419,7 +419,7 @@ void init() {
     printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
     fflush(stdout);
 
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+    long** l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
     for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
         long *** ptr = (long ***) mw_get_nth(&model_vec, nlet);
         *ptr = l2d_ptr;
