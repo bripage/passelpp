@@ -5,8 +5,6 @@
 #include "include/sgd.h"
 
 void update_clusters(long n) {
-    printf("%ld updating\n", n);
-    fflush(stdout);
     for (long i = 0; i < cluster_count; i++) {
         if (i != n) {
             for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
@@ -25,10 +23,6 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
-
-    printf("%ld starting to train\n", n);
-    fflush(stdout);
-
     long* l_model_vec = model_vec[n];
     long* l_train_s = train_s[n];
     long* l_train_c = train_c[n];
@@ -48,9 +42,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long sample;
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-        if (total_evaluated_sample_count[n] % 1000 == 0){
-            printf("%ld calling update\n", n);
-            fflush(stdout);
+        if (total_evaluated_sample_count[n] % update_period == 0){
             cilk_spawn update_clusters(n);
         }
 
@@ -66,12 +58,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
         class = l_train_c[sample];
-
-        if (n == 0){
-            printf("count %ld, sample %ld, start: %ld, stop: %ld\n",total_evaluated_sample_count[n], sample, start, stop);
-            fflush(stdout);
-        }
-
         for (i = start; i < stop; i++) {
             feature = l_train_f[i];
             distance += (l_train_v[i] * l_model_vec[feature]) >> 24;
@@ -96,7 +82,4 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             }
         }
     }
-
-    printf("%ld done training\n", n);
-    fflush(stdout);
 }

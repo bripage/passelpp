@@ -142,13 +142,9 @@ void parse_args(int argc, char * argv[]) {
             //printf("Test #: %ld\n", test_id);
             //fflush(stdout);
             i++;
-        } else if (!strcmp(argv[i], "--update-type")) {
+        } else if (!strcmp(argv[i], "--update-period")) {
             num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&update_type, num_arg);
-            i++;
-        } else if (!strcmp(argv[i], "--updater-count")) {
-            num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&updater_count, num_arg);
+            mw_replicated_init(&update_period, num_arg);
             i++;
         }
     }

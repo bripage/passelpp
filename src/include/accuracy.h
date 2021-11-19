@@ -28,7 +28,6 @@ extern replicated long* test_s;
 extern replicated long* test_f;
 extern replicated long* test_v;
 extern replicated long* test_c;
-extern replicated long** working_vec;        // working vector for each node
 extern replicated long** model_vec;        // working vector for each node
 extern long node_count_start;
 extern long non_standard_classes;
