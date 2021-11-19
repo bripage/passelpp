@@ -5,10 +5,10 @@
 #include "include/sgd.h"
 
 void update_clusters(long n) {
-    for (long i = 0; j < cluster_count; j++) {
+    for (long i = 0; i < cluster_count; i++) {
         if (i != n) {
             for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
-                model_vec[i][j] = model_vec[n];
+                model_vec[i][j] = model_vec[n][j];
             }
         }
     }
