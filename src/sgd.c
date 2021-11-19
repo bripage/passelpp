@@ -26,6 +26,9 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
 
+    printf("%ld starting to train\n", n);
+    fflush(stdout);
+
     long* l_model_vec = model_vec[n];
     long* l_train_s = train_s[n];
     long* l_train_c = train_c[n];
@@ -46,6 +49,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
         if (total_evaluated_sample_count[n] % 1000 == 0){
+            printf("%ld calling update\n", n);
+            fflush(stdout);
             cilk_spawn update_clusters(n);
         }
 
@@ -86,4 +91,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         }
     }
 
+    printf("%ld done training\n", n);
+    fflush(stdout);
 }
