@@ -5,7 +5,7 @@
 #include "include/sgd.h"
 
 void update_clusters(long n) {
-    printf("%ld updating\n"n);
+    printf("%ld updating\n", n);
     fflush(stdout);
     for (long i = 0; i < cluster_count; i++) {
         if (i != n) {
