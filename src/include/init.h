@@ -32,7 +32,7 @@ replicated long regularization_scalar;
 replicated long class1;
 replicated long class2;
 replicated long samples_per_cluster;
-extern replicated long update_period;
+replicated long update_period;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta
