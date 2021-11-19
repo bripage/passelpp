@@ -54,10 +54,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             cilk_spawn update_clusters(n);
         }
 
-        if (n == 0){
-            printf("sample %ld\n",total_evaluated_sample_count[n]);
-            fflush(stdout);
-        }
         sample = rand_state;
         sample ^= sample >> 12; // a
         sample ^= sample << 25; // b
@@ -70,6 +66,12 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         start = l_train_s[sample];
         stop = l_train_s[sample + 1];
         class = l_train_c[sample];
+
+        if (n == 0){
+            printf("count %ld, sample %ld, start: %ld, stop: %ld\n",total_evaluated_sample_count[n], sample, start, stop);
+            fflush(stdout);
+        }
+
         for (i = start; i < stop; i++) {
             feature = l_train_f[i];
             distance += (l_train_v[i] * l_model_vec[feature]) >> 24;
