@@ -4,18 +4,18 @@
 
 #include "include/sgd.h"
 
-void update_clusters(long n, long beta_gamma) {
+void update_clusters(long n, long dest, long beta_gamma) {
     long* l_model_vec = model_vec[n];
     long* r_model_vec;
-    for (long i = 0; i < cluster_count; i++) {
-        if (i != n) {
-            r_model_vec = model_vec[i];
+    //for (long i = 0; i < cluster_count; i++) {
+    //    if (i != n) {
+            r_model_vec = model_vec[dest];
             for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
                 REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
                 //model_vec[i][j] = model_vec[n][j];
             }
-        }
-    }
+    //    }
+    //}
 }
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
@@ -47,7 +47,12 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
         if (total_evaluated_sample_count[n] % update_period == 0){
-            cilk_spawn update_clusters(n, beta_gamma);
+            for (long t = 0; t < cluster_count; t++){
+                if (t != n){
+                    cilk_spawn update_clusters(n, t, beta_gamma);
+                }
+            }
+            //cilk_spawn update_clusters(n, beta_gamma);
         }
 
         sample = rand_state;
