@@ -165,7 +165,7 @@ void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
                 do {
                     mv_original = l_model_vec[feature];
                     mv_new = ((mv_original + l_temp1) * one_min_ltemp) >> 24;
-                } while (ATOMIC_CAS(l_model_vec[feature], mv_original, mv_new) == mv_original);
+                } while (ATOMIC_CAS(&l_model_vec[feature], mv_original, mv_new) == mv_original);
             }
         } else {
             for (i = start; i < stop; i++) {
@@ -174,9 +174,8 @@ void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
                 one_min_ltemp = 16777216 - l_temp1;
                 do {
                     mv_original = l_model_vec[feature];
-                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
                     mv_new = (mv_original * one_min_ltemp) >> 24;
-                } while (ATOMIC_CAS(l_model_vec[feature], mv_original, mv_new) == mv_original);
+                } while (ATOMIC_CAS(&l_model_vec[feature], mv_original, mv_new) == mv_original);
             }
         }
     }
@@ -236,9 +235,9 @@ void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long e
                 feature = l_train_f[i];
                 l_temp = (di * l_train_v[i]) >> 24;
                 mv_original = l_model_vec[feature];
-                mv_new = mv_original + l_temp;
+                mv_adjustment = mv_original + l_temp;
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24
+                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24;
                 mv_adjustment -= mv_original;
                 l_model_vec[feature] += mv_adjustment;
             }
@@ -247,7 +246,7 @@ void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long e
                 feature = l_train_f[i];
                 mv_original = l_model_vec[feature];
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24
+                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24;
                 mv_adjustment -= mv_original;
                 l_model_vec[feature] += mv_adjustment;
             }
