@@ -33,7 +33,7 @@ replicated long class1;
 replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
-replicated long train_type;
+extern replicated long train_type;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

@@ -22,7 +22,6 @@ replicated long gamma;
 /// Data allocation and misc globals
 replicated long* epoch_running;
 replicated long train_type;
-replicated long updater_count;
 replicated long** updater_last_node;
 
 #endif //EMUSGD_WILDEBEEST_H
