@@ -246,7 +246,7 @@ void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long e
                 feature = l_train_f[i];
                 mv_original = l_model_vec[feature];
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24;
+                mv_adjustment = (mv_original * (16777216 - l_temp)) >> 24;
                 mv_adjustment -= mv_original;
                 l_model_vec[feature] += mv_adjustment;
             }
