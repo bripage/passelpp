@@ -13,13 +13,11 @@ int main(int argc, char **argv) {
 
     /** Get Command line arguements for test run */
     parse_args(argc, argv);
-
     /** allocate memory for training/testing data, model/working vectors, populate data */
     init();
-
     eta_gamma = eta;
-
     beta_gamma = beta;
+
     for (long epoch = 1; epoch <= epochs; epoch++) {
         printf("epoch %ld started\n", epoch);
         fflush(stdout);

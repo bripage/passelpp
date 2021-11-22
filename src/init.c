@@ -146,6 +146,10 @@ void parse_args(int argc, char * argv[]) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&update_period, num_arg);
             i++;
+        } else if (!strcmp(argv[i], "--train-type")) {
+            num_arg = atoi(argv[i + 1]);
+            mw_replicated_init(&train_type, num_arg);
+            i++;
         }
     }
 

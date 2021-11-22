@@ -21,7 +21,7 @@ replicated long gamma;
 
 /// Data allocation and misc globals
 replicated long* epoch_running;
-replicated long update_type;
+replicated long train_type;
 replicated long updater_count;
 replicated long** updater_last_node;
 
