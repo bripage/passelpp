@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 
         for (long n = 0; n < cluster_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
-            cilk_spawn test_accuracy = get_single_testData_accuracy(n);
+            cilk_spawn get_single_testData_accuracy(n);
         }
         cilk_sync;
     }
