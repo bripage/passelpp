@@ -600,15 +600,12 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
         }
         distance *= class;
 
-        if (distance < 16777216) {
-            di = eta_gamma * class;
+        if (distance >= 16777216) {
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
-                l_temp = (di * l_train_v[i]) >> 24;
                 mv_original = l_model_vec[feature];
-                mv_adjustment = mv_original + l_temp;
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24;
+                mv_adjustment = (mv_original * (16777216 - l_temp)) >> 24;
                 mv_adjustment -= mv_original;
                 l_model_vec[feature] += mv_adjustment;
             }
