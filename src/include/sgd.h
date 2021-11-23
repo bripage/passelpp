@@ -47,4 +47,5 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void reinitialize_models(long n, long i);
 #endif //EMUSGD_SGD_H

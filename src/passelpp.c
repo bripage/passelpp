@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        for (long i = 0; n < cluster_count; n++) {
+        for (long i = 0; i < cluster_count; i++) {
             cilk_migrate_hint(&model_vec[best_cluster_id]);
             cilk_spawn reinitialize_models(best_cluster_id, i);
         }
