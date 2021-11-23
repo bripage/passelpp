@@ -16,6 +16,7 @@ FILE * test_features;
 FILE * test_labels;
 extern char* test_feature_path;
 extern char* test_label_path;
+extern replicated long cluster_count;
 extern replicated long total_test_points;
 extern replicated long train_sample_count;
 extern replicated long test_sample_count;
