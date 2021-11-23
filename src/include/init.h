@@ -52,10 +52,10 @@ replicated long** train_f;// training data feature id's (1:1 relationship to val
 replicated long** train_v;          // training data values (non-zero values for all samples)
 replicated long** train_c; // training sample classes (single value for each sample)
 
-replicated long* test_s;
-replicated long* test_f;
-replicated long* test_v;
-replicated long* test_c;
+replicated long** test_s;
+replicated long** test_f;
+replicated long** test_v;
+replicated long** test_c;
 replicated long** feat_deg_recip;
 replicated long* total_evaluated_sample_count;
 replicated long* cluster_sample_start;
@@ -63,6 +63,7 @@ replicated long* cluster_sample_end;
 replicated long* cluster_samples;
 replicated long* l_mv_start;
 replicated long* l_mv_stop;
+replicated double* accuracies;
 
 
 void parse_args(int argc, char * argv[]);

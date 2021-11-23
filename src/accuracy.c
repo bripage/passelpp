@@ -175,7 +175,7 @@ double get_single_trainData_accuracy(){
     return accuracy;
 }
 
-double get_single_testData_accuracy(long n){
+void get_single_testData_accuracy(long n){
     double correct_samples = 0.0;
     double accuracy;
     long j;
@@ -186,21 +186,22 @@ double get_single_testData_accuracy(long n){
 
     for (long i = 0; i < test_sample_count; i++) {
         dotProduct = 0;
-        start = test_s[i];
-        stop = test_s[i+1];
+        start = test_s[n][i];
+        stop = test_s[n][i+1];
 
         for (j = start; j < stop; j++) {
-            feature = test_f[j];
-            dotProduct += (test_v[j] * model_vec[n][feature]) >> 24;
+            feature = test_f[n][j];
+            dotProduct += (test_v[n][j] * model_vec[n][feature]) >> 24;
             //printf("%ld,test_v[%ld],working_vec[0][%ld],%ld,%ld\n", dotProduct, j, feature, test_v[j], working_vec[0][feature]);
             //fflush(stdout);
         }
 
-        if (dotProduct * test_c[i] > 0){
+        if (dotProduct * test_c[n][i] > 0){
             correct_samples += 1;
         }
     }
 
-    accuracy = 100*(correct_samples/test_sample_count);
-    return accuracy;
+    accuracies[n] = 100*(correct_samples/test_sample_count);
+    printf("%ld, %lf\n", n, accuracies[n]);
+    fflush(stdout);
 }

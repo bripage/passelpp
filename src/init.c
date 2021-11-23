@@ -397,6 +397,7 @@ void populateTrainingData() {
 }
 
 void init_cluster(long n){
+    accuracies[n] = 0.0;
     cluster_samples[n] = 0;
     total_evaluated_sample_count[n] = 0;
 
@@ -484,6 +485,9 @@ void init() {
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
+
+    d1d_ptr = (double *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &accuracies, (double) d1d_ptr);
 
     printf("--- Memmory Allocation Complete ---\n");
 	fflush(stdout);

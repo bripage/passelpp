@@ -37,28 +37,14 @@ int main(int argc, char **argv) {
         total_time = CLOCK() - start_time;
         epoch_time = (double) total_time / 210000000;
 
-        printf("epoch %ld done\n", epoch);
+        printf("Epoch %ld Time: %lf\n", epoch, epoch_time);
         fflush(stdout);
 
-        if (cluster_count > 1){
-            for (long n = 0; n < cluster_count; n++) {
-                //train_accuracy = get_trainData_accuracy(0);
-                test_accuracy = get_single_testData_accuracy(n);
-                printf("%ld,%ld,%lf,%lf\n", n, epoch, test_accuracy, epoch_time);
-                fflush(stdout);
-            }
-        } else {
-        //    train_accuracy = get_single_trainData_accuracy(0);
-            test_accuracy = get_single_testData_accuracy(0);
-            printf("%ld,%ld,%lf,%lf\n", 0, epoch, test_accuracy, epoch_time);
-            fflush(stdout);
+        for (long n = 0; n < cluster_count; n++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn test_accuracy = get_single_testData_accuracy(n);
         }
-
-        //printf("%ld,%ld,%lf,%lf,%lf\n", test_id, epoch, train_accuracy, test_accuracy, epoch_time);
-        //fflush(stdout);
-
-        //printf("%ld,%ld,%lf\n", test_id, epoch, epoch_time);
-        //fflush(stdout);
+        cilk_sync;
     }
 
 	return 0;
