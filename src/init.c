@@ -45,6 +45,8 @@ void parse_args(int argc, char * argv[]) {
     threads_per_cluster = 1;
     cluster_count = 1;
     samples_per_cluster = 1;
+    long reinit = 0;
+    long ignore = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -151,13 +153,17 @@ void parse_args(int argc, char * argv[]) {
             mw_replicated_init(&train_type, num_arg);
             i++;
         } else if (!strcmp(argv[i], "--model-reinitialization")) {
-            num_arg = 1;
-            mw_replicated_init(&model_reinitialization, num_arg);
+            reinit = 1;
         } else if (!strcmp(argv[i], "--ignore-poor-samples")) {
-            num_arg = 1;
-            mw_replicated_init(&ignore_poor_samples, num_arg);
+            ignore = 1;
         }
     }
+    mw_replicated_init(&model_reinitialization, reinit);
+    printf("Mode Vector Reinitialization: %ld\n", model_reinitialization);
+    fflush(stdout);
+    mw_replicated_init(&ignore_poor_samples, ignore);
+    printf("Ignore Samples with Negative Gradients: %ld\n", ignore_poor_samples);
+    fflush(stdout);
 
     /** Solve for Beta (based on cluster count) */
     double dtmp = SolveBeta(cluster_count);
