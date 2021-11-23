@@ -63,7 +63,7 @@ replicated long* cluster_sample_end;
 replicated long* cluster_samples;
 replicated long* l_mv_start;
 replicated long* l_mv_stop;
-replicated double* accuracies;
+replicated long* accuracies;
 
 
 void parse_args(int argc, char * argv[]);

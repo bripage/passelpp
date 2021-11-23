@@ -21,7 +21,7 @@ extern replicated long total_test_points;
 extern replicated long train_sample_count;
 extern replicated long test_sample_count;
 extern replicated long samples_per_cluster;
-extern replicated double* accuracies;
+extern replicated long* accuracies;
 extern replicated long** train_s;
 extern replicated long** train_f;
 extern replicated long** train_v;

@@ -486,8 +486,8 @@ void init() {
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
 
-    double* d1d_ptr = (double *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &accuracies, (long) d1d_ptr);
+    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &accuracies, (long) l1d_ptr);
 
     printf("--- Memmory Allocation Complete ---\n");
 	fflush(stdout);
