@@ -396,8 +396,10 @@ void populateTrainingData() {
     fflush(stdout);
 }
 
-void init_cluster(long n){
-    accuracies[n] = 0.0;
+void init_cluster(long n) {
+    for (long i = 0; i < cluster_count; i++){
+        accuracies[n][i] = 0;
+    }
     cluster_samples[n] = 0;
     total_evaluated_sample_count[n] = 0;
 
@@ -456,19 +458,37 @@ void init() {
         *ptr = l2d_ptr;
     }
 
-    long* l1d_ptr = (long *) mw_malloc1dlong(test_sample_count + 1);
-    mw_replicated_init((long *) &test_s, (long) l1d_ptr);
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (test_sample_count + 1) * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&test_s, nlet);
+        *ptr = l2d_ptr;
+    }
 
-    l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
-    mw_replicated_init((long *) &test_c, (long) l1d_ptr);
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), test_sample_count * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&test_c, nlet);
+        *ptr = l2d_ptr;
+    }
 
-    l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
-    mw_replicated_init((long *) &test_f, (long) l1d_ptr);
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&test_f, nlet);
+        *ptr = l2d_ptr;
+    }
 
-    l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
-    mw_replicated_init((long *) &test_v, (long) l1d_ptr);
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&test_v, nlet);
+        *ptr = l2d_ptr;
+    }
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long *** ptr = (long ***) mw_get_nth(&accuracies, nlet);
+        *ptr = l2d_ptr;
+    }
+
+    long* l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
@@ -485,9 +505,6 @@ void init() {
 
     l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
     mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &accuracies, (long) l1d_ptr);
 
     printf("--- Memmory Allocation Complete ---\n");
 	fflush(stdout);

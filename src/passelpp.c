@@ -10,6 +10,7 @@ int main(int argc, char **argv) {
     volatile double epoch_time;
     double train_accuracy = 0.0, test_accuracy = 0.0;
     long eta_gamma, beta_gamma;
+    long best_model_acc, best_cluster_id;
 
     /** Get Command line arguements for test run */
     parse_args(argc, argv);
@@ -43,6 +44,19 @@ int main(int argc, char **argv) {
         for (long n = 0; n < cluster_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn get_single_testData_accuracy(n);
+        }
+        cilk_sync;
+
+        best_model_acc = accuracies[0][0];
+        for (long n = 1; n < cluster_count; n++) {
+            if (accuracies[0][n] > best_model_acc) {
+                best_cluster_id = n;
+            }
+        }
+
+        for (long i = 0; n < cluster_count; n++) {
+            cilk_migrate_hint(&model_vec[best_cluster_id]);
+            cilk_spawn reinitialize_models(best_cluster_id, i);
         }
         cilk_sync;
     }

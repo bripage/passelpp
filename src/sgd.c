@@ -253,3 +253,11 @@ void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long e
         }
     }
 }
+
+void reinitialize_models(long n, long i){
+    for (long j = 0; < cluster_count; j++){
+        for (long f = 0; f < featureSetSize; f++){
+            model_vec[i][f] = model_vec[n][f];
+        }
+    }
+}
