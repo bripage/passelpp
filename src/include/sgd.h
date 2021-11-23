@@ -29,6 +29,7 @@ extern replicated long threads_per_cluster;
 extern replicated long total_train_points;
 extern replicated long update_period;
 extern replicated long train_type;
+extern replicated long ignore_poor_samples;
 
 /** Data allocation and misc globals */
 extern replicated long** model_vec;        // working vector for each node
@@ -45,7 +46,12 @@ extern replicated long* l_mv_stop;
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void cas_loop_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void cas_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void cas_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void reinitialize_models(long n, long i);
 #endif //EMUSGD_SGD_H

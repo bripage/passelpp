@@ -150,6 +150,12 @@ void parse_args(int argc, char * argv[]) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&train_type, num_arg);
             i++;
+        } else if (!strcmp(argv[i], "--model-reinitialization")) {
+            num_arg = 1;
+            mw_replicated_init(&model_reinitialization, num_arg);
+        } else if (!strcmp(argv[i], "--ignore-poor-samples")) {
+            num_arg = 1;
+            mw_replicated_init(&ignore_poor_samples, num_arg);
         }
     }
 
