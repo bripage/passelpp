@@ -57,21 +57,29 @@ void populateTestData() {
         }
 
         if (sample != current_sample) {
-            test_f[j] = 0;
-            test_v[j] = 1;
+            for (long c = 0; c < cluster_count; c++) {
+                test_f[c][j] = 0;
+                test_v[c][j] = 1;
+            }
             j++;
-            test_s[sample] = j;
-            test_f[j] = feature;
-            test_v[j] = fixed_value;
-            test_c[sample] = class;
+            for (long c = 0; c < cluster_count; c++) {
+                test_s[c][sample] = j;
+                test_f[c][j] = feature;
+                test_v[c][j] = fixed_value;
+                test_c[c][sample] = class;
+            }
             current_sample = sample;
         } else {
-            test_f[j] = feature;
-            test_v[j] = fixed_value;
+            for (long c = 0; c < cluster_count; c++) {
+                test_f[c][j] = feature;
+                test_v[c][j] = fixed_value;
+            }
         }
         j++;
     }
-    test_s[sample + 1] = j; // add sample id end ptr
+        for (long c = 0; c < cluster_count; c++) {
+            test_s[c][sample + 1] = j; // add sample id end ptr
+        }
 
     fclose(test_features);
     free(binBuffer);
@@ -114,36 +122,6 @@ double get_trainData_accuracy(long n){
     }
 
     accuracy = 100*(correct_samples/train_sample_count);
-    return accuracy;
-}
-
-double get_testData_accuracy(long n){
-    double correct_samples = 0.0;
-    double accuracy;
-    long j;
-    long dotProduct;
-    long start;
-    long stop;
-    long feature;
-
-    for (long i = 0; i < test_sample_count; i++) {
-        //printf("evaluating model against testData sample %ld\n", i);
-        //fflush(stdout);
-        dotProduct = 0;
-        start = test_s[i];
-        stop = test_s[i+1];
-
-        for (j = start; j < stop; j++) {
-            feature = test_f[j];
-            dotProduct += (test_v[j] * model_vec[n][feature]) >> 24;
-        }
-
-        if (dotProduct * test_c[i] > 0){
-            correct_samples += 1;
-        }
-    }
-
-    accuracy = 100*(correct_samples/test_sample_count);
     return accuracy;
 }
 

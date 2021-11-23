@@ -39,6 +39,6 @@ void populateTestData();
 double get_trainData_accuracy(long n);
 double get_testData_accuracy(long n);
 double get_single_trainData_accuracy();
-double get_single_testData_accuracy(long n);
+void get_single_testData_accuracy(long n);
 
 #endif //EMUSGD_ACCURACY_H
