@@ -179,7 +179,9 @@ void get_single_testData_accuracy(long n){
         }
     }
 
-    accuracies[0][n] = 100000*(correct_samples/test_sample_count);
-    printf("%ld, %ld\n", n, accuracies[n]);
-    fflush(stdout);
+    accuracy = 100*(correct_samples/test_sample_count);
+    accuracy *= 16777216;
+    accuracies[0][n] = (long) accuracy;
+    //printf("%ld, %ld\n", n, accuracies[n]);
+    //fflush(stdout);
 }
