@@ -57,13 +57,13 @@ replicated long** test_f;
 replicated long** test_v;
 replicated long** test_c;
 replicated long** feat_deg_recip;
+replicated long** accuracies;
 replicated long* total_evaluated_sample_count;
 replicated long* cluster_sample_start;
 replicated long* cluster_sample_end;
 replicated long* cluster_samples;
 replicated long* l_mv_start;
 replicated long* l_mv_stop;
-replicated long* accuracies;
 
 
 void parse_args(int argc, char * argv[]);

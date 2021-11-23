@@ -23,5 +23,6 @@ replicated long gamma;
 replicated long* epoch_running;
 replicated long train_type;
 replicated long** updater_last_node;
+extern replicated long** accuracies;
 
 #endif //EMUSGD_WILDEBEEST_H
