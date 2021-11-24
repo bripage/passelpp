@@ -416,7 +416,7 @@ void init_cluster(long n) {
     total_evaluated_sample_count[n] = 0;
 
     for (long i = 0; i < featureSetSize; i++) {
-        model_vec[n][i] = 16777216;
+        model_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
 
