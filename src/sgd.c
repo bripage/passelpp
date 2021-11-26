@@ -262,7 +262,7 @@ void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
                     mv_original = l_model_vec[feature];
                     mv_new = mv_original + l_temp1;
                     mv_new = (mv_new * (16777216 - l_temp2)) >> 24;
-                } while (ATOMIC_CAS(&l_model_vec[feature], mv_original, mv_new) != mv_original);
+                } while (ATOMIC_CAS(&l_model_vec[feature], mv_new, mv_original) != mv_original);
             }
         } else {
             for (i = start; i < stop; i++) {
@@ -271,7 +271,7 @@ void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
                 do {
                     mv_original = l_model_vec[feature];
                     mv_new = (mv_original * (16777216 - l_temp1)) >> 24;
-                } while (ATOMIC_CAS(&l_model_vec[feature], mv_original, mv_new) != mv_original);
+                } while (ATOMIC_CAS(&l_model_vec[feature], mv_new, mv_original) != mv_original);
             }
         }
     }
