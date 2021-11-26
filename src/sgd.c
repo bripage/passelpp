@@ -20,6 +20,7 @@ void update_clusters(long n, long dest, long beta_gamma) {
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
     long end_sample_count = cluster_samples[n] * epoch;
+    /*
     if (train_type == 0) {
         if (ignore_poor_samples) {
             for (long i = 0; i < threads_per_cluster; i++) {
@@ -39,11 +40,13 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
                 cilk_spawn cas_loop_and_neg_grad_drop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         } else {
+        */
             for (long i = 0; i < threads_per_cluster; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn cas_loop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
-        }
+        /*
+         }
     } else if (train_type == 2) {
         if (ignore_poor_samples) {
             for (long i = 0; i < threads_per_cluster; i++) {
@@ -69,6 +72,7 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
             }
         }
     }
+    */
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
@@ -254,20 +258,19 @@ void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
                 feature = l_train_f[i];
                 l_temp1 = (di * l_train_v[i]) >> 24;
                 l_temp2 = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                one_min_ltemp = 16777216 - l_temp2;
                 do {
                     mv_original = l_model_vec[feature];
-                    mv_new = ((mv_original + l_temp1) * one_min_ltemp) >> 24;
+                    mv_new = mv_original + l_temp1;
+                    mv_new = (mv_new * (16777216 - l_temp2)) >> 24;
                 } while (ATOMIC_CAS(&l_model_vec[feature], mv_original, mv_new) != mv_original);
             }
         } else {
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
                 l_temp1 = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                one_min_ltemp = 16777216 - l_temp1;
                 do {
                     mv_original = l_model_vec[feature];
-                    mv_new = (mv_original * one_min_ltemp) >> 24;
+                    mv_new = (mv_original * (16777216 - l_temp1)) >> 24;
                 } while (ATOMIC_CAS(&l_model_vec[feature], mv_original, mv_new) != mv_original);
             }
         }
