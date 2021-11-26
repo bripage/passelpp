@@ -12,9 +12,8 @@ void update_clusters(long n, long dest, long beta_gamma) {
             r_model_vec = model_vec[dest];
             //for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
             for (long j = 0; j < featureSetSize; j++) {
-                    REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
-                    //model_vec[i][j] = model_vec[n][j];
-                }
+                REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
+                //model_vec[i][j] = model_vec[n][j];
             }
     //    }
     //}
