@@ -623,7 +623,7 @@ void reinitialize_models(long n, long i){
     }
 }
 
-void nudege_reinitialize_models(long n, long i){
+void nudge_reinitialize_models(long n, long i){
     long* l_model_vec = model_vec[n];
     long* r_model_vec = model_vec[i];
     for (long j = 0; j < featureSetSize; j++) {

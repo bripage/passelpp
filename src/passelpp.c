@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
             } else if (reinit_type == 2){
                 for (long i = 0; i < cluster_count; i++) {
                     cilk_migrate_hint(&model_vec[best_cluster_id]);
-                    cilk_spawn nude_reinitialize_models(best_cluster_id, i);
+                    cilk_spawn nudge_reinitialize_models(best_cluster_id, i);
                 }
                 cilk_sync;
             }
