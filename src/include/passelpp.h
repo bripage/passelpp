@@ -25,5 +25,6 @@ replicated long train_type;
 replicated long** updater_last_node;
 extern replicated long** accuracies;
 replicated long model_reinitialization;
+replicated long reinit_type;
 
 #endif //EMUSGD_WILDEBEEST_H

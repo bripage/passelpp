@@ -622,3 +622,11 @@ void reinitialize_models(long n, long i){
         model_vec[i][f] = model_vec[n][f];
     }
 }
+
+void nudege_reinitialize_models(long n, long i){
+    long* l_model_vec = model_vec[n];
+    long* r_model_vec = model_vec[i];
+    for (long j = 0; j < featureSetSize; j++) {
+        REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
+    }
+}

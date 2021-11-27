@@ -36,6 +36,7 @@ replicated long update_period;
 extern replicated long train_type;
 extern replicated long model_reinitialization;
 replicated long ignore_poor_samples;
+extern replicated long reinit_type;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

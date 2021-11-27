@@ -56,11 +56,19 @@ int main(int argc, char **argv) {
         printf("peak accuracy on cluster %ld: %lf\n", best_cluster_id, (double) accuracies[0][best_cluster_id] / (double) 16777216);
         fflush(stdout);
         if(model_reinitialization) {
-            for (long i = 0; i < cluster_count; i++) {
-                cilk_migrate_hint(&model_vec[best_cluster_id]);
-                cilk_spawn reinitialize_models(best_cluster_id, i);
+            if (reinit_type == 1) {
+                for (long i = 0; i < cluster_count; i++) {
+                    cilk_migrate_hint(&model_vec[best_cluster_id]);
+                    cilk_spawn reinitialize_models(best_cluster_id, i);
+                }
+                cilk_sync;
+            } else if (reinit_type == 2){
+                for (long i = 0; i < cluster_count; i++) {
+                    cilk_migrate_hint(&model_vec[best_cluster_id]);
+                    cilk_spawn nude_reinitialize_models(best_cluster_id, i);
+                }
+                cilk_sync;
             }
-            cilk_sync;
         }
     }
 
