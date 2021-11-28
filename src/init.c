@@ -776,11 +776,12 @@ void init() {
 
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
-    MIGRATE(&model_vec[0]);
     if (using_clusters) {
+        MIGRATE(&model_vec[0]);
         populateTrainingData();
         populateTestData();
     } else {
+        MIGRATE(&model_vec_stripped[0]);
         populateTrainingDataStripped();
         populateTestDataStripped();
     }
