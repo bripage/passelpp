@@ -171,7 +171,7 @@ void parse_args(int argc, char * argv[]) {
     mw_replicated_init(&ignore_poor_samples, ignore);
     printf("Ignore Samples with Negative Gradients: %ld\n", ignore_poor_samples);
     fflush(stdout);
-    mw_replicated_init(&using_clusters, ignore);
+    mw_replicated_init(&using_clusters, clusters);
     printf("Using Multiple Clusters: %ld\n", using_clusters);
     fflush(stdout);
 
@@ -419,7 +419,7 @@ void populateTrainingData() {
 }
 
 void populateTrainingDataStripped() {
-    printf("inside populate_data()\n");
+    printf("inside populate_stripped_data()\n");
     fflush(stdout);
 
     long i, j = 0,
@@ -574,6 +574,8 @@ void populateTrainingDataStripped() {
 
             if (sample != current_sample) {
                 sample_count++;
+                printf("sample %ld\n", sample_count);
+                fflush(stdout);
                 current_sample = sample;
                 train_s_stripped[sample_count] = j;
                 train_c_stripped[sample_count] = class;
@@ -598,6 +600,9 @@ void populateTrainingDataStripped() {
     fclose(train_data);
     free(binBuffer);
 
+    printf("SAMPLE COUNT: %ld\n", sample_count);
+    fflush(stdout);
+
     double d_temp;
     long l_temp;
     for (long i = 0; i <= featureSetSize; i++) {
@@ -608,8 +613,6 @@ void populateTrainingDataStripped() {
         feat_deg_recip_stripped[i] = l_temp;
     }
 
-    printf("SAMPLE COUNT: %ld\n", sample_count);
-    fflush(stdout);
     printf("populate_data() done\n");
     fflush(stdout);
 }
