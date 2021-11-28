@@ -49,7 +49,7 @@ extern replicated long* model_vec_stripped;
 
 void populateTestData();
 void populateTestDataStripped();
-void get_accuracy(long n)
+void get_accuracy(long n);
 void get_stripped_accuracy();
 
 #endif //EMUSGD_ACCURACY_H

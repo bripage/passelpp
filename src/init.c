@@ -422,8 +422,8 @@ void populateTrainingDataStripped() {
     printf("inside populate_data()\n");
     fflush(stdout);
 
-    long i, , j = 0;
-    sample = -1,
+    long i, j = 0,
+            sample = -1,
             feature,
             fixed_value,
             class;
