@@ -208,8 +208,8 @@ void get_stripped_accuracy(){
             dotProduct += (test_v_stripped[j] * model_vec_stripped[feature]) >> 24;
         }
 
-        printf("%ld * %ld = %ld\n", dotProduct, test_c_stripped[i], dotProduct * test_c_stripped[i]);
-        fflush(stdout);
+        //printf("%ld * %ld = %ld\n", dotProduct, test_c_stripped[i], dotProduct * test_c_stripped[i]);
+        //fflush(stdout);
 
         if (dotProduct * test_c_stripped[i] > 0){
             correct_samples += 1;

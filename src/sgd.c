@@ -627,12 +627,22 @@ void stripped_train(long thread_id, long eta_gamma) {
     long i;
     long l_temp;
     long mv_temp;
+    unsigned long rand_state = 1337 + (1337 * thread_id);
+    unsigned long sample;
 
     while (thread_id < train_sample_count) {
+        sample = rand_state;
+        sample ^= sample >> 12; // a
+        sample ^= sample << 25; // b
+        sample ^= sample >> 27; // c
+        rand_state = sample;
+        sample *= UINT64_C(0x2545F4914F6CDD1D);
+        sample %= train_sample_count;
+
         distance = 0;
-        start = train_s_stripped[thread_id];
-        stop = train_s_stripped[thread_id + 1];
-        class = train_c_stripped[thread_id];
+        start = train_s_stripped[sample];
+        stop = train_s_stripped[sample + 1];
+        class = train_c_stripped[sample];
         for (i = start; i < stop; i++) {
             feature = train_f_stripped[i];
             distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
