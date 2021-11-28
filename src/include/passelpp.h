@@ -18,13 +18,14 @@ replicated long test_id;
 replicated long eta;                        // initial step size
 replicated long beta;
 replicated long gamma;
+replicated long using_clusters;
+replicated long model_reinitialization;
+replicated long reinit_type;
+replicated long train_type;
 
 /// Data allocation and misc globals
 replicated long* epoch_running;
-replicated long train_type;
 replicated long** updater_last_node;
 extern replicated long** accuracies;
-replicated long model_reinitialization;
-replicated long reinit_type;
 
 #endif //EMUSGD_WILDEBEEST_H

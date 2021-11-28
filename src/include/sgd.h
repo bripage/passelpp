@@ -39,6 +39,16 @@ extern replicated long** train_f;// training data feature id's (1:1 relationship
 extern replicated long** train_v;          // training data values (non-zero values for all samples)
 extern replicated long** train_c; // training sample classes (single value for each sample)
 
+extern replicated long* train_s_stripped;
+extern replicated long* train_f_stripped;
+extern replicated long* train_v_stripped;
+extern replicated long* train_c_stripped;
+extern replicated long* test_s_stripped;
+extern replicated long* test_f_stripped;
+extern replicated long* test_v_stripped;
+extern replicated long* test_c_stripped;
+extern replicated long* model_vec_stripped;
+extern replicated long* feat_deg_recip_stripped;
 extern replicated long* total_evaluated_sample_count;
 extern replicated long* cluster_samples;
 extern replicated long* l_mv_start;
@@ -53,6 +63,7 @@ void cas_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
 void cas_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
+void stripped_train(long thread_id, long eta_gamma);
 void reinitialize_models(long n, long i);
 void nudge_reinitialize_models(long n, long i);
 #endif //EMUSGD_SGD_H

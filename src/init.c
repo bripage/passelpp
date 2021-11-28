@@ -47,6 +47,7 @@ void parse_args(int argc, char * argv[]) {
     samples_per_cluster = 1;
     long reinit = 0;
     long ignore = 0;
+    long clusters = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -160,6 +161,8 @@ void parse_args(int argc, char * argv[]) {
             i++;
         } else if (!strcmp(argv[i], "--ignore-poor-samples")) {
             ignore = 1;
+        } else if (!strcmp(argv[i], "--using-clusters")) {
+            clusters = 1;
         }
     }
     mw_replicated_init(&model_reinitialization, reinit);
@@ -167,6 +170,9 @@ void parse_args(int argc, char * argv[]) {
     fflush(stdout);
     mw_replicated_init(&ignore_poor_samples, ignore);
     printf("Ignore Samples with Negative Gradients: %ld\n", ignore_poor_samples);
+    fflush(stdout);
+    mw_replicated_init(&using_clusters, ignore);
+    printf("Using Multiple Clusters: %ld\n", using_clusters);
     fflush(stdout);
 
     /** Solve for Beta (based on cluster count) */
@@ -412,6 +418,202 @@ void populateTrainingData() {
     fflush(stdout);
 }
 
+void populateTrainingDataStripped() {
+    printf("inside populate_data()\n");
+    fflush(stdout);
+
+    long i, , j = 0;
+    sample = -1,
+            feature,
+            fixed_value,
+            class;
+    long sample_count = -1;
+    long current_sample = -1;
+    train_data = NULL;
+    train_data = fopen(train_data_path, "rb");
+    if (train_data == NULL) {
+        printf("Failed to open training feature file.\n");
+        exit(1);
+    }
+
+    long non_zeros = total_train_points - train_sample_count;
+    long points;
+    long *binBuffer;
+    long bytesRead;
+    points = non_zeros * 4;
+    //printf("points = %ld\n", points);
+    //fflush(stdout);
+
+
+    if (non_zeros > 30000000) {
+        long chunk_points = 30000000 * 4;
+        long chunk_count = 0, final_chunk_points = 0;
+
+        printf("chunk_points = %ld\n", chunk_points);
+        fflush(stdout);
+        chunk_count = (non_zeros) / 30000000;
+        final_chunk_points = points - (chunk_count * chunk_points);
+        printf("final_chunk_points = %ld\n", final_chunk_points);
+        fflush(stdout);
+        if (final_chunk_points != 0) {
+            chunk_count++;
+        }
+        printf("chunk_count = %ld\n", chunk_count);
+        fflush(stdout);
+
+        binBuffer = (long *) malloc(chunk_points * sizeof(long));
+        printf("Done allocating initial buffer chunk\n");
+        fflush(stdout);
+        if (binBuffer == NULL) {
+            printf("Failed to allocate initial buffer chunk.\n");
+            exit(1);
+        }
+        bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
+        printf("bytesRead = %ld\n", bytesRead);
+        fflush(stdout);
+
+        for (long c = 0; c < chunk_count; c++) {
+            for (i = 0; i < chunk_points; i += 4) {
+                sample = binBuffer[i];
+                feature = binBuffer[i + 1];
+                fixed_value = binBuffer[i + 2];
+                class = binBuffer[i + 3];
+
+                if (non_standard_classes) {
+                    if (class == class1) {
+                        class = -1;
+                    } else if (class == class2) {
+                        class = 1;
+                    } else {
+                        printf("ERROR: Training Data classes do not match class range\n");
+                        fflush(stdout);
+                        exit(2);
+                    }
+                }
+
+                if (sample != current_sample) {
+                    sample_count++;
+                    train_s_stripped[sample_count] = j;
+                    train_c_stripped[sample_count] = class;
+                    train_f_stripped[j] = 0;
+                    train_v_stripped[j] = 1;
+                    feat_deg_recip_stripped[0]++;
+                    j++;
+                    train_f_stripped[j] = feature;
+                    train_v_stripped[j] = fixed_value;
+                    feat_deg_recip_stripped[feature]++;
+                    current_sample = sample;
+                } else {
+                    train_f_stripped[j] = feature;
+                    train_v_stripped[j] = fixed_value;
+                    feat_deg_recip_stripped[feature]++;
+                }
+                j++;
+            }
+
+            if (chunk_count > 1 && c != chunk_count - 1) {
+                if (c + 1 == chunk_count - 1) {
+                    printf("about to free buffer\n");
+                    fflush(stdout);
+                    free(binBuffer);
+                    printf("allocating buffer for final chunk\n");
+                    fflush(stdout);
+                    binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
+
+                    bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
+                    if (bytesRead != final_chunk_points) {
+                        printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points,
+                               final_chunk_points * sizeof(long), bytesRead);
+                        fflush(stdout);
+                        printf("Error in reading final file chunk\n");
+                        exit(1);
+                    }
+                    printf("final file chunk copied into buffer\n");
+                    fflush(stdout);
+                    chunk_points = final_chunk_points;
+                } else {
+                    printf("reading in next chunk\n");
+                    fflush(stdout);
+                    bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
+                    if (bytesRead != chunk_points) {
+                        printf("Error in reading file chunk %ld\n", i);
+                        exit(1);
+                    }
+                    printf("file chunk %ld copied into buffer\n", i);
+                    fflush(stdout);
+                }
+            }
+        }
+        train_s_stripped[sample_count + 1] = j; // add sample id end ptr
+    } else {
+        points = non_zeros * 4;
+        binBuffer = (long *) malloc(points * sizeof(long));
+        bytesRead = fread(binBuffer, sizeof(long), points, train_data);
+
+        if (bytesRead != (points)) {
+            printf("*** Feature File Read Failure ***\n");
+            exit(1);
+        }
+        for (i = 0; i < points; i += 4) {
+            sample = binBuffer[i];
+            feature = binBuffer[i + 1];
+            fixed_value = binBuffer[i + 2];
+            class = binBuffer[i + 3];
+
+            if (non_standard_classes) {
+                if (class == class1) {
+                    class = -1;
+                } else if (class == class2) {
+                    class = 1;
+                } else {
+                    printf("ERROR: Training Data classes do not match class range\n");
+                    fflush(stdout);
+                    exit(2);
+                }
+            }
+
+            if (sample != current_sample) {
+                sample_count++;
+                current_sample = sample;
+                train_s_stripped[sample_count] = j;
+                train_c_stripped[sample_count] = class;
+                train_f_stripped[j] = 0;
+                train_v_stripped[j] = 1;
+                feat_deg_recip_stripped[0]++;
+                j++;
+                train_f_stripped[j] = feature;
+                train_v_stripped[j] = fixed_value;
+                feat_deg_recip_stripped[feature]++;
+            } else {
+                train_f_stripped[j] = feature;
+                train_v_stripped[j] = fixed_value;
+                feat_deg_recip_stripped[feature]++;
+            }
+            j++;
+        }
+
+        train_s_stripped[sample_count + 1] = j; // add sample id end ptr
+        train_s_stripped[0] = 0;
+    }
+    fclose(train_data);
+    free(binBuffer);
+
+    double d_temp;
+    long l_temp;
+    for (long i = 0; i <= featureSetSize; i++) {
+        d_temp = 1.0;
+        d_temp /= (double) feat_deg_recip_stripped[i];
+        d_temp *= 16777216;
+        l_temp = (long) d_temp;
+        feat_deg_recip_stripped[i] = l_temp;
+    }
+
+    printf("SAMPLE COUNT: %ld\n", sample_count);
+    fflush(stdout);
+    printf("populate_data() done\n");
+    fflush(stdout);
+}
+
 void init_cluster(long n) {
     for (long i = 0; i < cluster_count; i++){
         accuracies[n][i] = 0;
@@ -434,108 +636,151 @@ void init_cluster(long n) {
 }
 
 void init() {
-    long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
-    printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+    if (using_clusters) {
+        long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
+        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        fflush(stdout);
+
+        long **l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&model_vec, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_c, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (test_sample_count + 1) * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&test_s, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), test_sample_count * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&test_c, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&test_f, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&test_v, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&accuracies, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        long *l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &cluster_sample_start, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &cluster_sample_end, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &cluster_samples, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &l_mv_start, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
+    } else {
+        long *l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
+        mw_replicated_init((long *) &train_s_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
+        mw_replicated_init((long *) &train_f_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
+        mw_replicated_init((long *) &train_v_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
+        mw_replicated_init((long *) &train_c_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
+        mw_replicated_init((long *) &test_s_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
+        mw_replicated_init((long *) &test_f_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
+        mw_replicated_init((long *) &test_v_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
+        mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
+        mw_replicated_init((long *) &model_vec_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
+        mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
+    }
+    printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
 
-    long** l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&model_vec, nlet);
-        *ptr = l2d_ptr;
+    if (using_clusters){
+        for (long n = 0; n < cluster_count; n++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn init_cluster(n);
+        }
+        cilk_sync;
+    } else {
+        for (long i = 0; i < featureSetSize; i++){
+            model_vec_stripped[i] = 0;
+            feat_deg_recip_stripped[i] = 0;
+        }
     }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&train_s, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&train_c, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&train_f, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&train_v, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (test_sample_count + 1) * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&test_s, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), test_sample_count * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&test_c, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&test_f, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&test_v, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long *** ptr = (long ***) mw_get_nth(&accuracies, nlet);
-        *ptr = l2d_ptr;
-    }
-
-    long* l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &cluster_sample_start, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &cluster_sample_end, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &cluster_samples, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &l_mv_start, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
-
-    printf("--- Memmory Allocation Complete ---\n");
-	fflush(stdout);
-	for (long n = 0; n < cluster_count; n++){
-	    cilk_migrate_hint(&model_vec[n]);
-	    cilk_spawn init_cluster(n);
-	}
-	cilk_sync;
 
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
-
     MIGRATE(&model_vec[0]);
-	populateTrainingData();
-	populateTestData();
+    if (using_clusters) {
+        populateTrainingData();
+        populateTestData();
+    } else {
+        populateTrainingDataStripped();
+        populateTestDataStripped();
+    }
 
 	printf("--- Initialization Complete ---\n");
 	fflush(stdout);

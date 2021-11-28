@@ -21,6 +21,11 @@ extern replicated long total_test_points;
 extern replicated long train_sample_count;
 extern replicated long test_sample_count;
 extern replicated long samples_per_cluster;
+extern long node_count_start;
+extern long non_standard_classes;
+extern long class1;
+extern long class2;
+
 extern replicated long** accuracies;
 extern replicated long** train_s;
 extern replicated long** train_f;
@@ -31,15 +36,20 @@ extern replicated long** test_f;
 extern replicated long** test_v;
 extern replicated long** test_c;
 extern replicated long** model_vec;        // working vector for each node
-extern long node_count_start;
-extern long non_standard_classes;
-extern long class1;
-extern long class2;
+
+extern replicated long* train_s_stripped;
+extern replicated long* train_f_stripped;
+extern replicated long* train_v_stripped;
+extern replicated long* train_c_stripped;
+extern replicated long* test_s_stripped;
+extern replicated long* test_f_stripped;
+extern replicated long* test_v_stripped;
+extern replicated long* test_c_stripped;
+extern replicated long* model_vec_stripped;
 
 void populateTestData();
-double get_trainData_accuracy(long n);
-double get_testData_accuracy(long n);
-double get_single_trainData_accuracy();
-void get_single_testData_accuracy(long n);
+void populateTestDataStripped();
+void get_accuracy(long n)
+void get_stripped_accuracy();
 
 #endif //EMUSGD_ACCURACY_H

@@ -37,6 +37,7 @@ extern replicated long train_type;
 extern replicated long model_reinitialization;
 replicated long ignore_poor_samples;
 extern replicated long reinit_type;
+extern replicated long using_clusters;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta
@@ -54,13 +55,23 @@ replicated long** train_s; // training data sample id's
 replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 replicated long** train_v;          // training data values (non-zero values for all samples)
 replicated long** train_c; // training sample classes (single value for each sample)
-
 replicated long** test_s;
 replicated long** test_f;
 replicated long** test_v;
 replicated long** test_c;
 replicated long** feat_deg_recip;
 replicated long** accuracies;
+
+replicated long* train_s_stripped;
+replicated long* train_f_stripped;
+replicated long* train_v_stripped;
+replicated long* train_c_stripped;
+replicated long* test_s_stripped;
+replicated long* test_f_stripped;
+replicated long* test_v_stripped;
+replicated long* test_c_stripped;
+replicated long* model_vec_stripped;
+replicated long* feat_deg_recip_stripped;
 replicated long* total_evaluated_sample_count;
 replicated long* cluster_sample_start;
 replicated long* cluster_sample_end;

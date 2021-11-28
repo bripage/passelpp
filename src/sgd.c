@@ -617,6 +617,49 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
     }
 }
 
+void stripped_train(long thread_id, long eta_gamma) {
+    long start;
+    long stop;
+    long class;
+    long feature;
+    long distance;
+    long di;
+    long i;
+    long l_temp;
+    long mv_temp;
+
+    while (thread_id < train_sample_count) {
+        distance = 0;
+        start = train_s_stripped[thread_id];
+        stop = train_s_stripped[thread_id + 1];
+        class = train_c_stripped[thread_id];
+        for (i = start; i < stop; i++) {
+            feature = train_f_stripped[i];
+            distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
+        }
+        distance *= class;
+
+        if (distance < 16777216) {
+            di = eta_gamma * class;
+            for (i = start; i < stop; i++) {
+                feature = train_f_stripped[i];
+                l_temp = (di * train_v_stripped[i]) >> 24;
+                mv_temp = model_vec_stripped[feature] + l_temp;
+                l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+                model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+            }
+        } else {
+            for (i = start; i < stop; i++) {
+                feature = train_f_stripped[i];
+                mv_temp = model_vec_stripped[feature];
+                l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+                model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+            }
+        }
+        thread_id += threads_per_cluster;
+    }
+}
+
 void reinitialize_models(long n, long i){
     for (long f = 0; f < featureSetSize; f++){
         model_vec[i][f] = model_vec[n][f];
