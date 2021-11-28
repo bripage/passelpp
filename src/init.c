@@ -574,8 +574,6 @@ void populateTrainingDataStripped() {
 
             if (sample != current_sample) {
                 sample_count++;
-                printf("sample %ld\n", sample_count);
-                fflush(stdout);
                 current_sample = sample;
                 train_s_stripped[sample_count] = j;
                 train_c_stripped[sample_count] = class;
