@@ -79,8 +79,6 @@ int main(int argc, char **argv) {
             fflush(stdout);
             start_time = CLOCK();
             if (epoch > 1) {
-                beta_gamma *= gamma;
-                beta_gamma >>= 24;
                 eta_gamma *= gamma;
                 eta_gamma >>= 24;
             }
