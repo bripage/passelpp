@@ -639,12 +639,18 @@ void init_cluster(long n) {
 }
 
 void init() {
+    long** l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&accuracies, nlet);
+        *ptr = l2d_ptr;
+    }
+
     if (using_clusters) {
         long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
         fflush(stdout);
 
-        long **l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&model_vec, nlet);
             *ptr = l2d_ptr;
@@ -701,12 +707,6 @@ void init() {
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&test_v, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&accuracies, nlet);
             *ptr = l2d_ptr;
         }
 
