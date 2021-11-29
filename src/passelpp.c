@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
             }
             cilk_sync;
             epoch_total = CLOCK() - start_time;
-            epoch_runtime = (double) total_time / 220000000;
+            epoch_runtime = (double) epoch_total / 220000000;
 
             //printf("Epoch %ld Time: %lf\n", epoch, epoch_runtime);
             //fflush(stdout);
