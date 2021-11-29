@@ -165,6 +165,8 @@ void parse_args(int argc, char * argv[]) {
             clusters = 1;
         } else if (!strcmp(argv[i], "--epsilon")) {
             sscanf(argv[i + 1], "%lf", &epsilon);
+            printf("epsilon = %lf\n", epsilon);
+            fflush(stdout);
             i++;
         }
     }
