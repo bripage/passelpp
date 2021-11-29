@@ -19,52 +19,52 @@ void update_clusters(long n, long dest, long beta_gamma) {
     //}
 }
 
-void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
+void train_spawn(long n, long thread_count, long epoch, long eta_gamma, long beta_gamma){
     long end_sample_count = cluster_samples[n] * epoch;
     if (train_type == 0) {
         if (ignore_poor_samples) {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn neg_grad_drop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         } else {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         }
     } else if (train_type == 1) {
         if (ignore_poor_samples) {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn cas_loop_and_neg_grad_drop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         } else {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn cas_loop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
          }
     } else if (train_type == 2) {
         if (ignore_poor_samples) {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn cas_and_neg_grad_drop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         } else {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn cas_drop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         }
     } else if (train_type == 3) {
         if (ignore_poor_samples) {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn nudge_and_neg_grad_drop_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
         } else {
-            for (long i = 0; i < threads_per_cluster; i++) {
+            for (long i = 0; i < thread_count; i++) {
                 cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn nudge_train(i, n, eta_gamma, beta_gamma, end_sample_count);
             }
@@ -615,7 +615,7 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
     }
 }
 
-void stripped_train(long thread_id, long eta_gamma) {
+void stripped_train(long thread_id, long thread_count, long eta_gamma) {
     long start;
     long stop;
     long class;
@@ -664,7 +664,7 @@ void stripped_train(long thread_id, long eta_gamma) {
                 model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
             }
         }
-        thread_id += threads_per_cluster;
+        thread_id += thread_count;
     }
 }
 
