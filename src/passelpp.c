@@ -21,6 +21,8 @@ int main(int argc, char **argv) {
     beta_gamma = beta;
 
     if (using_clusters) {
+        printf("--- Starting ---\n");
+        fflush(stdout);
         for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
             start_time = CLOCK();
             for (long epoch = 1; epoch <= epochs; epoch++) {
@@ -85,7 +87,7 @@ int main(int argc, char **argv) {
                     if (epochs_within_epsilon == 3) {
                         total_time = CLOCK() - start_time;
                         convergence_time = (double) total_time / 220000000;
-                        printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
+                        printf("%ld,%ld,%ld,%lf,%lf\n", test_id, threads, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
                         //return 0;
                         break;
@@ -95,7 +97,7 @@ int main(int argc, char **argv) {
                 }
                 previous_accuracy = current_accuracy;
             }
-            printf("ERROR: Did not converge using epsilon = %lf\n", epsilon);
+            printf("%ld,%ld,inf,inf,%lf\n", test_id, threads, current_accuracy);
             fflush(stdout);
 
             for (long i = 0; i < cluster_count; i++) {
@@ -108,9 +110,9 @@ int main(int argc, char **argv) {
             MIGRATE(&model_vec[0]);
         }
     } else {
+        printf("--- Starting ---\n");
+        fflush(stdout);
         for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
-            printf("--- Starting ---\n");
-            fflush(stdout);
             start_time = CLOCK();
             for (long epoch = 1; epoch <= epochs; epoch++) {
                 //printf("epoch %ld started\n", epoch);
@@ -137,7 +139,7 @@ int main(int argc, char **argv) {
                     if (epochs_within_epsilon == 3) {
                         total_time = CLOCK() - start_time;
                         convergence_time = (double) total_time / 220000000;
-                        printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
+                        printf("%ld,%ld,%ld,%lf,%lf\n", test_id, threads, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
                         //return 0;
                         break;
@@ -147,7 +149,7 @@ int main(int argc, char **argv) {
                 }
                 previous_accuracy = current_accuracy;
             }
-            printf("ERROR: Did not converge using epsilon = %lf\n", epsilon);
+            printf("%ld,%ld,inf,inf,%lf\n", test_id, threads, current_accuracy);
             fflush(stdout);
 
             accuracies[0][0] = 0;
