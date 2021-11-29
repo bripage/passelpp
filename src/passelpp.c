@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv) {
     volatile uint64_t start_time, total_time, epoch_start, epoch_total;
-    volatile double epoch_time, epoch_runtime, convergence_time;
+    volatile double epoch_runtime, convergence_time;
     double train_accuracy = 0.0, test_accuracy = 0.0;
     long eta_gamma, beta_gamma;
     long best_model_acc, best_cluster_id;
