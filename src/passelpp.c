@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
             }
         }
     } else {
-        /printf("--- Starting ---\n");
+        printf("--- Starting ---\n");
         fflush(stdout);
         for (long epoch = 1; epoch <= epochs; epoch++) {
             //printf("epoch %ld started\n", epoch);
@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
                 cilk_spawn stripped_train(t, eta_gamma);
             }
             cilk_sync;
-            epoch_time = (double) (CLOCK() - start_time)) / 210000000;
+            epoch_time = (double) (CLOCK() - start_time) / 210000000;
             get_stripped_accuracy();
             MIGRATE(&model_vec_stripped[0]);
             current_accuracy = (double) accuracies[0][0] / (double) 16777216;
