@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
             best_model_acc = accuracies[0][0];
             for (long n = 1; n < cluster_count; n++) {
                 if (accuracies[0][n] > best_model_acc) {
-                    best_model_acc accuracies[0][n];
+                    best_model_acc = accuracies[0][n];
                     best_cluster_id = n;
                 }
             }
