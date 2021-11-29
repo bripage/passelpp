@@ -6,7 +6,7 @@
 #include "include/accuracy.h"
 
 int main(int argc, char **argv) {
-    volatile uint64_t start_time, total_time, convergence_time;
+    volatile uint64_t start_time, total_time;
     volatile double epoch_time, convergence_time;
     double train_accuracy = 0.0, test_accuracy = 0.0;
     long eta_gamma, beta_gamma;
