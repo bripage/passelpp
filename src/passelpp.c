@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
             }
             cilk_sync;
             total_time = CLOCK() - start_time;
-            epoch_time = (double) total_time / 210000000;
+            epoch_time = (double) total_time / 220000000;
 
             printf("Epoch %ld Time: %lf\n", epoch, epoch_time);
             fflush(stdout);
