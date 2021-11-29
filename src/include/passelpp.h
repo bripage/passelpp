@@ -29,5 +29,8 @@ extern double epsilon;
 replicated long* epoch_running;
 replicated long** updater_last_node;
 extern replicated long** accuracies;
+extern replicated long* total_evaluated_sample_count;
+extern replicated long* model_vec_stripped;
+extern replicated long** model_vec;
 
 #endif //EMUSGD_WILDEBEEST_H

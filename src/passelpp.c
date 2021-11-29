@@ -100,9 +100,9 @@ int main(int argc, char **argv) {
 
             for (long i = 0; i < cluster_count; i++) {
                 accuracies[0][i] = 0;
-                total_evaluated_sample_count[n] = 0;
+                total_evaluated_sample_count[i] = 0;
                 for (long j = 0; j < featureSetSize; j++) {
-                    model_vec[n][i] = 0;
+                    model_vec[i][j] = 0;
                 }
             }
             MIGRATE(&model_vec[0]);
@@ -151,7 +151,7 @@ int main(int argc, char **argv) {
             fflush(stdout);
 
             accuracies[0][0] = 0;
-            for (long j = 0; j < featureSetSize; j++) {
+            for (long i = 0; i < featureSetSize; i++) {
                     model_vec_stripped[i] = 0;
             }
             MIGRATE(&model_vec_stripped[0]);
