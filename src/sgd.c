@@ -219,7 +219,6 @@ void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, lon
     unsigned long sample;
     long mv_original;
     long mv_new;
-    long one_min_ltemp;
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
         if (total_evaluated_sample_count[n] % update_period == 0) {
@@ -600,12 +599,15 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
         }
         distance *= class;
 
-        if (distance >= 16777216) {
+        if (distance < 16777216) {
+            di = eta_gamma * class;
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
+                l_temp = (di * l_train_v[i]) >> 24;
                 mv_original = l_model_vec[feature];
+                mv_adjustment = mv_original + l_temp;
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                mv_adjustment = (mv_original * (16777216 - l_temp)) >> 24;
+                mv_adjustment = (mv_adjustment * (16777216 - l_temp)) >> 24;
                 mv_adjustment -= mv_original;
                 l_model_vec[feature] += mv_adjustment;
             }

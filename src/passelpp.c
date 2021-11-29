@@ -8,7 +8,6 @@
 int main(int argc, char **argv) {
     volatile uint64_t start_time, total_time, epoch_start, epoch_total;
     volatile double epoch_runtime, convergence_time;
-    double train_accuracy = 0.0, test_accuracy = 0.0;
     long eta_gamma, beta_gamma;
     long best_model_acc, best_cluster_id;
     long epochs_within_epsilon = 1;
@@ -39,7 +38,7 @@ int main(int argc, char **argv) {
                 cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
             }
             cilk_sync;
-            epoch_total = CLOCK() - start_time;
+            epoch_total = CLOCK() - epoch_start;
             epoch_runtime = (double) epoch_total / 220000000;
 
             //printf("Epoch %ld Time: %lf\n", epoch, epoch_runtime);
