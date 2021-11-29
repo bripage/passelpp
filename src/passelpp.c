@@ -11,6 +11,8 @@ int main(int argc, char **argv) {
     double train_accuracy = 0.0, test_accuracy = 0.0;
     long eta_gamma, beta_gamma;
     long best_model_acc, best_cluster_id;
+    long epochs_within_epsilon = 1;
+    double previous_accuracy = 0.0, current_accuracy;
 
     /** Get Command line arguements for test run */
     parse_args(argc, argv);
@@ -75,8 +77,8 @@ int main(int argc, char **argv) {
         }
     } else {
         for (long epoch = 1; epoch <= epochs; epoch++) {
-            printf("epoch %ld started\n", epoch);
-            fflush(stdout);
+            //printf("epoch %ld started\n", epoch);
+            //fflush(stdout);
             start_time = CLOCK();
             if (epoch > 1) {
                 eta_gamma *= gamma;
@@ -87,15 +89,30 @@ int main(int argc, char **argv) {
                 cilk_spawn stripped_train(t, eta_gamma);
             }
             cilk_sync;
-            total_time = CLOCK() - start_time;
-            epoch_time = (double) total_time / 210000000;
-            printf("Epoch %ld Time: %lf\n", epoch, epoch_time);
-            fflush(stdout);
+            //total_time = CLOCK() - start_time;
+            //epoch_time = (double) total_time / 210000000;
 
             get_stripped_accuracy();
+            current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+            //printf("%ld,%ld,%ld,%ld\n", test_id, epoch, epoch_time, current_accuracy);
+            //fflush(stdout);
+            if (fabs(previous_accuracy - current_accuracy) <= epsilon){
+                epochs_within_epsilon++;
+                if (epochs_within_epsilon == 3){
+                    total_time = CLOCK() - start_time;
+                    convergence_time = (double) total_time / 220000000;
+                    printf("%ld,%ld,%ld,%ld\n", test_id, epoch, convergence_time, current_accuracy);
+                    fflush(stdout);
+                    return 0;
+                }
+            } else {
+                epochs_within_epsilon = 1;
+            }
+            previous_accuracy = current_accuracy;
             MIGRATE(&model_vec_stripped[0]);
-            printf("Accuracy: %lf\n", (double) accuracies[0][0] / (double) 16777216);
         }
+        printf("ERROR: Did not converge using epsilon = %lf\n", epsilon);
+        fflush(stdout);
     }
 
 	return 0;
