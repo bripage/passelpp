@@ -620,7 +620,7 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
 void stripped_train(long thread_id, long eta_gamma) {
     printf("trainer %ld starting\n", thread_id);
     fflush(stdout);
-    
+
     long start;
     long stop;
     long class;

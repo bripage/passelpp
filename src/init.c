@@ -750,10 +750,10 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
         mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
 
-        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
+        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &model_vec_stripped, (long) l1d_ptr);
 
-        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
+        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
     }
     printf("--- Memmory Allocation Complete ---\n");
