@@ -6,13 +6,13 @@
 #include "include/accuracy.h"
 
 int main(int argc, char **argv) {
-    volatile uint64_t start_time, total_time;
+    volatile uint64_t start_time, total_time, convergence_time;
     volatile double epoch_time;
     double train_accuracy = 0.0, test_accuracy = 0.0;
     long eta_gamma, beta_gamma;
     long best_model_acc, best_cluster_id;
     long epochs_within_epsilon = 1;
-    double previous_accuracy = 0.0, current_accuracy;
+    double previous_accuracy = 0.0, current_accuracy = 0.0;
 
     /** Get Command line arguements for test run */
     parse_args(argc, argv);
