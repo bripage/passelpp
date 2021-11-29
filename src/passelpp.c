@@ -54,12 +54,13 @@ int main(int argc, char **argv) {
             best_model_acc = accuracies[0][0];
             for (long n = 1; n < cluster_count; n++) {
                 if (accuracies[0][n] > best_model_acc) {
+                    best_model_acc accuracies[0][n];
                     best_cluster_id = n;
                 }
             }
-            //printf("peak accuracy on cluster %ld: %lf\n", best_cluster_id,
+           // printf("peak accuracy on cluster %ld: %lf\n", best_cluster_id,
             //       (double) accuracies[0][best_cluster_id] / (double) 16777216);
-            fflush(stdout);
+            //fflush(stdout);
             if (model_reinitialization) {
                 if (reinit_type == 1) {
                     for (long i = 0; i < cluster_count; i++) {
@@ -76,25 +77,25 @@ int main(int argc, char **argv) {
                 }
             }
 
-            current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+            current_accuracy = (double) best_model_acc / (double) 16777216;
             //printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
             //fflush(stdout);
-            if (fabs(best_model_acc - previous_accuracy) <= epsilon){
+            if (fabs(current_accuracy - previous_accuracy) <= epsilon){
                 epochs_within_epsilon++;
                 if (epochs_within_epsilon == 3){
                     total_time = CLOCK() - start_time;
                     convergence_time = (double) total_time / 220000000;
-                    printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, best_model_acc);
+                    printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
                     fflush(stdout);
                     return 0;
                 }
             } else {
                 epochs_within_epsilon = 1;
             }
-            previous_accuracy = best_model_acc;
-            printf("ERROR: Did not converge using epsilon = %lf\n", epsilon);
-            fflush(stdout);
+            previous_accuracy = current_accuracy;
         }
+        printf("ERROR: Did not converge using epsilon = %lf\n", epsilon);
+        fflush(stdout);
     } else {
         printf("--- Starting ---\n");
         fflush(stdout);
