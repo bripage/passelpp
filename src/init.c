@@ -163,6 +163,9 @@ void parse_args(int argc, char * argv[]) {
             ignore = 1;
         } else if (!strcmp(argv[i], "--using-clusters")) {
             clusters = 1;
+        } else if (!strcmp(argv[i], "--epsilon")) {
+            sscanf(argv[i + 1], "%lf", &epsilon);
+            i++;
         }
     }
     mw_replicated_init(&model_reinitialization, reinit);

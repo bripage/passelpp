@@ -38,6 +38,7 @@ extern replicated long model_reinitialization;
 replicated long ignore_poor_samples;
 extern replicated long reinit_type;
 extern replicated long using_clusters;
+double epsilon;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

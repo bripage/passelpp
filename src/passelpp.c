@@ -93,6 +93,7 @@ int main(int argc, char **argv) {
             //epoch_time = (double) total_time / 210000000;
 
             get_stripped_accuracy();
+            MIGRATE(&model_vec_stripped[0]);
             current_accuracy = (double) accuracies[0][0] / (double) 16777216;
             //printf("%ld,%ld,%ld,%ld\n", test_id, epoch, epoch_time, current_accuracy);
             //fflush(stdout);
@@ -109,7 +110,6 @@ int main(int argc, char **argv) {
                 epochs_within_epsilon = 1;
             }
             previous_accuracy = current_accuracy;
-            MIGRATE(&model_vec_stripped[0]);
         }
         printf("ERROR: Did not converge using epsilon = %lf\n", epsilon);
         fflush(stdout);

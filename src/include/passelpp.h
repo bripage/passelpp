@@ -9,6 +9,7 @@
 #include "time.h"
 #include "stdlib.h"
 #include "stdint.h"
+#include <math.h>
 
 /// Temporary variables and execution behavior flags
 replicated long threads_per_cluster;
@@ -22,6 +23,7 @@ replicated long using_clusters;
 replicated long model_reinitialization;
 replicated long reinit_type;
 replicated long train_type;
+extern double epsilon;
 
 /// Data allocation and misc globals
 replicated long* epoch_running;
