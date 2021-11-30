@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
     } else {
         printf("--- Starting ---\n");
         fflush(stdout);
-        for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
+        //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
             start_time = CLOCK();
             for (long epoch = 1; epoch <= epochs; epoch++) {
                 //printf("epoch %ld started\n", epoch);
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
                     eta_gamma *= gamma;
                     eta_gamma >>= 24;
                 }
-                for (long t = 0; t < threads; t++) {
+                for (long t = 0; t < threads_per_cluster; t++) {
                     cilk_migrate_hint(&model_vec_stripped[t]);
                     cilk_spawn stripped_train(t, threads, eta_gamma);
                 }
@@ -132,8 +132,8 @@ int main(int argc, char **argv) {
                 get_stripped_accuracy();
                 MIGRATE(&model_vec_stripped[0]);
                 current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-                //printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
-                //fflush(stdout);
+                printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
+                fflush(stdout);
                 if (fabs(current_accuracy - previous_accuracy) <= epsilon) {
                     epochs_within_epsilon++;
                     if (epochs_within_epsilon == 3) {
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
                         convergence_time = (double) total_time / 220000000;
                         printf("%ld,%ld,%ld,%lf,%lf\n", test_id, threads, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
-                        //return 0;
+                        return 0;
                         break;
                     }
                 } else {
@@ -152,12 +152,12 @@ int main(int argc, char **argv) {
             printf("%ld,%ld,inf,inf,%lf\n", test_id, threads, current_accuracy);
             fflush(stdout);
 
-            accuracies[0][0] = 0;
-            for (long i = 0; i < featureSetSize; i++) {
-                    model_vec_stripped[i] = 0;
-            }
-            MIGRATE(&model_vec_stripped[0]);
-        }
+            //accuracies[0][0] = 0;
+            //for (long i = 0; i < featureSetSize; i++) {
+            //        model_vec_stripped[i] = 0;
+            //}
+            //MIGRATE(&model_vec_stripped[0]);
+        //}
     }
 
 	return 0;
