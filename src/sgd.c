@@ -615,7 +615,7 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
     }
 }
 
-void stripped_train(long thread_id, long thread_count, long eta_gamma) {
+void stripped_train(long thread_id, long eta_gamma) {
     long start;
     long stop;
     long class;
@@ -664,7 +664,7 @@ void stripped_train(long thread_id, long thread_count, long eta_gamma) {
                 model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
             }
         }
-        thread_id += thread_count;
+        thread_id += threads_per_cluster;
     }
 }
 
