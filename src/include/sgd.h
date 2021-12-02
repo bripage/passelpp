@@ -55,7 +55,7 @@ extern replicated long* cluster_samples;
 extern replicated long* l_mv_start;
 extern replicated long* l_mv_stop;
 
-void train_spawn(long n, long thread_count, long epoch, long eta_gamma, long beta_gamma);
+void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
