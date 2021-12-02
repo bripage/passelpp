@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     if (using_clusters) {
         printf("--- Starting ---\n");
         fflush(stdout);
-        for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
+        //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
             start_time = CLOCK();
             for (long epoch = 1; epoch <= epochs; epoch++) {
                 //printf("epoch %ld started\n", epoch);
@@ -80,8 +80,8 @@ int main(int argc, char **argv) {
                 }
 
                 current_accuracy = (double) best_model_acc / (double) 16777216;
-                //printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
-                //fflush(stdout);
+                printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
+                fflush(stdout);
                 if (fabs(current_accuracy - previous_accuracy) <= epsilon) {
                     epochs_within_epsilon++;
                     if (epochs_within_epsilon == 3) {
@@ -89,8 +89,8 @@ int main(int argc, char **argv) {
                         convergence_time = (double) total_time / 220000000;
                         printf("%ld,%ld,%ld,%lf,%lf\n", test_id, threads, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
-                        //return 0;
-                        break;
+                        return 0;
+                        //break;
                     }
                 } else {
                     epochs_within_epsilon = 1;
@@ -100,15 +100,15 @@ int main(int argc, char **argv) {
             printf("%ld,%ld,inf,inf,%lf\n", test_id, threads, current_accuracy);
             fflush(stdout);
 
-            for (long i = 0; i < cluster_count; i++) {
-                accuracies[0][i] = 0;
-                total_evaluated_sample_count[i] = 0;
-                for (long j = 0; j < featureSetSize; j++) {
-                    model_vec[i][j] = 0;
-                }
-            }
-            MIGRATE(&model_vec[0]);
-        }
+            //for (long i = 0; i < cluster_count; i++) {
+            //    accuracies[0][i] = 0;
+            //    total_evaluated_sample_count[i] = 0;
+            //    for (long j = 0; j < featureSetSize; j++) {
+            //        model_vec[i][j] = 0;
+            //    }
+            //}
+            //MIGRATE(&model_vec[0]);
+        //}
     } else {
         printf("--- Starting ---\n");
         fflush(stdout);
@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
                         printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
                         return 0;
-                        break;
+                        //break;
                     }
                 } else {
                     epochs_within_epsilon = 1;
