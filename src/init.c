@@ -674,7 +674,7 @@ void init() {
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
-            *ptr = l2d_ptr;3
+            *ptr = l2d_ptr;
         }
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));
