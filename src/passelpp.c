@@ -44,8 +44,8 @@ int main(int argc, char **argv) {
                 epoch_total = CLOCK() - epoch_start;
                 epoch_runtime = (double) epoch_total / 215000000;
 
-                //printf("Epoch %ld Time: %lf\n", epoch, epoch_runtime);
-                //fflush(stdout);
+                printf("Epoch %ld Time: %lf\n", epoch, epoch_runtime);
+                fflush(stdout);
 
                 for (long n = 0; n < cluster_count; n++) {
                     cilk_migrate_hint(&model_vec[n]);
@@ -63,21 +63,6 @@ int main(int argc, char **argv) {
                 // printf("peak accuracy on cluster %ld: %lf\n", best_cluster_id,
                 //       (double) accuracies[0][best_cluster_id] / (double) 16777216);
                 //fflush(stdout);
-                if (model_reinitialization) {
-                    if (reinit_type == 1) {
-                        for (long i = 0; i < cluster_count; i++) {
-                            cilk_migrate_hint(&model_vec[best_cluster_id]);
-                            cilk_spawn reinitialize_models(best_cluster_id, i);
-                        }
-                        cilk_sync;
-                    } else if (reinit_type == 2) {
-                        for (long i = 0; i < cluster_count; i++) {
-                            cilk_migrate_hint(&model_vec[best_cluster_id]);
-                            cilk_spawn nudge_reinitialize_models(best_cluster_id, i);
-                        }
-                        cilk_sync;
-                    }
-                }
 
                 current_accuracy = (double) best_model_acc / (double) 16777216;
                 printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
