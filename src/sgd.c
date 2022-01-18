@@ -625,7 +625,7 @@ void stripped_train(long thread_id, long eta_gamma) {
     long i;
     long l_temp;
     long mv_temp;
-    unsigned long rand_state = 1337 + (1337 * tid);
+    unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 
     while (thread_id < train_sample_count) {
@@ -668,7 +668,7 @@ void stripped_train(long thread_id, long eta_gamma) {
     }
 }
 
-void stripped_train(long tid) {
+void stripped_train_no_epochs(long tid) {
     long eta_gamma = eta;
     long start;
     long stop;
