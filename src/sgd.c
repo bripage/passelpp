@@ -615,7 +615,8 @@ void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long 
     }
 }
 
-void stripped_train(long thread_id, long eta_gamma) {
+void stripped_train(long tid) {
+    long eta_gamma = eta;
     long start;
     long stop;
     long class;
@@ -625,46 +626,53 @@ void stripped_train(long thread_id, long eta_gamma) {
     long i;
     long l_temp;
     long mv_temp;
-    unsigned long rand_state = 1337 + (1337 * thread_id);
+    unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
+    long thread_id = tid;
 
-    while (thread_id < train_sample_count) {
-        sample = rand_state;
-        sample ^= sample >> 12; // a
-        sample ^= sample << 25; // b
-        sample ^= sample >> 27; // c
-        rand_state = sample;
-        sample *= UINT64_C(0x2545F4914F6CDD1D);
-        sample %= train_sample_count;
+    for (long e = 0; e < epochs; e++) {
+        while (thread_id < train_sample_count) {
+            sample = rand_state;
+            sample ^= sample >> 12; // a
+            sample ^= sample << 25; // b
+            sample ^= sample >> 27; // c
+            rand_state = sample;
+            sample *= UINT64_C(0x2545F4914F6CDD1D);
+            sample %= train_sample_count;
 
-        distance = 0;
-        start = train_s_stripped[sample];
-        stop = train_s_stripped[sample + 1];
-        class = train_c_stripped[sample];
-        for (i = start; i < stop; i++) {
-            feature = train_f_stripped[i];
-            distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
-        }
-        distance *= class;
-
-        if (distance < 16777216) {
-            di = eta_gamma * class;
+            distance = 0;
+            start = train_s_stripped[sample];
+            stop = train_s_stripped[sample + 1];
+            class = train_c_stripped[sample];
             for (i = start; i < stop; i++) {
                 feature = train_f_stripped[i];
-                l_temp = (di * train_v_stripped[i]) >> 24;
-                mv_temp = model_vec_stripped[feature] + l_temp;
-                l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-                model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
             }
-        } else {
-            for (i = start; i < stop; i++) {
-                feature = train_f_stripped[i];
-                mv_temp = model_vec_stripped[feature];
-                l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-                model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+            distance *= class;
+
+            if (distance < 16777216) {
+                di = eta_gamma * class;
+                for (i = start; i < stop; i++) {
+                    feature = train_f_stripped[i];
+                    l_temp = (di * train_v_stripped[i]) >> 24;
+                    mv_temp = model_vec_stripped[feature] + l_temp;
+                    l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+                    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                }
+            } else {
+                for (i = start; i < stop; i++) {
+                    feature = train_f_stripped[i];
+                    mv_temp = model_vec_stripped[feature];
+                    l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+                    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                }
             }
+            thread_id += threads_per_cluster;
         }
-        thread_id += threads_per_cluster;
+
+        eta_gamma *= gamma;
+        eta_gamma >>= 24;
+        thread_id = tid;
     }
 }
 

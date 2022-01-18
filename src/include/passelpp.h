@@ -23,6 +23,7 @@ replicated long using_clusters;
 replicated long model_reinitialization;
 replicated long reinit_type;
 replicated long train_type;
+replicated long using_epoch_barriers;
 extern double epsilon;
 
 /// Data allocation and misc globals

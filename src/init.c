@@ -48,6 +48,7 @@ void parse_args(int argc, char * argv[]) {
     long reinit = 0;
     long ignore = 0;
     long clusters = 0;
+    long epoch_barriers = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -168,6 +169,8 @@ void parse_args(int argc, char * argv[]) {
             printf("epsilon = %lf\n", epsilon);
             fflush(stdout);
             i++;
+        } else if (!strcmp(argv[i], "--using-epoch-barriers")) {
+            epoch_barriers = 1;
         }
     }
     mw_replicated_init(&model_reinitialization, reinit);
@@ -178,6 +181,9 @@ void parse_args(int argc, char * argv[]) {
     fflush(stdout);
     mw_replicated_init(&using_clusters, clusters);
     printf("Using Multiple Clusters: %ld\n", using_clusters);
+    fflush(stdout);
+    mw_replicated_init(&using_epoch_barriers, epoch_barriers);
+    printf("Using Epoch Barriers: %ld\n", using_epoch_barriers);
     fflush(stdout);
 
     /** Solve for Beta (based on cluster count) */
@@ -668,7 +674,7 @@ void init() {
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
-            *ptr = l2d_ptr;
+            *ptr = l2d_ptr;3
         }
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));

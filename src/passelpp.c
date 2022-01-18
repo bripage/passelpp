@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
                 }
                 cilk_sync;
                 epoch_total = CLOCK() - epoch_start;
-                epoch_runtime = (double) epoch_total / 220000000;
+                epoch_runtime = (double) epoch_total / 215000000;
 
                 //printf("Epoch %ld Time: %lf\n", epoch, epoch_runtime);
                 //fflush(stdout);
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
                     epochs_within_epsilon++;
                     if (epochs_within_epsilon == 3) {
                         total_time = CLOCK() - start_time;
-                        convergence_time = (double) total_time / 220000000;
+                        convergence_time = (double) total_time / 215000000;
                         printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
                         return 0;
@@ -110,9 +110,10 @@ int main(int argc, char **argv) {
             //MIGRATE(&model_vec[0]);
         //}
     } else {
-        printf("--- Starting ---\n");
-        fflush(stdout);
-        //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
+        if (using_epoch_barriers) {
+            printf("--- Starting ---\n");
+            fflush(stdout);
+            //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
             start_time = CLOCK();
             for (long epoch = 1; epoch <= epochs; epoch++) {
                 //printf("epoch %ld started\n", epoch);
@@ -128,7 +129,7 @@ int main(int argc, char **argv) {
                 }
                 cilk_sync;
                 epoch_total = CLOCK() - epoch_start;
-                epoch_runtime = (double) epoch_total / 220000000;
+                epoch_runtime = (double) epoch_total / 215000000;
                 get_stripped_accuracy();
                 MIGRATE(&model_vec_stripped[0]);
                 current_accuracy = (double) accuracies[0][0] / (double) 16777216;
@@ -138,7 +139,7 @@ int main(int argc, char **argv) {
                     epochs_within_epsilon++;
                     if (epochs_within_epsilon == 3) {
                         total_time = CLOCK() - start_time;
-                        convergence_time = (double) total_time / 220000000;
+                        convergence_time = (double) total_time / 215000000;
                         printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
                         fflush(stdout);
                         return 0;
@@ -151,13 +152,25 @@ int main(int argc, char **argv) {
             }
             printf("%ld,inf,inf,%lf\n", test_id, current_accuracy);
             fflush(stdout);
+        } else {
+            printf("--- Starting ---\n");
+            fflush(stdout);
+            //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
+            start_time = CLOCK();
+            for (long t = 0; t < threads_per_cluster; t++) {
+                cilk_migrate_hint(&model_vec_stripped[t]);
+                cilk_spawn stripped_train(t);
+            }
+            cilk_sync;
+            total_time = CLOCK() - start_time;
 
-            //accuracies[0][0] = 0;
-            //for (long i = 0; i < featureSetSize; i++) {
-            //        model_vec_stripped[i] = 0;
-            //}
-            //MIGRATE(&model_vec_stripped[0]);
-        //}
+            get_stripped_accuracy();
+            MIGRATE(&model_vec_stripped[0]);
+            current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+            printf("%ld,%ld,%lf,%lf\n", test_id, epochs, total_time, current_accuracy);
+            fflush(stdout);
+            total_time = CLOCK() - start_time;
+        }
     }
 
 	return 0;

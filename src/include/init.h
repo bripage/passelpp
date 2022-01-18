@@ -33,6 +33,7 @@ replicated long class1;
 replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
+extern replicated long using_epoch_barriers;
 extern replicated long train_type;
 extern replicated long model_reinitialization;
 replicated long ignore_poor_samples;
