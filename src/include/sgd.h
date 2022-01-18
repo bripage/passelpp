@@ -65,6 +65,7 @@ void cas_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long be
 void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void stripped_train(long tid);
+void stripped_train(long thread_id, long eta_gamma);
 void reinitialize_models(long n, long i);
 void nudge_reinitialize_models(long n, long i);
 #endif //EMUSGD_SGD_H
