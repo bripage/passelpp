@@ -1,1 +1,3 @@
 emu_system_cmd -p -c {0..3} -- 'emu_chassis_update_flash -l {0..7} /usr/ncdimm/ncdimm_stx_24gc_sdp_splitdeq_86617e4_g222_c177_20211209.periph.rpd'
+
+emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/news20_train1.bin --train-samples 17948 --train-points 8209201 --test-data /netscratch/sgd_data/news20/news20_test1.bin --test-samples 1994 --test-points 868761 -f 1355191 -e 25 --initial-step-size 0.5 --initial-step-decay 0.8 --regularization-scalar 1 --threads-per-cluster 1 -c 1 --test-id 1 --epsilon 0.1
