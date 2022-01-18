@@ -41,6 +41,10 @@ int main(int argc, char **argv) {
                     cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
                 }
                 cilk_sync;
+
+                printf("Epoch done\n");
+                fflush(stdout);
+
                 epoch_total = CLOCK() - epoch_start;
                 epoch_runtime = (double) epoch_total / 215000000;
 
