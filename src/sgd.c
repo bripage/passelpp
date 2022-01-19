@@ -237,18 +237,18 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 REMOTE_ADD(&spawned_run_notify[i % system_size][tid],1);
                 feature = train_f_stripped[i];
                 train_v_val = train_v_stripped[i];
-                model_vec_val = model_vec_stripped[feature]
+                model_vec_val = model_vec_stripped[feature];
                 distance += (train_v_val * model_vec_val) >> 24;
                 cilk_spawn child_train(i % system_size, tid, feature, train_v_val, model_vec_val, eta_gamma, di, e);
             }
             distance *= class;
 
             for (i = 0; i < system_size; i++){
-                REMOTE_ADD(spawned_run_notify[i][tid], distance);
+                REMOTE_ADD(&spawned_run_notify[i][tid], distance);
             }
             cilk_sync;
             for (i = 0; i < system_size; i++){
-                REMOTE_ADD(spawned_run_notify[i][tid], -distance);
+                REMOTE_ADD(&spawned_run_notify[i][tid], -distance);
             }
             thread_id += threads_per_cluster;
         }
@@ -260,8 +260,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
 }
 
 void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long di, long epoch){
-    long di,
-        l_temp,
+    long l_temp,
         mv_temp,
         eta_deg = 16777216 - ((eta_gamma * feat_deg_recip_stripped[feature]) >> 24);
 
