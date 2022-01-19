@@ -60,6 +60,7 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void stripped_train_no_epochs(long tid);
 void stripped_train(long thread_id, long eta_gamma);
+void stripped_train_no_epochs_spawn_children(long tid);
 void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long class, long epoch);
 
 #endif //EMUSGD_SGD_H
