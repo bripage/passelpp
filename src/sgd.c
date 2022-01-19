@@ -212,8 +212,8 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     long distance;
     long di;
     long i;
-    long l_temp;
-    long mv_temp;
+    long train_v_val;
+    long model_vec_val;
     unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
     long thread_id = tid;
