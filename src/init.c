@@ -49,6 +49,7 @@ void parse_args(int argc, char * argv[]) {
     long ignore = 0;
     long clusters = 0;
     long epoch_barriers = 0;
+    long spawn_child = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -172,6 +173,9 @@ void parse_args(int argc, char * argv[]) {
         } else if (!strcmp(argv[i], "--using-epoch-barriers")) {
             epoch_barriers = 1;
         }
+        else if (!strcmp(argv[i], "--spawn-children")) {
+            spawn_child = 1;
+        }
     }
     mw_replicated_init(&model_reinitialization, reinit);
     printf("Mode Vector Reinitialization: %ld\n", model_reinitialization);
@@ -184,6 +188,9 @@ void parse_args(int argc, char * argv[]) {
     fflush(stdout);
     mw_replicated_init(&using_epoch_barriers, epoch_barriers);
     printf("Using Epoch Barriers: %ld\n", using_epoch_barriers);
+    fflush(stdout);
+    mw_replicated_init(&spawning_children, spawn_child);
+    printf("Traininers Spawn Children: %ld\n", spawning_children);
     fflush(stdout);
 
     /** Solve for Beta (based on cluster count) */
@@ -638,6 +645,10 @@ void init_cluster(long n) {
         feat_deg_recip[n][i] = 0;
     }
 
+    for (long i = 0; i < threads_per_cluster; i++) {
+        spawned_run_notify[n][i] = 0;
+    }
+
     long features_per_cluster = featureSetSize / cluster_count;
     l_mv_start[n] = n * features_per_cluster;
     if (n != cluster_count-1) {
@@ -648,7 +659,9 @@ void init_cluster(long n) {
 }
 
 void init() {
-    long** l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
+    long *l1d_ptr;
+    long** l2d_ptr;
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
     for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
         long ***ptr = (long ***) mw_get_nth(&accuracies, nlet);
         *ptr = l2d_ptr;
@@ -719,7 +732,7 @@ void init() {
             *ptr = l2d_ptr;
         }
 
-        long *l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
@@ -737,7 +750,7 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
     } else {
-        long *l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
+        l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
         mw_replicated_init((long *) &train_s_stripped, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
@@ -766,6 +779,18 @@ void init() {
 
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), threads_per_cluster * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&spawned_run_notify, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), threads_per_cluster * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&gradients, nlet);
+            *ptr = l2d_ptr;
+        }
     }
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);

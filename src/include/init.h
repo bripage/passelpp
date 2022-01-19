@@ -33,6 +33,7 @@ replicated long class1;
 replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
+extern replicated long spawning_children;
 extern replicated long using_epoch_barriers;
 extern replicated long train_type;
 extern replicated long model_reinitialization;
@@ -63,6 +64,7 @@ replicated long** test_v;
 replicated long** test_c;
 replicated long** feat_deg_recip;
 replicated long** accuracies;
+replicated long** spawned_run_notify;
 
 replicated long* train_s_stripped;
 replicated long* train_f_stripped;

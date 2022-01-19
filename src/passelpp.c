@@ -42,9 +42,6 @@ int main(int argc, char **argv) {
                 }
                 cilk_sync;
 
-                printf("Epoch done\n");
-                fflush(stdout);
-
                 epoch_total = CLOCK() - epoch_start;
                 epoch_runtime = (double) epoch_total / 215000000;
 
@@ -89,14 +86,6 @@ int main(int argc, char **argv) {
             printf("%ld,inf,inf,%lf\n", test_id, current_accuracy);
             fflush(stdout);
 
-            //for (long i = 0; i < cluster_count; i++) {
-            //    accuracies[0][i] = 0;
-            //    total_evaluated_sample_count[i] = 0;
-            //    for (long j = 0; j < featureSetSize; j++) {
-            //        model_vec[i][j] = 0;
-            //    }
-            //}
-            //MIGRATE(&model_vec[0]);
         //}
     } else {
         if (using_epoch_barriers) {
@@ -142,22 +131,41 @@ int main(int argc, char **argv) {
             printf("%ld,inf,inf,%lf\n", test_id, current_accuracy);
             fflush(stdout);
         } else {
-            printf("--- Starting ---\n");
-            fflush(stdout);
-            //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
-            start_time = CLOCK();
-            for (long t = 0; t < threads_per_cluster; t++) {
-                cilk_migrate_hint(&model_vec_stripped[t]);
-                cilk_spawn stripped_train_no_epochs(t);
-            }
-            cilk_sync;
-            total_time = CLOCK() - start_time;
+            if (spawning_children) {
+                printf("--- Starting ---\n");
+                fflush(stdout);
+                //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
+                start_time = CLOCK();
+                for (long t = 0; t < threads_per_cluster; t++) {
+                    cilk_migrate_hint(&model_vec_stripped[t]);
+                    cilk_spawn stripped_train_no_epochs_spawn_children(t);
+                }
+                cilk_sync;
+                total_time = CLOCK() - start_time;
 
-            get_stripped_accuracy();
-            MIGRATE(&model_vec_stripped[0]);
-            current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-            printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
-            fflush(stdout);
+                get_stripped_accuracy();
+                MIGRATE(&model_vec_stripped[0]);
+                current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+                printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
+                fflush(stdout);
+            } else {
+                printf("--- Starting ---\n");
+                fflush(stdout);
+                //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
+                start_time = CLOCK();
+                for (long t = 0; t < threads_per_cluster; t++) {
+                    cilk_migrate_hint(&model_vec_stripped[t]);
+                    cilk_spawn stripped_train_no_epochs(t);
+                }
+                cilk_sync;
+                total_time = CLOCK() - start_time;
+
+                get_stripped_accuracy();
+                MIGRATE(&model_vec_stripped[0]);
+                current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+                printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
+                fflush(stdout);
+            }
         }
     }
 

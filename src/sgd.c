@@ -6,17 +6,11 @@
 
 void update_clusters(long n, long dest, long beta_gamma) {
     long* l_model_vec = model_vec[n];
-    long* r_model_vec;
-    //for (long i = 0; i < cluster_count; i++) {
-    //    if (i != n) {
-            r_model_vec = model_vec[dest];
-            //for (long j = l_mv_start[n]; j < l_mv_stop[n]; j++) {
-            for (long j = 0; j < featureSetSize; j++) {
-                REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
-                //model_vec[i][j] = model_vec[n][j];
-            }
-    //    }
-    //}
+    long* r_model_vec = model_vec[dest];
+
+    for (long j = 0; j < featureSetSize; j++) {
+        REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
+    }
 }
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
@@ -208,16 +202,150 @@ void stripped_train_no_epochs(long tid) {
     }
 }
 
-void reinitialize_models(long n, long i){
-    for (long f = 0; f < featureSetSize; f++){
-        model_vec[i][f] = model_vec[n][f];
+void stripped_train_no_epochs(long tid) {
+    long eta_gamma = eta;
+    long start;
+    long stop;
+    long class;
+    long feature;
+    long distance;
+    long di;
+    long i;
+    long l_temp;
+    long mv_temp;
+    unsigned long rand_state = 1337 + (1337 * tid);
+    unsigned long sample;
+    long thread_id = tid;
+
+    for (long e = 0; e < epochs; e++) {
+        while (thread_id < train_sample_count) {
+            sample = rand_state;
+            sample ^= sample >> 12; // a
+            sample ^= sample << 25; // b
+            sample ^= sample >> 27; // c
+            rand_state = sample;
+            sample *= UINT64_C(0x2545F4914F6CDD1D);
+            sample %= train_sample_count;
+
+            distance = 0;
+            start = train_s_stripped[sample];
+            stop = train_s_stripped[sample + 1];
+            class = train_c_stripped[sample];
+            for (i = start; i < stop; i++) {
+                feature = train_f_stripped[i];
+                distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
+            }
+            distance *= class;
+
+            if (distance < 16777216) {
+                di = eta_gamma * class;
+                for (i = start; i < stop; i++) {
+                    feature = train_f_stripped[i];
+                    l_temp = (di * train_v_stripped[i]) >> 24;
+                    mv_temp = model_vec_stripped[feature] + l_temp;
+                    l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+                    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                }
+            } else {
+                for (i = start; i < stop; i++) {
+                    feature = train_f_stripped[i];
+                    mv_temp = model_vec_stripped[feature];
+                    l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+                    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                }
+            }
+            thread_id += threads_per_cluster;
+        }
+
+        eta_gamma *= gamma;
+        eta_gamma >>= 24;
+        thread_id = tid;
     }
 }
 
-void nudge_reinitialize_models(long n, long i){
-    long* l_model_vec = model_vec[n];
-    long* r_model_vec = model_vec[i];
-    for (long j = 0; j < featureSetSize; j++) {
-        REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
+void stripped_train_no_epochs_spawn_children(long tid) {
+    long eta_gamma = eta;
+    long start;
+    long stop;
+    long class;
+    long feature;
+    long distance;
+    long di;
+    long i;
+    long l_temp;
+    long mv_temp;
+    unsigned long rand_state = 1337 + (1337 * tid);
+    unsigned long sample;
+    long thread_id = tid;
+
+    for (long e = 0; e < epochs; e++) {
+        while (thread_id < train_sample_count) {
+            sample = rand_state;
+            sample ^= sample >> 12; // a
+            sample ^= sample << 25; // b
+            sample ^= sample >> 27; // c
+            rand_state = sample;
+            sample *= UINT64_C(0x2545F4914F6CDD1D);
+            sample %= train_sample_count;
+
+            distance = 0;
+            start = train_s_stripped[sample];
+            stop = train_s_stripped[sample + 1];
+            class = train_c_stripped[sample];
+            di = eta_gamma * class;
+            for (i = start; i < stop; i++) {
+                REMOTE_ADD(&spawned_run_notify[i % system_size][tid],1);
+                feature = train_f_stripped[i];
+                train_v_val = train_v_stripped[i];
+                model_vec_val = model_vec_stripped[feature]
+                distance += (train_v_val * model_vec_val) >> 24;
+                cilk_spawn child_train(i % system_size, tid, feature, train_v_val, model_vec_val, eta_gamma, di, e);
+            }
+            distance *= class;
+
+            for (i = 0; i < system_size; i++){
+                REMOTE_ADD(spawned_run_notify[i][tid], distance);
+            }
+            cilk_sync;
+            for (i = 0; i < system_size; i++){
+                REMOTE_ADD(spawned_run_notify[i][tid], -distance);
+            }
+            thread_id += threads_per_cluster;
+        }
+
+        eta_gamma *= gamma;
+        eta_gamma >>= 24;
+        thread_id = tid;
+    }
+}
+
+void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long di, long epoch){
+    long di,
+        l_temp,
+        mv_temp,
+        eta_deg = 16777216 - ((eta_gamma * feat_deg_recip_stripped[feature]) >> 24);
+
+    if (epoch < 5) {
+        l_temp = (di * train_v_val) >> 24;
+        mv_temp = model_vec_val + l_temp;
+        while(spawned_run_notify[n][tid] == 0){
+            RESCHEDULE();
+        }
+        if (spawned_run_notify[n][tid] < 16777216) {
+            model_vec_stripped[feature] = (mv_temp * eta_deg) >> 24;
+        } else {
+            model_vec_stripped[feature] = (model_vec_val * eta_deg) >> 24;
+        }
+    } else {
+        while(spawned_run_notify[n][tid] == 0){
+            RESCHEDULE();
+        }
+        if (spawned_run_notify[n][tid] < 16777216) {
+            l_temp = (di * train_v_val) >> 24;
+            mv_temp = model_vec_val + l_temp;
+            model_vec_stripped[feature] = (mv_temp * eta_deg) >> 24;
+        } else {
+            model_vec_stripped[feature] = (model_vec_val * eta_deg) >> 24;
+        }
     }
 }

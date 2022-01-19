@@ -39,6 +39,7 @@ extern replicated long** train_s; // training data sample id's
 extern replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 extern replicated long** train_v;          // training data values (non-zero values for all samples)
 extern replicated long** train_c; // training sample classes (single value for each sample)
+extern replicated long** spawned_run_notify;
 
 extern replicated long* train_s_stripped;
 extern replicated long* train_f_stripped;
@@ -57,15 +58,8 @@ extern replicated long* l_mv_stop;
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void cas_loop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void cas_loop_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void cas_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void cas_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void nudge_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void nudge_and_neg_grad_drop_train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void stripped_train_no_epochs(long tid);
 void stripped_train(long thread_id, long eta_gamma);
-void reinitialize_models(long n, long i);
-void nudge_reinitialize_models(long n, long i);
+void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long class, long epoch);
+
 #endif //EMUSGD_SGD_H
