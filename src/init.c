@@ -785,12 +785,6 @@ void init() {
             long ***ptr = (long ***) mw_get_nth(&spawned_run_notify, nlet);
             *ptr = l2d_ptr;
         }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), threads_per_cluster * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&gradients, nlet);
-            *ptr = l2d_ptr;
-        }
     }
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
