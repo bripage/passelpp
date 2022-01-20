@@ -621,10 +621,6 @@ void init_cluster(long n) {
         feat_deg_recip[n][i] = 0;
     }
 
-    for (long i = 0; i < threads_per_cluster; i++) {
-        spawned_run_notify[n][i] = 0;
-    }
-
     if (n != cluster_count-1) {
         upstream[n] = n+1;
     } else {
@@ -779,6 +775,11 @@ void init() {
         for (long i = 0; i < featureSetSize; i++){
             model_vec_stripped[i] = 0;
             feat_deg_recip_stripped[i] = 0;
+        }
+        for (long n = 0; n < NUM_NODES(); n++) {
+            for (long i = 0; i < threads_per_cluster; i++) {
+                spawned_run_notify[n][i] = 0;
+            }
         }
     }
 
