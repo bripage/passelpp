@@ -268,7 +268,6 @@ void stripped_train_no_epochs(long tid) {
 }
 
 void stripped_train_no_epochs_spawn_children(long tid) {
-    long system_size = NUM_NODES();
     long eta_gamma = eta;
     long start;
     long stop;
@@ -277,8 +276,6 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     long distance;
     long di;
     long i;
-    long train_v_val;
-    long model_vec_val;
     unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
     long thread_id = tid;
@@ -325,23 +322,17 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     }
 }
 
-void child_train_pos_gradient(long i, long eta_gamma){
-    long l_temp, mv_temp;
-    for (i = start; i < stop; i++) {
-        feature = train_f_stripped[i];
-        mv_temp = model_vec_stripped[feature];
-        l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-        model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
-    }
+void child_train_pos_gradient(long i, long eta_gamma) {
+    long feature = train_f_stripped[i];
+    long mv_temp = model_vec_stripped[feature];
+    long l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
 }
 
-void child_train_neg_gradient(long i, long eta_gamma, long di){
-    long l_temp, mv_temp;
-    for (i = start; i < stop; i++) {
-        feature = train_f_stripped[i];
-        l_temp = (di * train_v_stripped[i]) >> 24;
-        mv_temp = model_vec_stripped[feature] + l_temp;
-        l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-        model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
-    }
+void child_train_neg_gradient(long i, long eta_gamma, long di) {
+    long feature = train_f_stripped[i];
+    long l_temp = (di * train_v_stripped[i]) >> 24;
+    long mv_temp = model_vec_stripped[feature] + l_temp;
+    l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
 }
