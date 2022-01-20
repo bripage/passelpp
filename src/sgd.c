@@ -1,15 +1,33 @@
 //
 // Created by Brian Page on 2020-04-09.
 //
-
 #include "include/sgd.h"
 
-void update_clusters(long n, long dest, long beta_gamma) {
-    long* l_model_vec = model_vec[n];
-    long* r_model_vec = model_vec[dest];
+void downstream_update(long i, long n, long d){
+    long* l_working_vec = working_vec[n];
+    long* d_working_vec = working_vec[d];
+    long* d_model_vec = model_vec[d];
+    long l_temp;
+    for (long j = i; j < featureSetSize; j+=16) {
+        l_temp = l_working_vec[j];
+        REMOTE_ADD(&d_model_vec[j], (lambda * l_temp) >> 24);
+        REMOTE_ADD(&d_working_vec[j], (lambda * l_temp) >> 24);
+    }
+}
 
-    for (long j = 0; j < featureSetSize; j++) {
-        REMOTE_ADD(&r_model_vec[j], (lambda * l_model_vec[j]) >> 24);
+void upstream_update(long i, long n, long u, long beta_gamma){
+    long* l_working_vec = working_vec[n];
+    long* u_working_vec = working_vec[u];
+    long* l_model_vec = model_vec[n];
+    long l_temp, wv_temp;
+    for (long j = i; j < featureSetSize; j+=16) {
+        l_temp = l_model_vec[j];
+        l_model_vec[j] = 0;
+        wv_temp = (beta_gamma * (l_working_vec[j] - l_temp)) >> 24;
+        REMOTE_ADD(&u_working_vec[j], wv_temp);
+        wv_temp += (one_min_lambda * l_temp) >> 24;
+        l_model_vec[j] += wv_temp;
+        l_working_vec[j] = wv_temp;
     }
 }
 
@@ -22,6 +40,8 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
+    long* l_working_vec = working_vec[n];
+    long* u_working_vec = working_vec[upstream[n]];
     long* l_model_vec = model_vec[n];
     long* l_train_s = train_s[n];
     long* l_train_c = train_c[n];
@@ -41,13 +61,18 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long sample;
 
     while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-        if (total_evaluated_sample_count[n] % update_period == 0){
-            for (long t = 0; t < cluster_count; t++){
-                if (t != n){
-                    cilk_spawn update_clusters(n, t, beta_gamma);
-                }
+        if (ATOMIC_CAS(&token[n],1,0) == 1) {
+            for (i = 0; i < 16; i++) {
+                cilk_migrate_hint(&l_model_vec);
+                cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
             }
-            //cilk_spawn update_clusters(n, beta_gamma);
+            for (i = 0; i < 16; i++) {
+                cilk_migrate_hint(&u_working_vec);
+                cilk_spawn downstream_update(i, upstream[n], n);
+            }
+            cilk_sync;
+            token[upstream[n]] = 1;   // pass token to upstream cluster
+            token[n] = 0;          // zero out my token
         }
 
         sample = rand_state;
@@ -64,7 +89,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         class = l_train_c[sample];
         for (i = start; i < stop; i++) {
             feature = l_train_f[i];
-            distance += (l_train_v[i] * l_model_vec[feature]) >> 24;
+            distance += (l_train_v[i] * l_working_vec[feature]) >> 24;
         }
         distance *= class;
 
@@ -73,16 +98,16 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
                 l_temp = (di * l_train_v[i]) >> 24;
-                mv_temp = l_model_vec[feature] + l_temp;
+                wv_temp = l_working_vec[feature] + l_temp;
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                l_model_vec[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
             }
         } else {
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
-                mv_temp = l_model_vec[feature];
+                wv_temp = l_working_vec[feature];
                 l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                l_model_vec[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+                l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
             }
         }
     }

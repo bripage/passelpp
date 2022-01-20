@@ -45,8 +45,6 @@ void parse_args(int argc, char * argv[]) {
     threads_per_cluster = 1;
     cluster_count = 1;
     samples_per_cluster = 1;
-    long reinit = 0;
-    long ignore = 0;
     long clusters = 0;
     long epoch_barriers = 0;
     long spawn_child = 0;
@@ -72,12 +70,6 @@ void parse_args(int argc, char * argv[]) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&train_sample_count, num_arg);
             //printf("train_sample_count = %ld\n", train_sample_count);
-            //fflush(stdout);
-            i++;
-        } else if (!strcmp(argv[i], "--regularization-scalar")) {
-            num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&regularization_scalar, num_arg);
-            //printf("regularization_scalar = %ld\n", regularization_scalar);
             //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--class-values")) {
@@ -151,18 +143,6 @@ void parse_args(int argc, char * argv[]) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&update_period, num_arg);
             i++;
-        } else if (!strcmp(argv[i], "--train-type")) {
-            num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&train_type, num_arg);
-            i++;
-        } else if (!strcmp(argv[i], "--model-reinitialization")) {
-            reinit = 1;
-        } else if (!strcmp(argv[i], "--reinitialization-type")) {
-            num_arg = atoi(argv[i + 1]);
-            mw_replicated_init(&reinit_type, num_arg);
-            i++;
-        } else if (!strcmp(argv[i], "--ignore-poor-samples")) {
-            ignore = 1;
         } else if (!strcmp(argv[i], "--using-clusters")) {
             clusters = 1;
         } else if (!strcmp(argv[i], "--epsilon")) {
@@ -177,12 +157,7 @@ void parse_args(int argc, char * argv[]) {
             spawn_child = 1;
         }
     }
-    mw_replicated_init(&model_reinitialization, reinit);
-    printf("Mode Vector Reinitialization: %ld\n", model_reinitialization);
-    fflush(stdout);
-    mw_replicated_init(&ignore_poor_samples, ignore);
-    printf("Ignore Samples with Negative Gradients: %ld\n", ignore_poor_samples);
-    fflush(stdout);
+
     mw_replicated_init(&using_clusters, clusters);
     printf("Using Multiple Clusters: %ld\n", using_clusters);
     fflush(stdout);
@@ -642,6 +617,7 @@ void init_cluster(long n) {
 
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
+        working_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
 
@@ -649,12 +625,16 @@ void init_cluster(long n) {
         spawned_run_notify[n][i] = 0;
     }
 
-    long features_per_cluster = featureSetSize / cluster_count;
-    l_mv_start[n] = n * features_per_cluster;
     if (n != cluster_count-1) {
-        l_mv_stop[n] = (n+1) * features_per_cluster;
+        upstream[n] = n+1;
     } else {
-        l_mv_stop[n] = featureSetSize;
+        upstream[n] = 0;
+    }
+
+    if (n == 0){
+        token[n] = 1;
+    } else {
+        token[n] = 0;
     }
 }
 
@@ -675,6 +655,12 @@ void init() {
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&model_vec, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&working_vec, nlet);
             *ptr = l2d_ptr;
         }
 
@@ -736,19 +722,13 @@ void init() {
         mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &cluster_sample_start, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &cluster_sample_end, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &cluster_samples, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &l_mv_start, (long) l1d_ptr);
+        mw_replicated_init((long *) &upstream, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &l_mv_stop, (long) l1d_ptr);
+        mw_replicated_init((long *) &token, (long) l1d_ptr);
     } else {
         l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
         mw_replicated_init((long *) &train_s_stripped, (long) l1d_ptr);

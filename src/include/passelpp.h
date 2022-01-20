@@ -20,19 +20,14 @@ replicated long eta;                        // initial step size
 replicated long beta;
 replicated long gamma;
 replicated long using_clusters;
-replicated long model_reinitialization;
-replicated long reinit_type;
-replicated long train_type;
 replicated long using_epoch_barriers;
 replicated long spawning_children;
 extern double epsilon;
 
-/// Data allocation and misc globals
-replicated long* epoch_running;
-replicated long** updater_last_node;
-extern replicated long** accuracies;
-extern replicated long* total_evaluated_sample_count;
-extern replicated long* model_vec_stripped;
+/// Data allocation
 extern replicated long** model_vec;
+extern replicated long** accuracies;
+
+extern replicated long* model_vec_stripped;
 
 #endif //EMUSGD_WILDEBEEST_H

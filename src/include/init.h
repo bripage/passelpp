@@ -28,17 +28,12 @@ replicated long total_test_points;
 replicated long test_sample_count;
 replicated long featureSetSize;             // num features in training data set (equivalent to col count in matrix)
 replicated long non_standard_classes;
-replicated long regularization_scalar;
 replicated long class1;
 replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
 extern replicated long spawning_children;
 extern replicated long using_epoch_barriers;
-extern replicated long train_type;
-extern replicated long model_reinitialization;
-replicated long ignore_poor_samples;
-extern replicated long reinit_type;
 extern replicated long using_clusters;
 double epsilon;
 
@@ -54,6 +49,7 @@ char* test_label_path;                   // path to accuracy testing sample clas
 
 /// Data allocation and misc globals
 replicated long** model_vec;        // working vector for each node
+replicated long** working_vec;       // working vector for each node
 replicated long** train_s; // training data sample id's
 replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 replicated long** train_v;          // training data values (non-zero values for all samples)
@@ -77,11 +73,9 @@ replicated long* test_c_stripped;
 replicated long* model_vec_stripped;
 replicated long* feat_deg_recip_stripped;
 replicated long* total_evaluated_sample_count;
-replicated long* cluster_sample_start;
-replicated long* cluster_sample_end;
 replicated long* cluster_samples;
-replicated long* l_mv_start;
-replicated long* l_mv_stop;
+replicated long* upstream;
+replicated long* token;
 
 
 void parse_args(int argc, char * argv[]);
