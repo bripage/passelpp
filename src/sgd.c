@@ -60,54 +60,94 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 
-    while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
-        if (ATOMIC_CAS(&token[n],1,0) == 1) {
-            for (i = 0; i < 16; i++) {
-                cilk_migrate_hint(&l_model_vec);
-                cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
-            }
-            for (i = 0; i < 16; i++) {
-                cilk_migrate_hint(&u_working_vec);
-                cilk_spawn downstream_update(i, upstream[n], n);
-            }
-            cilk_sync;
-            token[upstream[n]] = 1;   // pass token to upstream cluster
-            token[n] = 0;          // zero out my token
-        }
+    if (cluster_count == 1){
+        while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+            sample = rand_state;
+            sample ^= sample >> 12; // a
+            sample ^= sample << 25; // b
+            sample ^= sample >> 27; // c
+            rand_state = sample;
+            sample *= UINT64_C(0x2545F4914F6CDD1D);
+            sample %= cluster_samples[n];
 
-        sample = rand_state;
-        sample ^= sample >> 12; // a
-        sample ^= sample << 25; // b
-        sample ^= sample >> 27; // c
-        rand_state = sample;
-        sample *= UINT64_C(0x2545F4914F6CDD1D);
-        sample %= cluster_samples[n];
-
-        distance = 0;
-        start = l_train_s[sample];
-        stop = l_train_s[sample + 1];
-        class = l_train_c[sample];
-        for (i = start; i < stop; i++) {
-            feature = l_train_f[i];
-            distance += (l_train_v[i] * l_working_vec[feature]) >> 24;
-        }
-        distance *= class;
-
-        if (distance < 16777216) {
-            di = eta_gamma * class;
+            distance = 0;
+            start = l_train_s[sample];
+            stop = l_train_s[sample + 1];
+            class = l_train_c[sample];
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
-                l_temp = (di * l_train_v[i]) >> 24;
-                wv_temp = l_working_vec[feature] + l_temp;
-                l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                distance += (l_train_v[i] * l_model_vec[feature]) >> 24;
             }
-        } else {
+            distance *= class;
+
+            if (distance < 16777216) {
+                di = eta_gamma * class;
+                for (i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    l_temp = (di * l_train_v[i]) >> 24;
+                    wv_temp = l_model_vec[feature] + l_temp;
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    l_model_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }
+            } else {
+                for (i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    wv_temp = l_model_vec[feature];
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    l_model_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }
+            }
+        }
+    } else {
+        while (ATOMIC_ADDMS(&total_evaluated_sample_count[n], 1) < end_sample_count) {
+            if (ATOMIC_CAS(&token[n], 0, 1) == 1) {
+                for (i = 0; i < 16; i++) {
+                    cilk_migrate_hint(&l_model_vec);
+                    cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                }
+                for (i = 0; i < 16; i++) {
+                    cilk_migrate_hint(&u_working_vec);
+                    cilk_spawn downstream_update(i, upstream[n], n);
+                }
+                cilk_sync;
+                token[upstream[n]] = 1;   // pass token to upstream cluster
+                token[n] = 0;          // zero out my token
+            }
+
+            sample = rand_state;
+            sample ^= sample >> 12; // a
+            sample ^= sample << 25; // b
+            sample ^= sample >> 27; // c
+            rand_state = sample;
+            sample *= UINT64_C(0x2545F4914F6CDD1D);
+            sample %= cluster_samples[n];
+
+            distance = 0;
+            start = l_train_s[sample];
+            stop = l_train_s[sample + 1];
+            class = l_train_c[sample];
             for (i = start; i < stop; i++) {
                 feature = l_train_f[i];
-                wv_temp = l_working_vec[feature];
-                l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                distance += (l_train_v[i] * l_working_vec[feature]) >> 24;
+            }
+            distance *= class;
+
+            if (distance < 16777216) {
+                di = eta_gamma * class;
+                for (i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    l_temp = (di * l_train_v[i]) >> 24;
+                    wv_temp = l_working_vec[feature] + l_temp;
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }
+            } else {
+                for (i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    wv_temp = l_working_vec[feature];
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }
             }
         }
     }
