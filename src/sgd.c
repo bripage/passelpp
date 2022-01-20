@@ -328,7 +328,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
 
 void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long di, long epoch){
     long l_temp,
-        mv_temp,
+        mv_temp;
         //eta_deg = 16777216 - ((eta_gamma * feat_deg_recip_stripped[feature]) >> 24);
 
 
