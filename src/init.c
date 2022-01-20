@@ -755,12 +755,6 @@ void init() {
 
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), threads_per_cluster * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&spawned_run_notify, nlet);
-            *ptr = l2d_ptr;
-        }
     }
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
@@ -775,11 +769,6 @@ void init() {
         for (long i = 0; i < featureSetSize; i++){
             model_vec_stripped[i] = 0;
             feat_deg_recip_stripped[i] = 0;
-        }
-        for (long n = 0; n < NUM_NODES(); n++) {
-            for (long i = 0; i < threads_per_cluster; i++) {
-                spawned_run_notify[n][i] = 0;
-            }
         }
     }
 

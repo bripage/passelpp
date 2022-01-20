@@ -299,24 +299,23 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             class = train_c_stripped[sample];
             di = eta_gamma * class;
             for (i = start; i < stop; i++) {
-                REMOTE_ADD(&spawned_run_notify[i % system_size][tid],1);
                 feature = train_f_stripped[i];
-                train_v_val = train_v_stripped[i];
-                model_vec_val = model_vec_stripped[feature];
-                distance += (train_v_val * model_vec_val) >> 24;
-                cilk_spawn child_train(i % system_size, tid, feature, train_v_val, model_vec_val, eta_gamma, di, e);
+                distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
             }
             distance *= class;
 
-            for (i = 0; i < system_size; i++){
-                //REMOTE_ADD(&spawned_run_notify[i][tid], distance);
-                spawned_run_notify[i][tid] = distance;
+            if (distance < 16777216){
+                for (i = start; i < stop; i++) {
+                    cilk_migrate_hint(&train_v_stripped[i]);
+                    cilk_spawn child_train_neg_gradient(i, eta_gamma, di);
+                }
+            } else {
+                for (i = start; i < stop; i++) {
+                    cilk_migrate_hint(&train_v_stripped[i]);
+                    cilk_spawn child_train_pos_gradient(i, eta_gamma);
+                }
             }
-            cilk_sync;
-            for (i = 0; i < system_size; i++){
-                //REMOTE_ADD(&spawned_run_notify[i][tid], -distance);
-                spawned_run_notify[i][tid] = 0;
-            }
+
             thread_id += threads_per_cluster;
         }
 
@@ -326,32 +325,22 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     }
 }
 
-void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long di, long epoch){
-    long l_temp,
-        mv_temp;
-        //eta_deg = 16777216 - ((eta_gamma * feat_deg_recip_stripped[feature]) >> 24);
-
-
-    while(spawned_run_notify[n][tid] == 0){
-            RESCHEDULE();
-    }
-    /*
-    if (spawned_run_notify[n][tid] < 16777216) {
-        l_temp = (di * train_v_val) >> 24;
-        mv_temp = model_vec_val + l_temp;
-        model_vec_stripped[feature] = (mv_temp * eta_deg) >> 24;
-    } else {
-        model_vec_stripped[feature] = (model_vec_val * eta_deg) >> 24;
-    }
-    */
-
-    if (spawned_run_notify[n][tid] < 16777216) {
-        l_temp = (di * train_v_val) >> 24;
-        mv_temp = model_vec_stripped[feature] + l_temp;
+void child_train_pos_gradient(long i, long eta_gamma){
+    long l_temp, mv_temp;
+    for (i = start; i < stop; i++) {
+        feature = train_f_stripped[i];
+        mv_temp = model_vec_stripped[feature];
         l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
         model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
-    } else {
-        mv_temp = model_vec_stripped[feature];
+    }
+}
+
+void child_train_neg_gradient(long i, long eta_gamma, long di){
+    long l_temp, mv_temp;
+    for (i = start; i < stop; i++) {
+        feature = train_f_stripped[i];
+        l_temp = (di * train_v_stripped[i]) >> 24;
+        mv_temp = model_vec_stripped[feature] + l_temp;
         l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
         model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
     }

@@ -60,7 +60,6 @@ replicated long** test_v;
 replicated long** test_c;
 replicated long** feat_deg_recip;
 replicated long** accuracies;
-replicated long** spawned_run_notify;
 
 replicated long* train_s_stripped;
 replicated long* train_f_stripped;

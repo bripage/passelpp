@@ -37,7 +37,6 @@ extern replicated long** train_s;           // training data sample id's
 extern replicated long** train_f;           // training data feature id's (1:1 relationship to values vector)
 extern replicated long** train_v;           // training data values (non-zero values for all samples)
 extern replicated long** train_c;           // training sample classes (single value for each sample)
-extern replicated long** spawned_run_notify;
 
 extern replicated long* train_s_stripped;
 extern replicated long* train_f_stripped;
@@ -59,6 +58,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
 void stripped_train_no_epochs(long tid);
 void stripped_train(long thread_id, long eta_gamma);
 void stripped_train_no_epochs_spawn_children(long tid);
-void child_train(long n, long tid, long feature, long train_v_val, long model_vec_val, long eta_gamma, long class, long epoch);
+void child_train_pos_gradient(long i, long eta_gamma);
+void child_train_neg_gradient(long i, long eta_gamma, long di);
 
 #endif //EMUSGD_SGD_H
