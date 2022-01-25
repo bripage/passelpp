@@ -6,12 +6,10 @@
 #include "include/accuracy.h"
 
 int main(int argc, char **argv) {
-    volatile uint64_t start_time, total_time, epoch_start, epoch_total;
-    volatile double epoch_runtime, convergence_time;
+    volatile uint64_t start_time, total_time;
     long eta_gamma, beta_gamma;
     long best_model_acc, best_cluster_id;
-    long epochs_within_epsilon = 1;
-    double previous_accuracy = 0.0, current_accuracy = 0.0;
+    double current_accuracy = 0.0;
 
     /** Get Command line arguements for test run */
     parse_args(argc, argv);
@@ -23,21 +21,21 @@ int main(int argc, char **argv) {
     if (using_clusters) {
         printf("--- Starting ---\n");
         fflush(stdout);
-            start_time = CLOCK();
-            for (long epoch = 1; epoch <= epochs; epoch++) {
-                if (epoch > 1) {
-                    beta_gamma *= gamma;
-                    beta_gamma >>= 24;
-                    eta_gamma *= gamma;
-                    eta_gamma >>= 24;
-                }
-
-                for (long n = 0; n < cluster_count; n++) {
-                    cilk_migrate_hint(&model_vec[n]);
-                    cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
-                }
-                cilk_sync;
+        start_time = CLOCK();
+        for (long epoch = 1; epoch <= epochs; epoch++) {
+            if (epoch > 1) {
+                beta_gamma *= gamma;
+                beta_gamma >>= 24;
+                eta_gamma *= gamma;
+                eta_gamma >>= 24;
             }
+            for (long n = 0; n < cluster_count; n++) {
+                cilk_migrate_hint(&model_vec[n]);
+                cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
+            }
+            cilk_sync;
+        }
+        total_time = CLOCK() - start_time;
 
         for (long n = 0; n < cluster_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
