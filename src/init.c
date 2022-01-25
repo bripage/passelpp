@@ -121,7 +121,7 @@ void parse_args(int argc, char * argv[]) {
     mw_replicated_init(&using_clusters, clusters);
     printf("Using Multiple Clusters: %ld\n", using_clusters);
     fflush(stdout);
-    ltmp = ceil((double) train_sample_count / (double) cluster_count);
+    long ltmp = ceil((double) train_sample_count / (double) cluster_count);
     mw_replicated_init(&samples_per_cluster, ltmp);
     if (clusters) {
         printf("samples per cluster: %ld\n", samples_per_cluster);
