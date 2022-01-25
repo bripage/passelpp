@@ -32,10 +32,7 @@ replicated long class1;
 replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
-extern replicated long spawning_children;
-extern replicated long using_epoch_barriers;
 extern replicated long using_clusters;
-double epsilon;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

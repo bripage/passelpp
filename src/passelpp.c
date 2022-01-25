@@ -23,12 +23,8 @@ int main(int argc, char **argv) {
     if (using_clusters) {
         printf("--- Starting ---\n");
         fflush(stdout);
-        //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
             start_time = CLOCK();
             for (long epoch = 1; epoch <= epochs; epoch++) {
-                //printf("epoch %ld started\n", epoch);
-                //fflush(stdout);
-                epoch_start = CLOCK();
                 if (epoch > 1) {
                     beta_gamma *= gamma;
                     beta_gamma >>= 24;
@@ -41,132 +37,39 @@ int main(int argc, char **argv) {
                     cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
                 }
                 cilk_sync;
-
-                epoch_total = CLOCK() - epoch_start;
-                epoch_runtime = (double) epoch_total / 215000000;
-
-                printf("Epoch %ld Time: %lf\n", epoch, epoch_runtime);
-                fflush(stdout);
-
-                for (long n = 0; n < cluster_count; n++) {
-                    cilk_migrate_hint(&model_vec[n]);
-                    cilk_spawn get_accuracy(n);
-                }
-                cilk_sync;
-
-                best_model_acc = accuracies[0][0];
-                for (long n = 1; n < cluster_count; n++) {
-                    if (accuracies[0][n] > best_model_acc) {
-                        best_model_acc = accuracies[0][n];
-                        best_cluster_id = n;
-                    }
-                }
-                // printf("peak accuracy on cluster %ld: %lf\n", best_cluster_id,
-                //       (double) accuracies[0][best_cluster_id] / (double) 16777216);
-                //fflush(stdout);
-
-                current_accuracy = (double) best_model_acc / (double) 16777216;
-                printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
-                fflush(stdout);
-                if (fabs(current_accuracy - previous_accuracy) <= epsilon) {
-                    epochs_within_epsilon++;
-                    if (epochs_within_epsilon == 3) {
-                        total_time = CLOCK() - start_time;
-                        convergence_time = (double) total_time / 215000000;
-                        printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
-                        fflush(stdout);
-                        return 0;
-                        //break;
-                    }
-                } else {
-                    epochs_within_epsilon = 1;
-                }
-                previous_accuracy = current_accuracy;
             }
-            printf("%ld,inf,inf,%lf\n", test_id, current_accuracy);
-            fflush(stdout);
 
-        //}
-    } else {
-        if (using_epoch_barriers) {
-            printf("--- Starting ---\n");
-            fflush(stdout);
-            //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
-            start_time = CLOCK();
-            for (long epoch = 1; epoch <= epochs; epoch++) {
-                //printf("epoch %ld started\n", epoch);
-                //fflush(stdout);
-                epoch_start = CLOCK();
-                if (epoch > 1) {
-                    eta_gamma *= gamma;
-                    eta_gamma >>= 24;
-                }
-                for (long t = 0; t < threads_per_cluster; t++) {
-                    cilk_migrate_hint(&model_vec_stripped[t]);
-                    cilk_spawn stripped_train(t, eta_gamma);
-                }
-                cilk_sync;
-                epoch_total = CLOCK() - epoch_start;
-                epoch_runtime = (double) epoch_total / 215000000;
-                get_stripped_accuracy();
-                MIGRATE(&model_vec_stripped[0]);
-                current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-                printf("%ld,%ld,%lf,%lf\n", test_id, epoch, epoch_runtime, current_accuracy);
-                fflush(stdout);
-                if (fabs(current_accuracy - previous_accuracy) <= epsilon) {
-                    epochs_within_epsilon++;
-                    if (epochs_within_epsilon == 3) {
-                        total_time = CLOCK() - start_time;
-                        convergence_time = (double) total_time / 215000000;
-                        printf("%ld,%ld,%lf,%lf\n", test_id, epoch, convergence_time, current_accuracy);
-                        fflush(stdout);
-                        return 0;
-                        //break;
-                    }
-                } else {
-                    epochs_within_epsilon = 1;
-                }
-                previous_accuracy = current_accuracy;
-            }
-            printf("%ld,inf,inf,%lf\n", test_id, current_accuracy);
-            fflush(stdout);
-        } else {
-            if (spawning_children) {
-                printf("--- Starting ---\n");
-                fflush(stdout);
-                //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
-                start_time = CLOCK();
-                for (long t = 0; t < threads_per_cluster; t++) {
-                    cilk_migrate_hint(&model_vec_stripped[t]);
-                    cilk_spawn stripped_train_no_epochs_spawn_children(t);
-                }
-                cilk_sync;
-                total_time = CLOCK() - start_time;
-
-                get_stripped_accuracy();
-                MIGRATE(&model_vec_stripped[0]);
-                current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-                printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
-                fflush(stdout);
-            } else {
-                printf("--- Starting ---\n");
-                fflush(stdout);
-                //for (long threads = 1; threads <= threads_per_cluster; threads *= 2) {
-                start_time = CLOCK();
-                for (long t = 0; t < threads_per_cluster; t++) {
-                    cilk_migrate_hint(&model_vec_stripped[t]);
-                    cilk_spawn stripped_train_no_epochs(t);
-                }
-                cilk_sync;
-                total_time = CLOCK() - start_time;
-
-                get_stripped_accuracy();
-                MIGRATE(&model_vec_stripped[0]);
-                current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-                printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
-                fflush(stdout);
+        for (long n = 0; n < cluster_count; n++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn get_accuracy(n);
+        }
+        cilk_sync;
+        best_model_acc = accuracies[0][0];
+        for (long n = 1; n < cluster_count; n++) {
+            if (accuracies[0][n] > best_model_acc) {
+                best_model_acc = accuracies[0][n];
+                best_cluster_id = n;
             }
         }
+        current_accuracy = (double) best_model_acc / (double) 16777216;
+        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
+        fflush(stdout);
+    } else {
+        printf("--- Starting ---\n");
+        fflush(stdout);
+        start_time = CLOCK();
+        for (long t = 0; t < threads_per_cluster; t++) {
+            cilk_migrate_hint(&model_vec_stripped[t]);
+            cilk_spawn stripped_train_no_epochs_spawn_children(t);
+        }
+        cilk_sync;
+        total_time = CLOCK() - start_time;
+
+        get_stripped_accuracy();
+        MIGRATE(&model_vec_stripped[0]);
+        current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
+        fflush(stdout);
     }
 
 	return 0;

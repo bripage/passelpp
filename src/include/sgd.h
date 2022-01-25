@@ -55,8 +55,6 @@ extern replicated long* token;
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
-void stripped_train_no_epochs(long tid);
-void stripped_train(long thread_id, long eta_gamma);
 void stripped_train_no_epochs_spawn_children(long tid);
 void child_train_pos_gradient(long i, long eta_gamma);
 void child_train_neg_gradient(long i, long eta_gamma, long di);

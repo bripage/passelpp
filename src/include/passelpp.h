@@ -20,9 +20,6 @@ replicated long eta;                        // initial step size
 replicated long beta;
 replicated long gamma;
 replicated long using_clusters;
-replicated long using_epoch_barriers;
-replicated long spawning_children;
-extern double epsilon;
 
 /// Data allocation
 extern replicated long** model_vec;

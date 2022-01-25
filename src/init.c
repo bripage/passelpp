@@ -46,98 +46,68 @@ void parse_args(int argc, char * argv[]) {
     cluster_count = 1;
     samples_per_cluster = 1;
     long clusters = 0;
-    long epoch_barriers = 0;
-    long spawn_child = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
             train_data_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(train_data_path, argv[i + 1]);
-            //printf("train_data_path = %s\n",train_data_path);
-            //fflush(stdout);
         } else if (!strcmp(argv[i], "--test-data")) {
             test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(test_feature_path, argv[i + 1]);
-            //printf("test_data_path = %s\n", test_feature_path);
-            //fflush(stdout);
         } else if (!strcmp(argv[i], "-f")) {
             num_arg = atoi(argv[i + 1]) + 1;
             mw_replicated_init(&featureSetSize, num_arg);
-            //printf("featureSetSize = %ld\n", featureSetSize);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--train-samples")) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&train_sample_count, num_arg);
-            //printf("train_sample_count = %ld\n", train_sample_count);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--class-values")) {
             num_arg = atoi(argv[i + 1]);
             class1 = num_arg;
             num_arg = atoi(argv[i + 2]);
             class2 = num_arg;
-            //printf("classes: {%ld,%ld}\n", class1, class2);
-            //fflush(stdout);
             non_standard_classes = 1;
             i += 2;
         } else if (!strcmp(argv[i], "-e")) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&epochs, num_arg);
-            //printf("Epoch Count: %ld\n", epochs);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--train-points")) {
             num_arg = atoi(argv[i + 1]) + train_sample_count;
             mw_replicated_init(&total_train_points, num_arg);
-            //printf("total_train_points = %ld\n", total_train_points);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--test-samples")) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&test_sample_count, num_arg);
-            //printf("test_sample_count = %ld\n", test_sample_count);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--test-points")) {
             num_arg = atoi(argv[i + 1]) + test_sample_count;
             mw_replicated_init(&total_test_points, num_arg);
-            //printf("total_test_points = %ld\n", total_test_points);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--threads-per-cluster")) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&threads_per_cluster, num_arg);
-            //printf("Threads Per Cluster= %ld\n", threads_per_cluster);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--initial-step-size")) {
             sscanf(argv[i + 1], "%lf", &scaled_float);
             double d_temp = scaled_float * 16777216;
             long eta_init = (long) d_temp;
             mw_replicated_init(&eta, eta_init);
-            //printf("initial step size: %lf\n", scaled_float);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--initial-step-decay")) {
             sscanf(argv[i + 1], "%lf", &scaled_float);
             double d_temp = scaled_float * 16777216;
             long gamma_init = (long) d_temp;
             mw_replicated_init(&gamma, gamma_init);
-            //printf("initial_step_decay = %lf\n", scaled_float);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "-c")) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&cluster_count, num_arg);
-            //printf("Cluster Count: %ld\n", cluster_count);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--test-id")) {
             num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&test_id, num_arg);
-            //printf("Test #: %ld\n", test_id);
-            //fflush(stdout);
             i++;
         } else if (!strcmp(argv[i], "--update-period")) {
             num_arg = atoi(argv[i + 1]);
@@ -145,39 +115,24 @@ void parse_args(int argc, char * argv[]) {
             i++;
         } else if (!strcmp(argv[i], "--using-clusters")) {
             clusters = 1;
-        } else if (!strcmp(argv[i], "--epsilon")) {
-            sscanf(argv[i + 1], "%lf", &epsilon);
-            printf("epsilon = %lf\n", epsilon);
-            fflush(stdout);
-            i++;
-        } else if (!strcmp(argv[i], "--using-epoch-barriers")) {
-            epoch_barriers = 1;
-        }
-        else if (!strcmp(argv[i], "--spawn-children")) {
-            spawn_child = 1;
         }
     }
 
     mw_replicated_init(&using_clusters, clusters);
     printf("Using Multiple Clusters: %ld\n", using_clusters);
     fflush(stdout);
-    mw_replicated_init(&using_epoch_barriers, epoch_barriers);
-    printf("Using Epoch Barriers: %ld\n", using_epoch_barriers);
-    fflush(stdout);
-    mw_replicated_init(&spawning_children, spawn_child);
-    printf("Traininers Spawn Children: %ld\n", spawning_children);
-    fflush(stdout);
+    ltmp = ceil((double) train_sample_count / (double) cluster_count);
+    mw_replicated_init(&samples_per_cluster, ltmp);
+    if (clusters) {
+        printf("samples per cluster: %ld\n", samples_per_cluster);
+        fflush(stdout);
+    }
 
     /** Solve for Beta (based on cluster count) */
     double dtmp = SolveBeta(cluster_count);
     dtmp *= 16777216; // shift 24 bits
     long ltmp = (long) dtmp;
     mw_replicated_init(&beta, ltmp);
-
-    ltmp = ceil((double) train_sample_count / (double) cluster_count);
-    mw_replicated_init(&samples_per_cluster, ltmp);
-    printf("samples per cluster: %ld\n", samples_per_cluster);
-    fflush(stdout);
 
     ltmp = beta;
     for (long i = 1; i <= cluster_count - 1; i++) {
