@@ -131,7 +131,7 @@ void parse_args(int argc, char * argv[]) {
     /** Solve for Beta (based on cluster count) */
     double dtmp = SolveBeta(cluster_count);
     dtmp *= 16777216; // shift 24 bits
-    long ltmp = (long) dtmp;
+    ltmp = (long) dtmp;
     mw_replicated_init(&beta, ltmp);
 
     ltmp = beta;
