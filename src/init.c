@@ -119,13 +119,13 @@ void parse_args(int argc, char * argv[]) {
     }
 
     mw_replicated_init(&using_clusters, clusters);
-    printf("Using Multiple Clusters: %ld\n", using_clusters);
-    fflush(stdout);
+    //printf("Using Multiple Clusters: %ld\n", using_clusters);
+    //fflush(stdout);
     long ltmp = ceil((double) train_sample_count / (double) cluster_count);
     mw_replicated_init(&samples_per_cluster, ltmp);
     if (clusters) {
-        printf("samples per cluster: %ld\n", samples_per_cluster);
-        fflush(stdout);
+        //printf("samples per cluster: %ld\n", samples_per_cluster);
+        //fflush(stdout);
     }
 
     /** Solve for Beta (based on cluster count) */
@@ -144,13 +144,13 @@ void parse_args(int argc, char * argv[]) {
     ltmp = 16777216 - lambda;
     mw_replicated_init(&one_min_lambda, ltmp);
 
-    printf("--- Parsing Arguments Complete ---\n");
-    fflush(stdout);
+    //printf("--- Parsing Arguments Complete ---\n");
+    //fflush(stdout);
 }
 
 void populateTrainingData() {
-    printf("inside populate_data()\n");
-    fflush(stdout);
+    //printf("inside populate_data()\n");
+    //fflush(stdout);
 
     long i,
             sample = -1,
@@ -186,28 +186,28 @@ void populateTrainingData() {
         long chunk_points = 30000000*4;
         long chunk_count = 0, final_chunk_points = 0;
 
-        printf("chunk_points = %ld\n", chunk_points);
-        fflush(stdout);
+        //printf("chunk_points = %ld\n", chunk_points);
+        //fflush(stdout);
         chunk_count = (non_zeros) / 30000000;
         final_chunk_points = points - (chunk_count * chunk_points);
-        printf("final_chunk_points = %ld\n", final_chunk_points);
-        fflush(stdout);
+        //printf("final_chunk_points = %ld\n", final_chunk_points);
+        //fflush(stdout);
         if (final_chunk_points != 0){
             chunk_count++;
         }
-        printf("chunk_count = %ld\n", chunk_count);
-        fflush(stdout);
+        //printf("chunk_count = %ld\n", chunk_count);
+        //fflush(stdout);
 
         binBuffer = (long *) malloc(chunk_points * sizeof(long));
-        printf("Done allocating initial buffer chunk\n");
-        fflush(stdout);
+        //printf("Done allocating initial buffer chunk\n");
+        //fflush(stdout);
         if (binBuffer == NULL) {
             printf("Failed to allocate initial buffer chunk.\n");
             exit(1);
         }
         bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
-        printf("bytesRead = %ld\n", bytesRead);
-        fflush(stdout);
+        //printf("bytesRead = %ld\n", bytesRead);
+        //fflush(stdout);
 
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
@@ -254,33 +254,33 @@ void populateTrainingData() {
 
             if (chunk_count > 1 && c != chunk_count - 1) {
                 if (c + 1 == chunk_count - 1) {
-                    printf("about to free buffer\n");
-                    fflush(stdout);
+                    //printf("about to free buffer\n");
+                    //fflush(stdout);
                     free(binBuffer);
-                    printf("allocating buffer for final chunk\n");
-                    fflush(stdout);
+                    //printf("allocating buffer for final chunk\n");
+                    //fflush(stdout);
                     binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
 
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
                     if (bytesRead != final_chunk_points) {
-                        printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points, final_chunk_points*sizeof(long),bytesRead);
-                        fflush(stdout);
+                        //printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points, final_chunk_points*sizeof(long),bytesRead);
+                        //fflush(stdout);
                         printf("Error in reading final file chunk\n");
                         exit(1);
                     }
-                    printf("final file chunk copied into buffer\n");
-                    fflush(stdout);
+                    //printf("final file chunk copied into buffer\n");
+                    //fflush(stdout);
                     chunk_points = final_chunk_points;
                 } else {
-                    printf("reading in next chunk\n");
-                    fflush(stdout);
+                    //printf("reading in next chunk\n");
+                    //fflush(stdout);
                     bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
                     if (bytesRead != chunk_points) {
                         printf("Error in reading file chunk %ld\n", i);
                         exit(1);
                     }
-                    printf("file chunk %ld copied into buffer\n", i);
-                    fflush(stdout);
+                    //printf("file chunk %ld copied into buffer\n", i);
+                    //fflush(stdout);
                 }
             }
         }
@@ -360,15 +360,15 @@ void populateTrainingData() {
         }
     }
 
-    printf("SAMPLE COUNT: %ld\n", sample_count);
-    fflush(stdout);
-    printf("populate_data() done\n");
-    fflush(stdout);
+    //printf("SAMPLE COUNT: %ld\n", sample_count);
+    //fflush(stdout);
+    //printf("populate_data() done\n");
+    //fflush(stdout);
 }
 
 void populateTrainingDataStripped() {
-    printf("inside populate_stripped_data()\n");
-    fflush(stdout);
+    //printf("inside populate_stripped_data()\n");
+    //fflush(stdout);
 
     long i, j = 0,
             sample = -1,
@@ -397,28 +397,28 @@ void populateTrainingDataStripped() {
         long chunk_points = 30000000 * 4;
         long chunk_count = 0, final_chunk_points = 0;
 
-        printf("chunk_points = %ld\n", chunk_points);
-        fflush(stdout);
+        //printf("chunk_points = %ld\n", chunk_points);
+        //fflush(stdout);
         chunk_count = (non_zeros) / 30000000;
         final_chunk_points = points - (chunk_count * chunk_points);
-        printf("final_chunk_points = %ld\n", final_chunk_points);
-        fflush(stdout);
+        //printf("final_chunk_points = %ld\n", final_chunk_points);
+        //fflush(stdout);
         if (final_chunk_points != 0) {
             chunk_count++;
         }
-        printf("chunk_count = %ld\n", chunk_count);
-        fflush(stdout);
+        //printf("chunk_count = %ld\n", chunk_count);
+        //fflush(stdout);
 
         binBuffer = (long *) malloc(chunk_points * sizeof(long));
-        printf("Done allocating initial buffer chunk\n");
-        fflush(stdout);
+        //printf("Done allocating initial buffer chunk\n");
+        //fflush(stdout);
         if (binBuffer == NULL) {
             printf("Failed to allocate initial buffer chunk.\n");
             exit(1);
         }
         bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
-        printf("bytesRead = %ld\n", bytesRead);
-        fflush(stdout);
+        //printf("bytesRead = %ld\n", bytesRead);
+        //fflush(stdout);
 
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
@@ -461,11 +461,11 @@ void populateTrainingDataStripped() {
 
             if (chunk_count > 1 && c != chunk_count - 1) {
                 if (c + 1 == chunk_count - 1) {
-                    printf("about to free buffer\n");
-                    fflush(stdout);
+                    //printf("about to free buffer\n");
+                    //fflush(stdout);
                     free(binBuffer);
-                    printf("allocating buffer for final chunk\n");
-                    fflush(stdout);
+                    //printf("allocating buffer for final chunk\n");
+                    //fflush(stdout);
                     binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
 
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
@@ -476,19 +476,19 @@ void populateTrainingDataStripped() {
                         printf("Error in reading final file chunk\n");
                         exit(1);
                     }
-                    printf("final file chunk copied into buffer\n");
-                    fflush(stdout);
+                    //printf("final file chunk copied into buffer\n");
+                    //fflush(stdout);
                     chunk_points = final_chunk_points;
                 } else {
-                    printf("reading in next chunk\n");
-                    fflush(stdout);
+                    //printf("reading in next chunk\n");
+                    //fflush(stdout);
                     bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
                     if (bytesRead != chunk_points) {
                         printf("Error in reading file chunk %ld\n", i);
                         exit(1);
                     }
-                    printf("file chunk %ld copied into buffer\n", i);
-                    fflush(stdout);
+                    //printf("file chunk %ld copied into buffer\n", i);
+                    //fflush(stdout);
                 }
             }
         }
@@ -546,8 +546,8 @@ void populateTrainingDataStripped() {
     fclose(train_data);
     free(binBuffer);
 
-    printf("SAMPLE COUNT: %ld\n", sample_count);
-    fflush(stdout);
+    //("SAMPLE COUNT: %ld\n", sample_count);
+    //fflush(stdout);
 
     double d_temp;
     long l_temp;
@@ -559,8 +559,8 @@ void populateTrainingDataStripped() {
         feat_deg_recip_stripped[i] = l_temp;
     }
 
-    printf("populate_data() done\n");
-    fflush(stdout);
+    //printf("populate_data() done\n");
+    //fflush(stdout);
 }
 
 void init_cluster(long n) {
@@ -600,8 +600,8 @@ void init() {
 
     if (using_clusters) {
         long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
-        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
-        fflush(stdout);
+        //printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        //fflush(stdout);
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
@@ -711,8 +711,8 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
     }
-    printf("--- Memmory Allocation Complete ---\n");
-    fflush(stdout);
+    //printf("--- Memmory Allocation Complete ---\n");
+    //fflush(stdout);
 
     if (using_clusters){
         for (long n = 0; n < cluster_count; n++) {
@@ -727,8 +727,8 @@ void init() {
         }
     }
 
-    printf("--- Memmory Initialization Complete ---\n");
-    fflush(stdout);
+    //printf("--- Memmory Initialization Complete ---\n");
+    //fflush(stdout);
     if (using_clusters) {
         MIGRATE(&model_vec[0]);
         populateTrainingData();
@@ -739,6 +739,6 @@ void init() {
         populateTestDataStripped();
     }
 
-	printf("--- Initialization Complete ---\n");
-	fflush(stdout);
+	//printf("--- Initialization Complete ---\n");
+	//fflush(stdout);
 }

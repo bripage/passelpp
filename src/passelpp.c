@@ -19,8 +19,8 @@ int main(int argc, char **argv) {
     beta_gamma = beta;
 
     if (using_clusters) {
-        printf("--- Starting ---\n");
-        fflush(stdout);
+        //printf("--- Starting ---\n");
+        //fflush(stdout);
         start_time = CLOCK();
         for (long epoch = 1; epoch <= epochs; epoch++) {
             if (epoch > 1) {
@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
         printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
         fflush(stdout);
     } else {
-        printf("--- Starting ---\n");
-        fflush(stdout);
+        //printf("--- Starting ---\n");
+        //fflush(stdout);
         start_time = CLOCK();
         for (long t = 0; t < threads_per_cluster; t++) {
             cilk_migrate_hint(&model_vec_stripped[t]);
