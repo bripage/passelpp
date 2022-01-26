@@ -581,8 +581,14 @@ void init_cluster(long n) {
     fflush(stdout);
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
+        printf("3a, i = %ld\n",i);
+        fflush(stdout);
         working_vec[n][i] = 0;
+        printf("3b, i = %ld\n",i);
+        fflush(stdout);
         feat_deg_recip[n][i] = 0;
+        printf("3c, i = %ld\n",i);
+        fflush(stdout);
     }
     printf("4\n");
     fflush(stdout);
