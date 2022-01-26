@@ -569,24 +569,29 @@ void init_cluster(long n) {
     }
     cluster_samples[n] = 0;
     total_evaluated_sample_count[n] = 0;
-
+    printf("1\n");
+    fflush(stdout);
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
-
+    printf("2\n");
+    fflush(stdout);
     if (n != cluster_count-1) {
         upstream[n] = n+1;
     } else {
         upstream[n] = 0;
     }
-
+    printf("3\n");
+    fflush(stdout);
     if (n == 0){
         token[n] = 1;
     } else {
         token[n] = 0;
     }
+    printf("4\n");
+    fflush(stdout);
 }
 
 void init() {
