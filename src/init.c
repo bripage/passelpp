@@ -567,6 +567,8 @@ void init_cluster(long n) {
     printf("0\n");
     fflush(stdout);
     for (long i = 0; i < cluster_count; i++){
+        printf("n = %ld, i = %ld\n", n, i);
+        fflush(stdout);
         accuracies[n][i] = 0;
     }
     printf("1\n");
