@@ -119,13 +119,13 @@ void parse_args(int argc, char * argv[]) {
     }
 
     mw_replicated_init(&using_clusters, clusters);
-    //printf("Using Multiple Clusters: %ld\n", using_clusters);
-    //fflush(stdout);
+    printf("Using Multiple Clusters: %ld\n", using_clusters);
+    fflush(stdout);
     long ltmp = ceil((double) train_sample_count / (double) cluster_count);
     mw_replicated_init(&samples_per_cluster, ltmp);
     if (clusters) {
-        //printf("samples per cluster: %ld\n", samples_per_cluster);
-        //fflush(stdout);
+        printf("samples per cluster: %ld\n", samples_per_cluster);
+        fflush(stdout);
     }
 
     /** Solve for Beta (based on cluster count) */
@@ -564,33 +564,39 @@ void populateTrainingDataStripped() {
 }
 
 void init_cluster(long n) {
+    printf("0\n");
+    fflush(stdout);
     for (long i = 0; i < cluster_count; i++){
         accuracies[n][i] = 0;
     }
-    cluster_samples[n] = 0;
-    total_evaluated_sample_count[n] = 0;
     printf("1\n");
+    fflush(stdout);
+    cluster_samples[n] = 0;
+    printf("2\n");
+    fflush(stdout);
+    total_evaluated_sample_count[n] = 0;
+    printf("3\n");
     fflush(stdout);
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
-    printf("2\n");
+    printf("4\n");
     fflush(stdout);
     if (n != cluster_count-1) {
         upstream[n] = n+1;
     } else {
         upstream[n] = 0;
     }
-    printf("3\n");
+    printf("5\n");
     fflush(stdout);
     if (n == 0){
         token[n] = 1;
     } else {
         token[n] = 0;
     }
-    printf("4\n");
+    printf("6\n");
     fflush(stdout);
 }
 
@@ -605,8 +611,8 @@ void init() {
 
     if (using_clusters) {
         long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
-        //printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
-        //fflush(stdout);
+        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        fflush(stdout);
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
