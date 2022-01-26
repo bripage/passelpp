@@ -19,8 +19,8 @@ int main(int argc, char **argv) {
     beta_gamma = beta;
 
     if (using_clusters) {
-        //printf("--- Starting ---\n");
-        //fflush(stdout);
+        printf("--- Starting ---\n");
+        fflush(stdout);
         start_time = CLOCK();
         for (long epoch = 1; epoch <= epochs; epoch++) {
             if (epoch > 1) {

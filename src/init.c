@@ -144,8 +144,8 @@ void parse_args(int argc, char * argv[]) {
     ltmp = 16777216 - lambda;
     mw_replicated_init(&one_min_lambda, ltmp);
 
-    //printf("--- Parsing Arguments Complete ---\n");
-    //fflush(stdout);
+    printf("--- Parsing Arguments Complete ---\n");
+    fflush(stdout);
 }
 
 void populateTrainingData() {
@@ -362,8 +362,8 @@ void populateTrainingData() {
 
     //printf("SAMPLE COUNT: %ld\n", sample_count);
     //fflush(stdout);
-    //printf("populate_data() done\n");
-    //fflush(stdout);
+    printf("populate_data() done\n");
+    fflush(stdout);
 }
 
 void populateTrainingDataStripped() {
@@ -711,8 +711,8 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
     }
-    //printf("--- Memmory Allocation Complete ---\n");
-    //fflush(stdout);
+    printf("--- Memmory Allocation Complete ---\n");
+    fflush(stdout);
 
     if (using_clusters){
         for (long n = 0; n < cluster_count; n++) {
@@ -727,8 +727,8 @@ void init() {
         }
     }
 
-    //printf("--- Memmory Initialization Complete ---\n");
-    //fflush(stdout);
+    printf("--- Memmory Initialization Complete ---\n");
+    fflush(stdout);
     if (using_clusters) {
         MIGRATE(&model_vec[0]);
         populateTrainingData();
@@ -739,6 +739,6 @@ void init() {
         populateTestDataStripped();
     }
 
-	//printf("--- Initialization Complete ---\n");
-	//fflush(stdout);
+	printf("--- Initialization Complete ---\n");
+	fflush(stdout);
 }
