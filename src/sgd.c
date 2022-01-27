@@ -100,18 +100,21 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
         }
     } else {
         while (ATOMIC_ADDMS(&total_evaluated_sample_count[n], 1) < end_sample_count) {
-            if (ATOMIC_CAS(&token[n], 0, 1) == 1) {
-                for (i = 0; i < 16; i++) {
-                    cilk_migrate_hint(&l_model_vec);
-                    cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+            if (token[n] == 1){
+                if (ATOMIC_ADDM(&samples_since_token[n], 1) == update_period){
+                    ATOMIC_SWAP(&token[n], 0);
+                    for (i = 0; i < 16; i++) {
+                        cilk_migrate_hint(&l_model_vec);
+                        cilk_spawn upstream_update(i, n, upstream[n], beta_gamma);
+                    }
+                    for (i = 0; i < 16; i++) {
+                        cilk_migrate_hint(&u_working_vec);
+                        cilk_spawn downstream_update(i, upstream[n], n);
+                    }
+                    cilk_sync;
+                    token[upstream[n]] = 1;   // pass token to upstream cluster
+                    ATOMIC_SWAP(&samples_since_token[n], 0);
                 }
-                for (i = 0; i < 16; i++) {
-                    cilk_migrate_hint(&u_working_vec);
-                    cilk_spawn downstream_update(i, upstream[n], n);
-                }
-                cilk_sync;
-                token[upstream[n]] = 1;   // pass token to upstream cluster
-                token[n] = 0;          // zero out my token
             }
 
             sample = rand_state;

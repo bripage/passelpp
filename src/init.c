@@ -119,13 +119,13 @@ void parse_args(int argc, char * argv[]) {
     }
 
     mw_replicated_init(&using_clusters, clusters);
-    printf("Using Multiple Clusters: %ld\n", using_clusters);
-    fflush(stdout);
+    //printf("Using Multiple Clusters: %ld\n", using_clusters);
+    //fflush(stdout);
     long ltmp = ceil((double) train_sample_count / (double) cluster_count);
     mw_replicated_init(&samples_per_cluster, ltmp);
     if (clusters) {
-        printf("samples per cluster: %ld\n", samples_per_cluster);
-        fflush(stdout);
+        //printf("samples per cluster: %ld\n", samples_per_cluster);
+        //fflush(stdout);
     }
 
     /** Solve for Beta (based on cluster count) */
@@ -144,8 +144,8 @@ void parse_args(int argc, char * argv[]) {
     ltmp = 16777216 - lambda;
     mw_replicated_init(&one_min_lambda, ltmp);
 
-    printf("--- Parsing Arguments Complete ---\n");
-    fflush(stdout);
+    //printf("--- Parsing Arguments Complete ---\n");
+    //fflush(stdout);
 }
 
 void populateTrainingData() {
@@ -362,8 +362,8 @@ void populateTrainingData() {
 
     //printf("SAMPLE COUNT: %ld\n", sample_count);
     //fflush(stdout);
-    printf("populate_data() done\n");
-    fflush(stdout);
+    //printf("populate_data() done\n");
+    //fflush(stdout);
 }
 
 void populateTrainingDataStripped() {
@@ -564,48 +564,27 @@ void populateTrainingDataStripped() {
 }
 
 void init_cluster(long n) {
-    printf("0\n");
-    fflush(stdout);
     for (long i = 0; i < cluster_count; i++){
-        printf("n = %ld, i = %ld\n", n, i);
-        fflush(stdout);
         accuracies[n][i] = 0;
     }
-    printf("1\n");
-    fflush(stdout);
     cluster_samples[n] = 0;
-    printf("2\n");
-    fflush(stdout);
     total_evaluated_sample_count[n] = 0;
-    printf("3\n");
-    fflush(stdout);
+    samples_since_token[n] = 0;
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
-        //printf("3a, i = %ld\n",i);
-        //fflush(stdout);
         working_vec[n][i] = 0;
-        //printf("3b, i = %ld\n",i);
-        //fflush(stdout);
         feat_deg_recip[n][i] = 0;
-        //printf("3c, i = %ld\n",i);
-        //fflush(stdout);
     }
-    printf("4\n");
-    fflush(stdout);
     if (n != cluster_count-1) {
         upstream[n] = n+1;
     } else {
         upstream[n] = 0;
     }
-    printf("5\n");
-    fflush(stdout);
     if (n == 0){
         token[n] = 1;
     } else {
         token[n] = 0;
     }
-    printf("6\n");
-    fflush(stdout);
 }
 
 void init() {
@@ -619,8 +598,8 @@ void init() {
 
     if (using_clusters) {
         long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
-        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
-        fflush(stdout);
+        //printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        //fflush(stdout);
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
@@ -699,6 +678,9 @@ void init() {
 
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &token, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
         l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
         mw_replicated_init((long *) &train_s_stripped, (long) l1d_ptr);
@@ -730,8 +712,8 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
     }
-    printf("--- Memmory Allocation Complete ---\n");
-    fflush(stdout);
+    //printf("--- Memmory Allocation Complete ---\n");
+    //fflush(stdout);
 
     if (using_clusters){
         for (long n = 0; n < cluster_count; n++) {
@@ -746,8 +728,8 @@ void init() {
         }
     }
 
-    printf("--- Memmory Initialization Complete ---\n");
-    fflush(stdout);
+    //printf("--- Memmory Initialization Complete ---\n");
+    //fflush(stdout);
     if (using_clusters) {
         MIGRATE(&model_vec[0]);
         populateTrainingData();
@@ -758,6 +740,6 @@ void init() {
         populateTestDataStripped();
     }
 
-	printf("--- Initialization Complete ---\n");
-	fflush(stdout);
+	//printf("--- Initialization Complete ---\n");
+	//fflush(stdout);
 }

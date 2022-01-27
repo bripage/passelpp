@@ -72,6 +72,7 @@ replicated long* total_evaluated_sample_count;
 replicated long* cluster_samples;
 replicated long* upstream;
 replicated long* token;
+replicated long* samples_since_token;
 
 
 void parse_args(int argc, char * argv[]);
