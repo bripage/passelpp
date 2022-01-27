@@ -26,6 +26,5 @@ extern replicated long** model_vec;
 extern replicated long** accuracies;
 
 extern replicated long* model_vec_stripped;
-extern replicated long* samples_since_token;
 
 #endif //EMUSGD_WILDEBEEST_H

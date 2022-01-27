@@ -52,6 +52,7 @@ extern replicated long* total_evaluated_sample_count;
 extern replicated long* cluster_samples;
 extern replicated long* upstream;
 extern replicated long* token;
+extern replicated long* samples_since_token;
 
 void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
