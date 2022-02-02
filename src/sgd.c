@@ -189,14 +189,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 feature = train_f_stripped[i];
                 distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
             }
-            */
-            for (long n = 0; n < node_count; n++) {
-                for (i = start + n; i < stop; i += node_count) {
-                    feature = train_f_stripped[i];
-                    distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
-                }
-            }
-            distance *= class;
+                         distance *= class;
 
             if (distance < 16777216){
                 for (i = start; i < stop; i++) {
@@ -207,6 +200,35 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 for (i = start; i < stop; i++) {
                     cilk_migrate_hint(&train_v_stripped[i]);
                     cilk_spawn child_train_pos_gradient(i, eta_gamma);
+                }
+            }
+            */
+            for (long n = 0; n < node_count; n++) {
+                for (i = start + n; i < stop; i += node_count) {
+                    feature = train_f_stripped[i];
+                    distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
+                }
+            }
+            distance *= class;
+
+            if (distance < 16777216){
+                for (long n = 0; n < node_count; n++) {
+                    for (i = start + n; i < stop; i += node_count) {
+                        feature = l_train_f[i];
+                        l_temp = (di * l_train_v[i]) >> 24;
+                        wv_temp = l_working_vec[feature] + l_temp;
+                        l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                        l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                    }
+                }
+            } else {
+                for (long n = 0; n < node_count; n++) {
+                    for (i = start + n; i < stop; i += node_count) {
+                        feature = l_train_f[i];
+                        wv_temp = l_working_vec[feature];
+                        l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                        l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                    }
                 }
             }
 
