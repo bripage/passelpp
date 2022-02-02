@@ -117,7 +117,7 @@ void parse_args(int argc, char * argv[]) {
             clusters = 1;
         }
     }
-
+    mw_replicated_init(&node_count, NUM_NODES());
     mw_replicated_init(&using_clusters, clusters);
     //printf("Using Multiple Clusters: %ld\n", using_clusters);
     //fflush(stdout);

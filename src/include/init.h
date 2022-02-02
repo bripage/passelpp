@@ -33,6 +33,7 @@ replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
 extern replicated long using_clusters;
+replicated long node_count;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

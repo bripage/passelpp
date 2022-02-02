@@ -184,9 +184,17 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             stop = train_s_stripped[sample + 1];
             class = train_c_stripped[sample];
             di = eta_gamma * class;
+            /*
             for (i = start; i < stop; i++) {
                 feature = train_f_stripped[i];
                 distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
+            }
+            */
+            for (long n = 0; n < node_count; n++) {
+                for (i = start + n; i < stop; i += node_count) {
+                    feature = train_f_stripped[i];
+                    distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
+                }
             }
             distance *= class;
 
