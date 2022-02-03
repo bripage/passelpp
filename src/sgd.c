@@ -215,10 +215,10 @@ void stripped_train_no_epochs_spawn_children(long tid) {
 
             if (distance < 16777216) {
                 cilk_migrate_hint(&train_v_stripped[start]);
-                cilk_spawn  child_train_neg_2d(start + n, stop, eta_gamma, di);
+                cilk_spawn  child_train_neg_2d(start, stop, eta_gamma, di);
             } else {
                 cilk_migrate_hint(&train_v_stripped[start]);
-                cilk_spawn child_train_pos_2d(start + n, stop, eta_gamma);
+                cilk_spawn child_train_pos_2d(start, stop, eta_gamma);
             }
 
             thread_id += threads_per_cluster;
