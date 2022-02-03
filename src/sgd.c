@@ -214,14 +214,14 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             distance *= class;
 
             if (distance < 16777216){
-                for (i = start; i < stop; i++) {
-                    cilk_migrate_hint(&train_v_stripped[i]);
-                    cilk_spawn child_train_neg_2d(start, stop, eta_gamma, di);
+                for (long n = 0; n < node_count; n++) {
+                    cilk_migrate_hint(&train_v_stripped[n]);
+                    cilk_spawn child_train_neg_2d(start+n, stop, eta_gamma, di);
                 }
             } else {
-                for (i = start; i < stop; i++) {
-                    cilk_migrate_hint(&train_v_stripped[i]);
-                    cilk_spawn child_train_pos_2d(start, stop, eta_gamma);
+                for (long n = 0; n < node_count; n++) {
+                    cilk_migrate_hint(&train_v_stripped[n]);
+                    cilk_spawn child_train_pos_2d(start+n, stop, eta_gamma);
                 }
             }
 
@@ -252,7 +252,7 @@ void child_train_neg_gradient(long i, long eta_gamma, long di) {
 
 void child_train_pos_2d(long start, long stop, long eta_gamma) {
     long feature, l_temp, mv_temp;
-    for (long i = start + n; i < stop; i += node_count) {
+    for (long i = start; i < stop; i += node_count) {
         feature = train_f_stripped[i];
         mv_temp = model_vec_stripped[feature];
         l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
@@ -262,7 +262,7 @@ void child_train_pos_2d(long start, long stop, long eta_gamma) {
 
 void child_train_neg_2d(long start, long stop, long eta_gamma, long di) {
     long feature, l_temp, mv_temp;
-    for (long i = start + n; i < stop; i += node_count) {
+    for (long i = start; i < stop; i += node_count) {
         feature = train_f_stripped[i];
         l_temp = (di * train_v_stripped[i]) >> 24;
         mv_temp = model_vec_stripped[feature] + l_temp;
