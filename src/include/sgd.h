@@ -60,5 +60,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
 void stripped_train_no_epochs_spawn_children(long tid);
 void child_train_pos_gradient(long i, long eta_gamma);
 void child_train_neg_gradient(long i, long eta_gamma, long di);
+void child_train_pos_2d(long start, long stop, long eta_gamma);
+void child_train_neg_2d(long start, long stop, long eta_gamma, long di);
 
 #endif //EMUSGD_SGD_H
