@@ -251,22 +251,24 @@ void child_train_neg_gradient(long i, long eta_gamma, long di) {
 
 
 void child_train_pos_2d(long start, long stop, long eta_gamma) {
-    long feature, l_temp, mv_temp;
+    long feature, l_temp, mv_orig, mv_new;
     for (long i = start; i < stop; i += node_count) {
         feature = train_f_stripped[i];
-        mv_temp = model_vec_stripped[feature];
+        mv_orig = model_vec_stripped[feature];
         l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-        model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+        mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
+        REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
     }
 }
 
 void child_train_neg_2d(long start, long stop, long eta_gamma, long di) {
-    long feature, l_temp, mv_temp;
+    long feature, l_temp, mv_orig, mv_new;
     for (long i = start; i < stop; i += node_count) {
         feature = train_f_stripped[i];
         l_temp = (di * train_v_stripped[i]) >> 24;
-        mv_temp = model_vec_stripped[feature] + l_temp;
+        mv_orig = model_vec_stripped[feature] + l_temp;
         l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-        model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
+        mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
+        REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
     }
 }
