@@ -213,16 +213,12 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             }
             distance *= class;
 
-            if (distance < 16777216){
-                for (long n = 0; n < node_count; n++) {
-                    cilk_migrate_hint(&train_v_stripped[n]);
-                    cilk_spawn child_train_neg_2d(start+n, stop, eta_gamma, di);
-                }
+            if (distance < 16777216) {
+                cilk_migrate_hint(&train_v_stripped[start]);
+                cilk_spawn  child_train_neg_2d(start + n, stop, eta_gamma, di);
             } else {
-                for (long n = 0; n < node_count; n++) {
-                    cilk_migrate_hint(&train_v_stripped[n]);
-                    cilk_spawn child_train_pos_2d(start+n, stop, eta_gamma);
-                }
+                cilk_migrate_hint(&train_v_stripped[start]);
+                cilk_spawn child_train_pos_2d(start + n, stop, eta_gamma);
             }
 
             thread_id += threads_per_cluster;
