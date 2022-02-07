@@ -471,7 +471,7 @@ void populateTrainingDataStripped() {
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
                     if (bytesRead != final_chunk_points) {
                         //printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points,
-                               final_chunk_points * sizeof(long), bytesRead);
+                        //       final_chunk_points * sizeof(long), bytesRead);
                         //fflush(stdout);
                         printf("Error in reading final file chunk\n");
                         exit(1);
