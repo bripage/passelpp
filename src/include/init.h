@@ -52,10 +52,6 @@ replicated long** train_s; // training data sample id's
 replicated long** train_f;// training data feature id's (1:1 relationship to values vector)
 replicated long** train_v;          // training data values (non-zero values for all samples)
 replicated long** train_c; // training sample classes (single value for each sample)
-replicated long** test_s;
-replicated long** test_f;
-replicated long** test_v;
-replicated long** test_c;
 replicated long** feat_deg_recip;
 replicated long** accuracies;
 

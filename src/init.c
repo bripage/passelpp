@@ -257,8 +257,8 @@ void populateTrainingData() {
                     //printf("about to free buffer\n");
                     //fflush(stdout);
                     free(binBuffer);
-                    //printf("allocating buffer for final chunk\n");
-                    //fflush(stdout);
+                    printf("allocating buffer for final chunk\n");
+                    fflush(stdout);
                     binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
 
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
@@ -268,19 +268,19 @@ void populateTrainingData() {
                         printf("Error in reading final file chunk\n");
                         exit(1);
                     }
-                    //printf("final file chunk copied into buffer\n");
-                    //fflush(stdout);
+                    printf("final file chunk copied into buffer\n");
+                    fflush(stdout);
                     chunk_points = final_chunk_points;
                 } else {
                     //printf("reading in next chunk\n");
                     //fflush(stdout);
                     bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
                     if (bytesRead != chunk_points) {
-                        printf("Error in reading file chunk %ld\n", i);
+                        printf("Error in reading file chunk %ld\n", c+1);
                         exit(1);
                     }
-                    //printf("file chunk %ld copied into buffer\n", i);
-                    //fflush(stdout);
+                    printf("file chunk %ld of %ld copied into buffer\n", c+1, chunk_count);
+                    fflush(stdout);
                 }
             }
         }
@@ -464,15 +464,15 @@ void populateTrainingDataStripped() {
                     //printf("about to free buffer\n");
                     //fflush(stdout);
                     free(binBuffer);
-                    //printf("allocating buffer for final chunk\n");
-                    //fflush(stdout);
+                    printf("allocating buffer for final chunk\n");
+                    fflush(stdout);
                     binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
 
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
                     if (bytesRead != final_chunk_points) {
-                        printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points,
+                        //printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points,
                                final_chunk_points * sizeof(long), bytesRead);
-                        fflush(stdout);
+                        //fflush(stdout);
                         printf("Error in reading final file chunk\n");
                         exit(1);
                     }
@@ -484,11 +484,11 @@ void populateTrainingDataStripped() {
                     //fflush(stdout);
                     bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
                     if (bytesRead != chunk_points) {
-                        printf("Error in reading file chunk %ld\n", i);
+                        printf("Error in reading file chunk %ld\n", c+1);
                         exit(1);
                     }
-                    //printf("file chunk %ld copied into buffer\n", i);
-                    //fflush(stdout);
+                    printf("file chunk %ld of %ld copied into buffer\n", c+1, chunk_count);
+                    fflush(stdout);
                 }
             }
         }
@@ -597,9 +597,9 @@ void init() {
     }
 
     if (using_clusters) {
-        long non_zeros_per_cluster = 2 * ceil((double) total_train_points / (double) cluster_count);
-        //printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
-        //fflush(stdout);
+        long non_zeros_per_cluster = ceil((double) samples_per_cluster * (total_train_points / (double) train_sample_count));
+        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        fflush(stdout);
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
@@ -643,30 +643,6 @@ void init() {
             *ptr = l2d_ptr;
         }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (test_sample_count + 1) * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&test_s, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), test_sample_count * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&test_c, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&test_f, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), total_test_points * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&test_v, nlet);
-            *ptr = l2d_ptr;
-        }
-
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
@@ -694,26 +670,27 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
         mw_replicated_init((long *) &train_c_stripped, (long) l1d_ptr);
 
-        l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
-        mw_replicated_init((long *) &test_s_stripped, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
-        mw_replicated_init((long *) &test_f_stripped, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
-        mw_replicated_init((long *) &test_v_stripped, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
-        mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
-
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &model_vec_stripped, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
     }
-    //printf("--- Memmory Allocation Complete ---\n");
-    //fflush(stdout);
+
+    l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
+    mw_replicated_init((long *) &test_s_stripped, (long) l1d_ptr);
+
+    l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
+    mw_replicated_init((long *) &test_f_stripped, (long) l1d_ptr);
+
+    l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
+    mw_replicated_init((long *) &test_v_stripped, (long) l1d_ptr);
+
+    l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
+    mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
+
+    printf("--- Memmory Allocation Complete ---\n");
+    fflush(stdout);
 
     if (using_clusters){
         for (long n = 0; n < cluster_count; n++) {
@@ -728,18 +705,17 @@ void init() {
         }
     }
 
-    //printf("--- Memmory Initialization Complete ---\n");
-    //fflush(stdout);
+    printf("--- Memmory Initialization Complete ---\n");
+    fflush(stdout);
     if (using_clusters) {
         MIGRATE(&model_vec[0]);
         populateTrainingData();
-        populateTestData();
     } else {
         MIGRATE(&model_vec_stripped[0]);
         populateTrainingDataStripped();
-        populateTestDataStripped();
     }
+    populateTestDataStripped();
 
-	//printf("--- Initialization Complete ---\n");
-	//fflush(stdout);
+	printf("--- Initialization Complete ---\n");
+	fflush(stdout);
 }

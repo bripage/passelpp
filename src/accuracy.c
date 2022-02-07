@@ -168,17 +168,15 @@ void get_accuracy(long n){
 
     for (long i = 0; i < test_sample_count; i++) {
         dotProduct = 0;
-        start = test_s[n][i];
-        stop = test_s[n][i+1];
+        start = test_s_stripped[i];
+        stop = test_s_stripped[i+1];
 
         for (j = start; j < stop; j++) {
-            feature = test_f[n][j];
-            dotProduct += (test_v[n][j] * model_vec[n][feature]) >> 24;
-            //printf("%ld,test_v[%ld],working_vec[0][%ld],%ld,%ld\n", dotProduct, j, feature, test_v[j], working_vec[0][feature]);
-            //fflush(stdout);
+            feature = test_f_stripped[j];
+            dotProduct += (test_v_stripped[j] * model_vec[n][feature]) >> 24;
         }
 
-        if (dotProduct * test_c[n][i] > 0){
+        if (dotProduct * test_c_stripped[i] > 0){
             correct_samples += 1;
         }
     }
@@ -186,8 +184,6 @@ void get_accuracy(long n){
     accuracy = 100*(correct_samples/test_sample_count);
     accuracy *= 16777216;
     accuracies[0][n] = (long) accuracy;
-    //printf("%ld, %ld\n", n, accuracies[n]);
-    //fflush(stdout);
 }
 
 void get_stripped_accuracy(){
