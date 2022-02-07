@@ -86,6 +86,8 @@ void populateTestData() {
 }
 */
 void populateTestDataStripped() {
+    printf("%Populating Test Data\n");
+    fflush(stdout);
     long i;
     long sample = -1;
     long feature;
