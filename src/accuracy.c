@@ -58,27 +58,27 @@ void populateTestData() {
 
         if (sample != current_sample) {
             for (long c = 0; c < cluster_count; c++) {
-                test_f[c][j] = 0;
-                test_v[c][j] = 1;
+                test_f[j] = 0;
+                test_v[j] = 1;
             }
             j++;
             for (long c = 0; c < cluster_count; c++) {
-                test_s[c][sample] = j;
-                test_f[c][j] = feature;
-                test_v[c][j] = fixed_value;
-                test_c[c][sample] = class;
+                test_s[sample] = j;
+                test_f[j] = feature;
+                test_v[j] = fixed_value;
+                test_c[sample] = class;
             }
             current_sample = sample;
         } else {
             for (long c = 0; c < cluster_count; c++) {
-                test_f[c][j] = feature;
-                test_v[c][j] = fixed_value;
+                test_f[j] = feature;
+                test_v[j] = fixed_value;
             }
         }
         j++;
     }
         for (long c = 0; c < cluster_count; c++) {
-            test_s[c][sample + 1] = j; // add sample id end ptr
+            test_s[sample + 1] = j; // add sample id end ptr
         }
 
     fclose(test_features);
