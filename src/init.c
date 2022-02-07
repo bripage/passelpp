@@ -195,8 +195,8 @@ void populateTrainingData() {
         if (final_chunk_points != 0){
             chunk_count++;
         }
-        //printf("chunk_count = %ld\n", chunk_count);
-        //fflush(stdout);
+        printf("chunk_count = %ld\n", chunk_count);
+        fflush(stdout);
 
         binBuffer = (long *) malloc(chunk_points * sizeof(long));
         //printf("Done allocating initial buffer chunk\n");
@@ -597,7 +597,7 @@ void init() {
     }
 
     if (using_clusters) {
-        long non_zeros_per_cluster = ceil((double) samples_per_cluster * (total_train_points / (double) train_sample_count));
+        long non_zeros_per_cluster = 2 * ceil((double) samples_per_cluster * (total_train_points / (double) train_sample_count));
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
         fflush(stdout);
 
