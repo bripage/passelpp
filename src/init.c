@@ -246,20 +246,20 @@ void populateTrainingData(long node) {
 
                     if (sample != current_sample) {
                         sample_count++;
-                        train_s[node][sample_count] = data_placement[n];
+                        train_s[node][sample_count] = j;
                         train_c[node][sample_count] = class;
                         train_f[node][j] = 0;
                         train_v[node][j] = 1;
-                        REMOTE_ADD(&feat_deg_recip_stripped[0][0], 1);
+                        REMOTE_ADD(&feat_deg_recip[0][0], 1);
                         j++;
                         train_f[node][j] = feature;
                         train_v[node][j] = fixed_value;
-                        REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
+                        REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                         current_sample = sample;
                     } else {
                         train_f[node][j] = feature;
                         train_v[node][j] = fixed_value;
-                        REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
+                        REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                     }
                     j++;
                 }
@@ -326,20 +326,20 @@ void populateTrainingData(long node) {
 
                 if (sample != current_sample) {
                     sample_count++;
-                    train_s[node][sample_count] = data_placement[n];
+                    train_s[node][sample_count] = j;
                     train_c[node][sample_count] = class;
                     train_f[node][j] = 0;
                     train_v[node][j] = 1;
-                    REMOTE_ADD(&feat_deg_recip_stripped[0][0], 1);
+                    REMOTE_ADD(&feat_deg_recip[0][0], 1);
                     j++;
                     train_f[node][j] = feature;
                     train_v[node][j] = fixed_value;
-                    REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
+                    REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                     current_sample = sample;
                 } else {
                     train_f[node][j] = feature;
                     train_v[node][j] = fixed_value;
-                    REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
+                    REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                 }
                 j++;
             }
