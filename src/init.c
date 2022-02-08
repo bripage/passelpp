@@ -822,7 +822,7 @@ void init() {
     }
 
     if (using_clusters) {
-        long non_zeros_per_cluster = ceil((double) total_train_points / (double) cluster_count);
+        long non_zeros_per_cluster = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
         fflush(stdout);
 
