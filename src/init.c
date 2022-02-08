@@ -180,6 +180,9 @@ void populateTrainingData(long node) {
     if (multi_file_load){
         char* node_train_data = malloc(strlen(train_data_path)+10);
         sprintf(node_train_data, "%sp%ld.bin", train_data_path, node);
+        printf("Node %ld loading file %s\n", node, node_train_data);
+        fflush(stdout);
+
         struct stat buffer;
         int status;
         status = stat(node_train_data, &buffer);
