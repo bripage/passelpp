@@ -41,7 +41,6 @@ replicated long multi_file_load;
 double initial_step_size;                // becomes eta
 double initial_step_decay;               // becomes gamma
 FILE * train_data;                       // training data file ptr
-FILE * class_data;                       // training data sample class file ptr
 char * train_data_path;                  // path to training data file
 char * class_data_path;                  // path to training sample class file
 char* test_feature_path;                 // path to accuracy testing file
