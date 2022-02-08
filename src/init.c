@@ -168,12 +168,7 @@ void populateTrainingData(long node) {
     long min_assignment;
     long sample_count = -1;
     long current_sample = -1;
-    long* sample_placement = (long*) malloc(cluster_count * sizeof(long));
-    long* data_placement = (long*) malloc(cluster_count * sizeof(long));
-    for (n = 0; n < cluster_count; n++) {
-        data_placement[n] = 0;
-        sample_placement[n] = 0;
-    }
+    long j = 0;
     train_data = NULL;
     long non_zeros;
     long points;
@@ -251,37 +246,22 @@ void populateTrainingData(long node) {
 
                     if (sample != current_sample) {
                         sample_count++;
-
-                        //
-                        //  Bin pack by assigning next row to the cluster with the least amount of currently assigned nnz
-                        //
-                        n = 0;
-                        min_assignment = data_placement[0];
-                        for (long m = 1; m < cluster_count; m++) {
-                            if (data_placement[m] < min_assignment) {
-                                n = m;
-                            }
-                        }
-
-                        sample_placement[n]++;
-                        cluster_samples[n]++;
-
-                        train_s[n][sample_placement[n]] = data_placement[n];
-                        train_c[n][sample_placement[n]] = class;
-                        train_f[n][data_placement[n]] = 0;
-                        train_v[n][data_placement[n]] = 1;
-                        feat_deg_recip[0][0]++;
-                        data_placement[n]++;
-                        train_f[n][data_placement[n]] = feature;
-                        train_v[n][data_placement[n]] = fixed_value;
-                        feat_deg_recip[0][feature]++;
+                        train_s[node][sample_count] = data_placement[n];
+                        train_c[node][sample_count] = class;
+                        train_f[node][j] = 0;
+                        train_v[node][j] = 1;
+                        REMOTE_ADD(&feat_deg_recip_stripped[0][0], 1);
+                        j++;
+                        train_f[node][j] = feature;
+                        train_v[node][j] = fixed_value;
+                        REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
                         current_sample = sample;
                     } else {
-                        train_f[n][data_placement[n]] = feature;
-                        train_v[n][data_placement[n]] = fixed_value;
-                        feat_deg_recip[0][feature]++;
+                        train_f[node][j] = feature;
+                        train_v[node][j] = fixed_value;
+                        REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
                     }
-                    data_placement[n]++;
+                    j++;
                 }
 
                 if (chunk_count > 1 && c != chunk_count - 1) {
@@ -316,10 +296,7 @@ void populateTrainingData(long node) {
                     }
                 }
             }
-            for (n = 0; n < cluster_count; n++) {
-                train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
-            }
-
+            train_s[node][sample_count + 1] = j; // add sample id end ptr
         } else {
             points = non_zeros * 4;
             binBuffer = (long *) malloc(points * sizeof(long));
@@ -349,47 +326,38 @@ void populateTrainingData(long node) {
 
                 if (sample != current_sample) {
                     sample_count++;
+                    train_s[node][sample_count] = data_placement[n];
+                    train_c[node][sample_count] = class;
+                    train_f[node][j] = 0;
+                    train_v[node][j] = 1;
+                    REMOTE_ADD(&feat_deg_recip_stripped[0][0], 1);
+                    j++;
+                    train_f[node][j] = feature;
+                    train_v[node][j] = fixed_value;
+                    REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
                     current_sample = sample;
-
-                    //
-                    //  Bin pack by assigning next row to the cluster with the least amount of currently assigned nnz
-                    //
-                    n = 0;
-                    min_assignment = data_placement[0];
-                    for (long m = 1; m < cluster_count; m++) {
-                        if (data_placement[m] < min_assignment) {
-                            n = m;
-                        }
-                    }
-                    sample_placement[n]++;
-                    cluster_samples[n]++;
-
-                    train_s[n][sample_placement[n]] = data_placement[n];
-                    train_c[n][sample_placement[n]] = class;
-                    train_f[n][data_placement[n]] = 0;
-                    train_v[n][data_placement[n]] = 1;
-                    feat_deg_recip[0][0]++;
-                    data_placement[n]++;
-                    train_f[n][data_placement[n]] = feature;
-                    train_v[n][data_placement[n]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
                 } else {
-                    train_f[n][data_placement[n]] = feature;
-                    train_v[n][data_placement[n]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
+                    train_f[node][j] = feature;
+                    train_v[node][j] = fixed_value;
+                    REMOTE_ADD(&feat_deg_recip_stripped[0][feature], 1);
                 }
-                data_placement[n]++;
+                j++;
             }
 
-            for (n = 0; n < cluster_count; n++) {
-                train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
-                train_s[n][0] = 0;
-            }
+            train_s[node][sample_count + 1] = j; // add sample id end ptr
+            train_s[node][0] = 0;
         }
 
         fclose(train_data);
         free(binBuffer);
     } else {
+        long* sample_placement = (long*) malloc(cluster_count * sizeof(long));
+        long* data_placement = (long*) malloc(cluster_count * sizeof(long));
+        for (n = 0; n < cluster_count; n++) {
+            data_placement[n] = 0;
+            sample_placement[n] = 0;
+        }
+
         non_zeros = total_train_points - train_sample_count;
         points = non_zeros * 4;
         train_data = fopen(train_data_path, "rb");
@@ -584,17 +552,17 @@ void populateTrainingData(long node) {
 
         fclose(train_data);
         free(binBuffer);
+    }
 
-        double d_temp;
-        long l_temp;
-        for (long i = 0; i <= featureSetSize; i++) {
-            d_temp = 1.0;
-            d_temp /= (double) feat_deg_recip[0][i];
-            d_temp *= 16777216;
-            l_temp = (long) d_temp;
-            for (n = 0; n < cluster_count; n++) {
-                feat_deg_recip[n][i] = l_temp;
-            }
+    double d_temp;
+    long l_temp;
+    for (long i = 0; i <= featureSetSize; i++) {
+        d_temp = 1.0;
+        d_temp /= (double) feat_deg_recip[0][i];
+        d_temp *= 16777216;
+        l_temp = (long) d_temp;
+        for (n = 0; n < cluster_count; n++) {
+            feat_deg_recip[n][i] = l_temp;
         }
     }
 
