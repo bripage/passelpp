@@ -314,7 +314,6 @@ void populateTrainingData(long node) {
             }
             train_s[node][sample_count + 1] = j; // add sample id end ptr
         } else {
-            points = non_zeros * 4;
             binBuffer = (long *) malloc(points * sizeof(long));
             bytesRead = fread(binBuffer, sizeof(long), points, multi_load_train_data);
 
@@ -342,6 +341,8 @@ void populateTrainingData(long node) {
 
                 if (sample != current_sample) {
                     sample_count++;
+                    printf("sample %ld\n", sample_count);
+                    fflush(stdout);
                     train_s[node][sample_count] = j;
                     train_c[node][sample_count] = class;
                     train_f[node][j] = 0;
