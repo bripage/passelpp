@@ -183,8 +183,8 @@ void populateTrainingData(long node) {
     //fflush(stdout);
 
     if (multi_file_load){
-        char* node_train_data = malloc(strlen(train_data_path)+4);
-        sprintf(node_train_data, "%s_%ld", train_data_path, node);
+        char* node_train_data = malloc(strlen(train_data_path)+10);
+        sprintf(node_train_data, "%sp%ld.bin", train_data_path, node);
         struct stat buffer;
         int status;
         status = stat(node_train_data, &buffer);
