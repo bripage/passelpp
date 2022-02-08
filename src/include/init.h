@@ -11,6 +11,7 @@
 #include "fcntl.h"
 #include <string.h>
 #include <math.h>
+#include <sys/stat.h>
 
 /// Replicated globals
 extern replicated long test_id;
@@ -34,6 +35,7 @@ replicated long samples_per_cluster;
 replicated long update_period;
 extern replicated long using_clusters;
 replicated long node_count;
+replicated long multi_file_load;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

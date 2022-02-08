@@ -237,6 +237,7 @@ void child_train_pos_gradient(long i, long eta_gamma) {
     model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
 }
 
+
 void child_train_neg_gradient(long i, long eta_gamma, long di) {
     long feature = train_f_stripped[i];
     long l_temp = (di * train_v_stripped[i]) >> 24;
