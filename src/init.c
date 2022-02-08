@@ -197,14 +197,10 @@ void populateTrainingData(long node) {
         non_zeros = points / 4;
         */
 
-        FILE * multi_load_train_data = fopen(node_train_data, "rb");
+        FILE * multi_load_train_data = mw_fopen(node_train_data, "rb");
         if (multi_load_train_data == NULL) {
             printf("Failed to open training feature file.\n");
             exit(1);
-        }
-        if (multi_load_train_data == NULL) {
-            printf("File Not Found!\n");
-            exit(-1);
         }
         fseek(multi_load_train_data, 0, SEEK_END);
         points = ftell(multi_load_train_data) / 8;
@@ -319,7 +315,7 @@ void populateTrainingData(long node) {
             binBuffer = (long *) malloc(points * sizeof(long));
             printf("buffer allocated\n");
             fflush(stdout);
-            bytesRead = fread(binBuffer, sizeof(long), points, multi_load_train_data);
+            bytesRead = mw_fread(binBuffer, sizeof(long), points, multi_load_train_data);
             printf("%ld bytes read\n", bytesRead);
             fflush(stdout);
             if (bytesRead != (points)) {
@@ -370,7 +366,7 @@ void populateTrainingData(long node) {
             train_s[node][0] = 0;
         }
 
-        fclose(multi_load_train_data);
+        mw_fclose(multi_load_train_data);
         free(binBuffer);
 
         cluster_samples[node] = sample_count;
