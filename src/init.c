@@ -314,9 +314,14 @@ void populateTrainingData(long node) {
             }
             train_s[node][sample_count + 1] = j; // add sample id end ptr
         } else {
+            printf("not using chunking\n");
+            fflush(stdout);
             binBuffer = (long *) malloc(points * sizeof(long));
+            printf("buffer allocated\n");
+            fflush(stdout);
             bytesRead = fread(binBuffer, sizeof(long), points, multi_load_train_data);
-
+            printf("%ld bytes read\n", bytesRead);
+            fflush(stdout);
             if (bytesRead != (points)) {
                 printf("*** Feature File Read Failure ***\n");
                 exit(1);
