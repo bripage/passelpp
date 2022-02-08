@@ -168,8 +168,8 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
     long thread_id = tid;
-    long l_temp;
-    long mv_temp;
+    //long l_temp;
+    //long mv_temp;
 
     for (long e = 0; e < epochs; e++) {
         while (thread_id < train_sample_count) {

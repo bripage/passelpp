@@ -207,7 +207,7 @@ void populateTrainingData(long node) {
             exit(-1);
         }
         fseek(multi_load_train_data, 0, SEEK_END);
-        points = ftell(multi_load_train_data) / 64;
+        points = ftell(multi_load_train_data) / 32;
         non_zeros = points / 4;
         fseek(multi_load_train_data, 0, SEEK_SET);
 
