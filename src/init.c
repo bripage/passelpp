@@ -183,11 +183,11 @@ void populateTrainingData(long node) {
         printf("Node %ld loading file %s\n", node, node_train_data);
         fflush(stdout);
 
-        struct stat buffer;
+        struct stat file_stats;
         int status;
-        status = stat(node_train_data.c_str(), &buffer);
+        status = stat(node_train_data, &file_stats);
         if(status == 0) {
-            points = buffer.st_size;
+            points = file_stats.st_size;
         } else {
             printf("Node %ld Could not determine file size\n", node);
             fflush(stdout);
