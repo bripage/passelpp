@@ -185,7 +185,7 @@ void populateTrainingData(long node) {
 
         struct stat buffer;
         int status;
-        status = stat(node_train_data, &buffer);
+        status = stat(node_train_data.c_str(), &buffer);
         if(status == 0) {
             points = buffer.st_size;
         } else {
