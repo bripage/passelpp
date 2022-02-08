@@ -204,7 +204,7 @@ void populateTrainingData(long node) {
         }
         if (multi_load_train_data == NULL) {
             printf("File Not Found!\n");
-            return -1;
+            exit(-1);
         }
         fseek(multi_load_train_data, 0, SEEK_END);
         points = ftell(multi_load_train_data) / 64;
