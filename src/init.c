@@ -183,7 +183,7 @@ void populateTrainingData(long node) {
     //fflush(stdout);
 
     if (multi_file_load){
-        char* node_train_data = malloc(strlen(train_data_path)+(3*strlen(char))+1);
+        char* node_train_data = malloc(strlen(train_data_path)+4);
         sprintf(node_train_data, "%s_%ld", train_data_path, node);
         struct stat buffer;
         int status;
@@ -948,7 +948,7 @@ void init() {
     if (using_clusters) {
         if (multi_file_load){
             for (long i = 0; i < cluster_count; i++){
-                cilk_migrate_hint($model_vec[i]);
+                cilk_migrate_hint(&model_vec[i]);
                 cilk_spawn populateTrainingData(i);
             }
         } else {
