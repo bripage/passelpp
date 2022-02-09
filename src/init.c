@@ -166,7 +166,7 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *mode){
     void* from_disk = NULL;
     //printf("local_ptr = %p.\n", local_ptr);
     char* fname = malloc(strlen(train_data_path)+10);
-    sprintf(fname, "%sp%ld.bin", train_data_path, node);
+    sprintf(fname, "%sp%ld.bin", train_data_path, n);
     printf("Node %ld loading file %s\n", n, fname);
     fflush(stdout);
 
