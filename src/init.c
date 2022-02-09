@@ -269,8 +269,8 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
 
         if (sample != current_sample) {
             sample_count++;
-            printf("sample %ld\n", sample_count);
-            fflush(stdout);
+            //printf("sample %ld\n", sample_count);
+            //fflush(stdout);
             train_s[n][sample_count] = j;
             train_c[n][sample_count] = class;
             train_f[n][j] = 0;
