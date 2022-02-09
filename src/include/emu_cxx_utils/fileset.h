@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdio>
+#include "stdio.h"
 #include <sstream>
 #include <string>
 #include "striped_array.h"
