@@ -12,6 +12,7 @@
 #include <string.h>
 #include <math.h>
 #include <sys/stat.h>
+#include "memoryweb/io.h"
 
 /// Replicated globals
 extern replicated long test_id;
