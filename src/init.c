@@ -255,7 +255,7 @@ static void multi_node_read(void *local_ptr, uint64_t n){
     long sample_count = -1;
     long current_sample = -1;
     long j = 0;
-    long* data_buf = from_disk_buf;
+    long* data_buf = from_disk;
     for (long i = 0; i < points; i += 4) {
         sample = data_buf[i];
         feature = data_buf[i + 1];
