@@ -191,7 +191,7 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
 #endif
 
     fseek(fp, 0, SEEK_END);
-    long num_bytes = ftell(multi_load_train_data);
+    long num_bytes = ftell(fp);
     long points = num_bytes / 8;
     long non_zeros = points / 4;
     fseek(fp, 0, SEEK_SET);
@@ -240,7 +240,15 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
 #endif
 
     MIGRATE(local_ptr);
-    for (i = 0; i < points; i += 4) {
+    long i;
+    long sample = -1;
+    long feature;
+    long fixed_value;
+    long class;
+    long sample_count = -1;
+    long current_sample = -1;
+    long j = 0;
+    for (long i = 0; i < points; i += 4) {
         sample = from_disk_buf[i];
         feature = from_disk_buf[i + 1];
         fixed_value = from_disk_buf[i + 2];
@@ -262,26 +270,27 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
             sample_count++;
             printf("sample %ld\n", sample_count);
             fflush(stdout);
-            train_s[node][sample_count] = j;
-            train_c[node][sample_count] = class;
-            train_f[node][j] = 0;
-            train_v[node][j] = 1;
+            train_s[n][sample_count] = j;
+            train_c[n][sample_count] = class;
+            train_f[n][j] = 0;
+            train_v[n][j] = 1;
             REMOTE_ADD(&feat_deg_recip[0][0], 1);
             j++;
-            train_f[node][j] = feature;
-            train_v[node][j] = fixed_value;
+            train_f[n][j] = feature;
+            train_v[n][j] = fixed_value;
             REMOTE_ADD(&feat_deg_recip[0][feature], 1);
             current_sample = sample;
         } else {
-            train_f[node][j] = feature;
-            train_v[node][j] = fixed_value;
+            train_f[n][j] = feature;
+            train_v[n][j] = fixed_value;
             REMOTE_ADD(&feat_deg_recip[0][feature], 1);
         }
         j++;
     }
 
-    train_s[node][sample_count + 1] = j; // add sample id end ptr
-    train_s[node][0] = 0;
+    train_s[n][sample_count + 1] = j; // add sample id end ptr
+    train_s[n][0] = 0;
+    cluster_samples[n] = sample_count + 1;
 
     mw_localfree(from_disk_buf);
 }
