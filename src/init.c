@@ -165,6 +165,8 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
     void* from_disk_buf = NULL;
     void* from_disk = NULL;
     //printf("local_ptr = %p.\n", local_ptr);
+    fprintf(stderr, "node%lu %s\n", n, fname);
+    fflush(NULL);
 
     MIGRATE(local_ptr); // Migrate to node
     fp = mw_fopen(fname, mode, local_ptr);
