@@ -158,13 +158,12 @@ void parse_args(int argc, char * argv[]) {
 }
 
 static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode){
-    FILE *fp = NULL;
-    size_t wrote = 0, read = 0;
+    FILE* fp = NULL;
+    size_t read = 0;
     //TODO: uint64_t actual_node = NODE_ID()
-    int matched, ret, index;
-    void *from_disk_buf = NULL;
-    void *to_disk = NULL, *from_disk = NULL;
-    uint64_t ticks_start, ticks_stop;
+    int ret;
+    void* from_disk_buf = NULL;
+    void* from_disk = NULL;
     //printf("local_ptr = %p.\n", local_ptr);
 
     MIGRATE(local_ptr); // Migrate to node
@@ -242,7 +241,6 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
 #endif
 
     MIGRATE(local_ptr);
-    long i;
     long sample = -1;
     long feature;
     long fixed_value;
