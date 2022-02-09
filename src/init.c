@@ -8,6 +8,8 @@
 #include "include/init.h"
 #include "include/accuracy.h"
 
+static long nodelet0;
+
 double SolveBeta(long num_clusters) {
     double start = 0.6;
     double end = 1.0;
@@ -155,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode, uint64_t buf_sz){
+static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode){
     FILE *fp = NULL;
     size_t wrote = 0, read = 0;
     //TODO: uint64_t actual_node = NODE_ID()
@@ -198,7 +200,7 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
     printf("non-zeros = %ld, points = %ld\n", non_zeros, points);
     fflush(stdout);
 
-    from_disk_buf = mw_localmalloc(1 * buf_sz + 0x000, local_ptr);
+    from_disk_buf = mw_localmalloc(1 * num_bytes + 0x000, local_ptr);
     if (!from_disk_buf) {
         fprintf(stderr, "mw_localmalloc/malloc returned %p.\n", from_disk_buf);
         fflush(NULL);
@@ -249,10 +251,10 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
     long current_sample = -1;
     long j = 0;
     for (long i = 0; i < points; i += 4) {
-        sample = from_disk_buf[i];
-        feature = from_disk_buf[i + 1];
-        fixed_value = from_disk_buf[i + 2];
-        class = from_disk_buf[i + 3];
+        sample = (long) from_disk_buf[i];
+        feature = (long) from_disk_buf[i + 1];
+        fixed_value = (long) from_disk_buf[i + 2];
+        class = (long) from_disk_buf[i + 3];
 
         if (non_standard_classes) {
             if (class == class1) {
@@ -308,7 +310,6 @@ void populateTrainingData() {
     long min_assignment;
     long sample_count = -1;
     long current_sample = -1;
-    long j = 0;
     train_data = NULL;
     long non_zeros;
     long points;
@@ -895,12 +896,12 @@ void init() {
             for (n = 0; n < cluster_count; n++) {
                 // Add .nlet# to string buffer
                 sprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
-                printf("Node %ld loading file %s\n", node, node_train_data);
+                printf("Node %ld loading file %s\n", n, buf);
                 fflush(stdout);
 
                 fnames[n] = strdup(buf); // Create duplicate string
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
-                cilk_spawn __do_open_write_read_memcmp(local_ptr, n, fnames[n], mode, sz);
+                cilk_spawn __do_open_write_read_memcmp(local_ptr, n, fnames[n], mode);
             }
             cilk_sync;
             printf("Local done.\n");
@@ -911,7 +912,7 @@ void init() {
                 repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
                 memcpy(repl_fnames[n], fnames[n], sizeof(fnames[n]) + 1);
                 memcpy(repl_mode[n], mode, sizeof(mode) + 1);
-                cilk_spawn __do_open_write_read_memcmp(local_ptr, n,repl_fnames[n],repl_mode[n],sz);
+                cilk_spawn __do_open_write_read_memcmp(local_ptr, n,repl_fnames[n],repl_mode[n]);
             }
             cilk_sync;
             printf("Replicated done.\n");
