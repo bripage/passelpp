@@ -196,8 +196,7 @@ void populateTrainingData(long node) {
         }
         non_zeros = points / 4;
         */
-        long* local_ptr = (long*) malloc(sizeof(long));
-        FILE * multi_load_train_data = mw_fopen(node_train_data, "rb", local_ptr);
+        FILE * multi_load_train_data = fopen(node_train_data, "rb");
         if (multi_load_train_data == NULL) {
             printf("Failed to open training feature file.\n");
             exit(1);
@@ -233,7 +232,7 @@ void populateTrainingData(long node) {
                 printf("Failed to allocate initial buffer chunk.\n");
                 exit(1);
             }
-            bytesRead = mw_fread(binBuffer, sizeof(long), chunk_points, multi_load_train_data);
+            bytesRead = fread(binBuffer, sizeof(long), chunk_points, multi_load_train_data);
             //printf("bytesRead = %ld\n", bytesRead);
             //fflush(stdout);
 
@@ -285,7 +284,7 @@ void populateTrainingData(long node) {
                         fflush(stdout);
                         binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
 
-                        bytesRead = mw_fread(binBuffer, sizeof(long), final_chunk_points, multi_load_train_data);
+                        bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, multi_load_train_data);
                         if (bytesRead != final_chunk_points) {
                             //printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points, final_chunk_points*sizeof(long),bytesRead);
                             //fflush(stdout);
@@ -298,7 +297,7 @@ void populateTrainingData(long node) {
                     } else {
                         //printf("reading in next chunk\n");
                         //fflush(stdout);
-                        bytesRead = mw_fread(binBuffer, sizeof(long), chunk_points, multi_load_train_data);
+                        bytesRead = fread(binBuffer, sizeof(long), chunk_points, multi_load_train_data);
                         if (bytesRead != chunk_points) {
                             printf("Error in reading file chunk %ld\n", c + 1);
                             exit(1);
@@ -315,7 +314,7 @@ void populateTrainingData(long node) {
             binBuffer = (long *) malloc(points * sizeof(long));
             printf("buffer allocated\n");
             fflush(stdout);
-            bytesRead = mw_fread(binBuffer, sizeof(long), points, multi_load_train_data);
+            bytesRead = fread(binBuffer, sizeof(long), points, multi_load_train_data);
             printf("%ld bytes read\n", bytesRead);
             fflush(stdout);
             if (bytesRead != (points)) {
