@@ -250,11 +250,12 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
     long sample_count = -1;
     long current_sample = -1;
     long j = 0;
+    long* data_buf = from_disk_buf;
     for (long i = 0; i < points; i += 4) {
-        sample = (long) from_disk_buf[i];
-        feature = (long) from_disk_buf[i + 1];
-        fixed_value = (long) from_disk_buf[i + 2];
-        class = (long) from_disk_buf[i + 3];
+        sample = data_buf[i];
+        feature = data_buf[i + 1];
+        fixed_value = data_buf[i + 2];
+        class = data_buf[i + 3];
 
         if (non_standard_classes) {
             if (class == class1) {
@@ -895,7 +896,7 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 // Add .nlet# to string buffer
-                sprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
+                snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
                 printf("Node %ld loading file %s\n", n, buf);
                 fflush(stdout);
 
