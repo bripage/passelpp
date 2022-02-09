@@ -169,7 +169,7 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
     MIGRATE(local_ptr); // Migrate to node
     fp = mw_fopen(fname, mode, local_ptr);
     if (!fp) {
-        fprintf(stderr, "mw_fopen returned %p: %m.\n", fp);
+        fprintf(stderr, "mw_fopen on node%lu returned %p: %m.\n", fp);
         fflush(NULL);
         exit(0 << 16 | EXIT_FAILURE);
     }
