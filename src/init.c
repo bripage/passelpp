@@ -901,7 +901,7 @@ void init() {
 
                 fnames[n] = strdup(buf); // Create duplicate string
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
-                cilk_spawn __do_open_write_read_memcmp(local_ptr, n, fnames[n], mode);
+                cilk_spawn multi_node_read(local_ptr, n, fnames[n], mode);
             }
             cilk_sync;
             printf("Local done.\n");
@@ -912,7 +912,7 @@ void init() {
                 repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
                 memcpy(repl_fnames[n], fnames[n], sizeof(fnames[n]) + 1);
                 memcpy(repl_mode[n], mode, sizeof(mode) + 1);
-                cilk_spawn __do_open_write_read_memcmp(local_ptr, n,repl_fnames[n],repl_mode[n]);
+                cilk_spawn multi_node_read(local_ptr, n,repl_fnames[n],repl_mode[n]);
             }
             cilk_sync;
             printf("Replicated done.\n");
