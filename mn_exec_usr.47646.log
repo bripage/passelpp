@@ -1,0 +1,3799 @@
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: Invalidating icache...
+[STATUS]: Invalidating dcache...
+[STATUS]: Invalidate icache check...
+[STATUS]: Invalidate dcache check...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: Clearing checkpoint buffer on MSP[0] at addr=0x83fffa00 and buffer end=0x83fffb00
+[STATUS]: set_enable_seq()...
+[STATUS]: per_msp_set_enable_queue(do_enable=1, msp_id=0)...
+[STATUS]: set_enable_runq()...
+[STATUS]: per_msp_set_enable_queue(do_enable=1, msp_id=0)...
+[STATUS]: Resetting NODE and MSP counters...
+[STATUS]: SRIO_PORT_0_CONTROL=0xd06f_0101
+[STATUS]: SRIO_PORT_0_ERR_STATUS=0xe000_0002
+[STATUS]: SRIO_PORT_0_ERR_DETECT=0x0000_0000
+[STATUS]: SRIO_PORT_1_CONTROL=0xd06f_0101
+[STATUS]: SRIO_PORT_1_ERR_STATUS=0xe000_0002
+[STATUS]: SRIO_PORT_1_ERR_DETECT=0x0000_0000
+[STATUS]: SRIO_PORT_2_CONTROL=0xd06f_0101
+[STATUS]: SRIO_PORT_2_ERR_STATUS=0xe000_0002
+[STATUS]: SRIO_PORT_2_ERR_DETECT=0x0000_0000
+[STATUS]: SRIO_PORT_3_CONTROL=0xd06f_0101
+[STATUS]: SRIO_PORT_3_ERR_STATUS=0xe000_0002
+[STATUS]: SRIO_PORT_3_ERR_DETECT=0x0000_0000
+[STATUS]: SRIO_PORT_4_CONTROL=0xd06f_0101
+[STATUS]: SRIO_PORT_4_ERR_STATUS=0xe000_0002
+[STATUS]: SRIO_PORT_4_ERR_DETECT=0x0000_0000
+[STATUS]: SRIO_PORT_5_CONTROL=0xd06f_0101
+[STATUS]: SRIO_PORT_5_ERR_STATUS=0xe000_0002
+[STATUS]: SRIO_PORT_5_ERR_DETECT=0x0000_0000
+[STATUS]: set_enable_gcs()...
+[STATUS]: Calling runtime service get_argv_and_env_size
+[STATUS]: Calling runtime service set_argv_and_env
+[STATUS]: Calling runtime service get_argc
+[STATUS]: Calling system service ioctl
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service open
+[STATUS]: Calling system service writev
+[STATUS]: Calling system service readv
+[STATUS]: x10_write_dma: 320 MB/s, (82806293 ns, 27800064 bytes).
+[STATUS]: x10_write_dma: 0 MB/s, (3520 ns, 0 bytes).
+EXCEPTION=0x5 (ADDRESS / VIEW), CAUSE=0x2 (NULL POINTER), A=0x0000000000000000, TPC=0x8000fd71! Printing thread...
+A=0x0000_0000_0000_0000
+Raw TCB0=0x020b_ffff_7001_5e00
+Raw TCB1=0x030a_0000_8000_fd71
+Printing selected TCB fields...
+	TCB.FenceCnt=0x0
+	TCB.AID=0x3
+	TCB.TS (thread state)=0x1
+	TCB.TS_data (except_code)=0x5, CAUSE=2
+	TCB.Z=1, N=0, CB=0, V=0, U=0, NaN=0
+	TCB.M=0, WO=0x0, NoM=0x0, RND=0x0
+	TCB.D2=1, D=1, A2=1, EMask=0xffff
+	TCB.TSR_LEN=0xb
+	TCB.TPC=0x8000fd71
+	TCB.LAST_NODE=0x0000, LAST_CONTEXT=0x0a, LAST_GC=0x0c
+	TCB.RTS=0, TL=0, SP=0, MG=0, QD=0
+D=0x0000_0000_0000_0000
+D2=0x0080_0000_0001_6868
+A2=0x0080_0000_0001_6868
+E[0]=0x0180_0003_0000_11e0
+E[1]=0x0000_0000_8000_fce5
+E[2]=0x0000_0000_0000_0000
+E[3]=0x0000_0000_0000_0000
+E[4]=0x0000_0000_0000_0000
+E[5]=0x4010_0000_0000_0000
+E[6]=0x0000_0000_4039_5f62
+E[7]=0x0000_0000_0000_0000
+E[8]=0x0000_0000_0000_0000
+E[9]=0x0000_0000_0000_0000
+E[10]=0x0000_0000_0000_0000
+E[11]=0x0180_0003_0000_17a0
+E[12]=0x0180_0003_0000_2d20
+E[13]=0x0180_0000_0001_6aed
+E[14]=0x0180_0003_0000_2d20
+E[15]=0x0180_0000_0001_6aed
+ThreadID=0x0000_0046_2da1_0ade
+
+
+--------------------- cluster id: 0 ---------------------
+gc0_ready_context_map=0x0000_0000_0000_0000
+gc0_available_context_map=0xffff_ffff_ffff_dfff
+	For cluster0.gc0.context13 context status register=0x7a00_001d_e740_3316
+gc1_ready_context_map=0x0000_0000_0000_0000
+gc1_available_context_map=0xffff_ffff_ffff_ffff
+gc2_ready_context_map=0x0000_0000_0000_0000
+gc2_available_context_map=0xffff_ffff_ffff_ffff
+gc3_ready_context_map=0x0000_0000_0000_0000
+gc3_available_context_map=0xffff_ffff_ffff_ffff
+
+--------------------- cluster id: 1 ---------------------
+gc0_ready_context_map=0x0000_0000_0000_0000
+gc0_available_context_map=0xffff_ffff_ffff_ffff
+gc1_ready_context_map=0x0000_0000_0000_0000
+gc1_available_context_map=0xffff_ffff_ffff_ffff
+gc2_ready_context_map=0x0000_0000_0000_0000
+gc2_available_context_map=0xffff_ffff_ffff_ffff
+gc3_ready_context_map=0x0000_0000_0000_0000
+gc3_available_context_map=0xffff_ffff_ffff_ffff
+
+--------------------- cluster id: 2 ---------------------
+gc0_ready_context_map=0x0000_0000_0000_0000
+gc0_available_context_map=0xffff_ffff_ffff_ffff
+gc1_ready_context_map=0x0000_0000_0000_0000
+gc1_available_context_map=0xffff_ffff_ffff_ffff
+gc2_ready_context_map=0x0000_0000_0000_0000
+gc2_available_context_map=0xffff_ffff_ffff_ffff
+gc3_ready_context_map=0x0000_0000_0000_0000
+gc3_available_context_map=0xffff_ffff_ffff_ffff
+
+--------------------- cluster id: 3 ---------------------
+gc0_ready_context_map=0x0000_0000_0000_0000
+gc0_available_context_map=0xffff_ffff_ffff_ffff
+gc1_ready_context_map=0x0000_0000_0000_0000
+gc1_available_context_map=0xffff_ffff_ffff_ffff
+gc2_ready_context_map=0x0000_0000_0000_0000
+gc2_available_context_map=0xffff_ffff_ffff_ffff
+gc3_ready_context_map=0x0000_0000_0000_0000
+gc3_available_context_map=0xffff_ffff_ffff_ffff
+
+--------------------- cluster id: 4 ---------------------
+gc0_ready_context_map=0x0000_0000_0000_0000
+gc0_available_context_map=0xffff_ffff_ffff_ffff
+gc1_ready_context_map=0x0000_0000_0000_0000
+gc1_available_context_map=0xffff_ffff_ffff_ffff
+gc2_ready_context_map=0x0000_0000_0000_0000
+gc2_available_context_map=0xffff_ffff_ffff_ffff
+gc3_ready_context_map=0x0000_0000_0000_0000
+gc3_available_context_map=0xffff_ffff_ffff_ffff
+
+--------------------- cluster id: 5 ---------------------
+gc0_ready_context_map=0x0000_0000_0000_0000
+gc0_available_context_map=0xffff_ffff_ffff_ffff
+gc1_ready_context_map=0x0000_0000_0000_0000
+gc1_available_context_map=0xffff_ffff_ffff_ffff
+gc2_ready_context_map=0x0000_0000_0000_0000
+gc2_available_context_map=0xffff_ffff_ffff_ffff
+gc3_ready_context_map=0x0000_0000_0000_0000
+gc3_available_context_map=0xffff_ffff_ffff_ffff
+-------------------------------------------------------------
+[STATUS]: consumer_exit_cond = SFR_EXCEPTION.
+[STATUS]: Writing checkpoint flag...
+[STATUS]: write_checkpoint_flag: Node[0] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[0] completed sending checkpoint flags
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Checkpointing node
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[0] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[0] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+Printing thread during checkpointing...
+A=0x0080_0000_0001_6018
+Raw TCB0=0x000b_ffff_7041_3e00
+Raw TCB1=0x40ea_0000_8001_67b3
+Printing selected TCB fields...
+	TCB.FenceCnt=0x0
+	TCB.AID=0x3
+	TCB.TS (thread state)=0x1
+	TCB.TS_data (except_code)=0x3, CAUSE=0
+	TCB.Z=1, N=0, CB=0, V=0, U=0, NaN=0
+	TCB.M=1, WO=0x0, NoM=0x0, RND=0x0
+	TCB.D2=1, D=1, A2=1, EMask=0xffff
+	TCB.TSR_LEN=0xb
+	TCB.TPC=0x800167b3
+	TCB.LAST_NODE=0x0000, LAST_CONTEXT=0x2a, LAST_GC=0x03
+	TCB.RTS=0, TL=0, SP=0, MG=1, QD=0
+D=0x0000_0000_0000_0016
+D2=0x0080_0000_0001_6868
+A2=0x0080_0000_0001_6868
+E[0]=0x0180_0003_0000_17a0
+E[1]=0x0000_0000_8001_6771
+E[2]=0x0000_0000_0000_0002
+E[3]=0x0180_0003_0000_2d60
+E[4]=0x0000_0000_0000_0000
+E[5]=0x0000_0000_0000_01b6
+E[6]=0x0000_0000_4039_5f62
+E[7]=0x0000_0000_0000_0000
+E[8]=0x0000_0000_0000_0000
+E[9]=0x0000_0000_0000_0000
+E[10]=0x0000_0000_0000_0000
+E[11]=0x0180_0003_0000_0bb0
+E[12]=0x0180_0003_0000_2d60
+E[13]=0x0180_0003_0000_2d60
+E[14]=0x0180_0000_0001_6aed
+E[15]=0x0000_0000_0000_0000
+ThreadID=0x0000_0106_2dc6_972e
+
+Received checkpointed thread, now printing it...
+A=0x0180_0002_802f_4ee0
+Raw TCB0=0x000b_ffff_7040_be00
+Raw TCB1=0x400d_0000_8000_3304
+Printing selected TCB fields...
+	TCB.FenceCnt=0x0
+	TCB.AID=0x3
+	TCB.TS (thread state)=0x1
+	TCB.TS_data (except_code)=0xb, CAUSE=0
+	TCB.Z=0, N=0, CB=0, V=0, U=0, NaN=0
+	TCB.M=1, WO=0x0, NoM=0x0, RND=0x0
+	TCB.D2=1, D=1, A2=1, EMask=0xffff
+	TCB.TSR_LEN=0xb
+	TCB.TPC=0x80003304
+	TCB.LAST_NODE=0x0000, LAST_CONTEXT=0x0d, LAST_GC=0x00
+	TCB.RTS=0, TL=0, SP=0, MG=1, QD=0
+D=0x0000_0000_002f_4480
+D2=0x0080_0000_0001_6870
+A2=0x0080_0000_0001_6868
+E[0]=0x0180_0012_8000_0010
+E[1]=0x0280_0080_c8ee_8020
+E[2]=0x0280_0080_c884_3320
+E[3]=0x0280_0080_c878_5b00
+E[4]=0x0280_0080_c8e2_a800
+E[5]=0x0280_0080_c878_1b00
+E[6]=0x0280_0080_c94c_f500
+E[7]=0x0000_0000_0005_e890
+E[8]=0x0000_0000_0000_00e0
+E[9]=0x0000_0000_0000_00e0
+E[10]=0x0000_0000_000a_5d7c
+E[11]=0x0000_0000_0001_7b05
+E[12]=0xffff_ffff_ffff_ffff
+E[13]=0x0180_0000_0001_6f38
+E[14]=0x0000_0000_0035_0664
+E[15]=0x0180_0002_8000_0a60
+ThreadID=0x0000_0045_fc83_d7d5
+
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: NODE 0: Monitoring for SEQ handlers done...
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: emu_handler_and_loader: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	3
+	0x2	0
+	0x3	11
+	0x4	0
+	0x5	1
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	1
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3060, from FIFO = 3060, EMIF = 3060.
+MSP channel 0 resp_count: from FIFO = 3060, to FIFO = 3060, EMIF = 3060.
+
+MSP channel 1 cmd_count: to FIFO = 1246, from FIFO = 1246, EMIF = 1246.
+MSP channel 1 resp_count: from FIFO = 1246, to FIFO = 1246, EMIF = 1246.
+
+MSP channel 2 cmd_count: to FIFO = 3041, from FIFO = 3041, EMIF = 3041.
+MSP channel 2 resp_count: from FIFO = 3041, to FIFO = 3041, EMIF = 3041.
+
+MSP channel 3 cmd_count: to FIFO = 1987, from FIFO = 1987, EMIF = 1987.
+MSP channel 3 resp_count: from FIFO = 1987, to FIFO = 1987, EMIF = 1987.
+
+MSP channel 4 cmd_count: to FIFO = 2840, from FIFO = 2840, EMIF = 2840.
+MSP channel 4 resp_count: from FIFO = 2840, to FIFO = 2840, EMIF = 2840.
+
+MSP channel 5 cmd_count: to FIFO = 179, from FIFO = 179, EMIF = 179.
+MSP channel 5 resp_count: from FIFO = 179, to FIFO = 179, EMIF = 179.
+
+MSP channel 6 cmd_count: to FIFO = 3028, from FIFO = 3028, EMIF = 3028.
+MSP channel 6 resp_count: from FIFO = 3028, to FIFO = 3028, EMIF = 3028.
+
+MSP channel 7 cmd_count: to FIFO = 3287, from FIFO = 3287, EMIF = 3287.
+MSP channel 7 resp_count: from FIFO = 3287, to FIFO = 3287, EMIF = 3287.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 56873, max: 62656
+[STATUS]: pthread 50537 called __consumer_tsr_queue_destroy (CONSUMER_TID=50537, PRODUCER_TID=50538).
+[STATUS]: Threaded SEQ: max_elements 2
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 17
+[STATUS]: Threaded SEQ: get_elements 17
+[STATUS]: Threaded SEQ: empty_queue 15
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn1 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[1] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[1] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[1] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[1] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[1] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1813, from FIFO = 1813, EMIF = 1813.
+MSP channel 0 resp_count: from FIFO = 1813, to FIFO = 1813, EMIF = 1813.
+
+MSP channel 1 cmd_count: to FIFO = 1259, from FIFO = 1259, EMIF = 1259.
+MSP channel 1 resp_count: from FIFO = 1259, to FIFO = 1259, EMIF = 1259.
+
+MSP channel 2 cmd_count: to FIFO = 2317, from FIFO = 2317, EMIF = 2317.
+MSP channel 2 resp_count: from FIFO = 2317, to FIFO = 2317, EMIF = 2317.
+
+MSP channel 3 cmd_count: to FIFO = 3320, from FIFO = 3320, EMIF = 3320.
+MSP channel 3 resp_count: from FIFO = 3320, to FIFO = 3320, EMIF = 3320.
+
+MSP channel 4 cmd_count: to FIFO = 2115, from FIFO = 2115, EMIF = 2115.
+MSP channel 4 resp_count: from FIFO = 2115, to FIFO = 2115, EMIF = 2115.
+
+MSP channel 5 cmd_count: to FIFO = 1701, from FIFO = 1701, EMIF = 1701.
+MSP channel 5 resp_count: from FIFO = 1701, to FIFO = 1701, EMIF = 1701.
+
+MSP channel 6 cmd_count: to FIFO = 2859, from FIFO = 2859, EMIF = 2859.
+MSP channel 6 resp_count: from FIFO = 2859, to FIFO = 2859, EMIF = 2859.
+
+MSP channel 7 cmd_count: to FIFO = 2634, from FIFO = 2634, EMIF = 2634.
+MSP channel 7 resp_count: from FIFO = 2634, to FIFO = 2634, EMIF = 2634.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62515, max: 62660
+[STATUS]: pthread 10447 called __consumer_tsr_queue_destroy (CONSUMER_TID=10447, PRODUCER_TID=10453).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn2 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[2] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[2] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[2] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[2] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[2] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 769, from FIFO = 769, EMIF = 769.
+MSP channel 0 resp_count: from FIFO = 769, to FIFO = 769, EMIF = 769.
+
+MSP channel 1 cmd_count: to FIFO = 1355, from FIFO = 1355, EMIF = 1355.
+MSP channel 1 resp_count: from FIFO = 1355, to FIFO = 1355, EMIF = 1355.
+
+MSP channel 2 cmd_count: to FIFO = 656, from FIFO = 656, EMIF = 656.
+MSP channel 2 resp_count: from FIFO = 656, to FIFO = 656, EMIF = 656.
+
+MSP channel 3 cmd_count: to FIFO = 1741, from FIFO = 1741, EMIF = 1741.
+MSP channel 3 resp_count: from FIFO = 1741, to FIFO = 1741, EMIF = 1741.
+
+MSP channel 4 cmd_count: to FIFO = 1840, from FIFO = 1840, EMIF = 1840.
+MSP channel 4 resp_count: from FIFO = 1840, to FIFO = 1840, EMIF = 1840.
+
+MSP channel 5 cmd_count: to FIFO = 2898, from FIFO = 2898, EMIF = 2898.
+MSP channel 5 resp_count: from FIFO = 2898, to FIFO = 2898, EMIF = 2898.
+
+MSP channel 6 cmd_count: to FIFO = 1241, from FIFO = 1241, EMIF = 1241.
+MSP channel 6 resp_count: from FIFO = 1241, to FIFO = 1241, EMIF = 1241.
+
+MSP channel 7 cmd_count: to FIFO = 298, from FIFO = 298, EMIF = 298.
+MSP channel 7 resp_count: from FIFO = 298, to FIFO = 298, EMIF = 298.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62515, max: 62633
+[STATUS]: pthread 10411 called __consumer_tsr_queue_destroy (CONSUMER_TID=10411, PRODUCER_TID=10417).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn3 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[3] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[3] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[3] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[3] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[3] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2181, from FIFO = 2181, EMIF = 2181.
+MSP channel 0 resp_count: from FIFO = 2181, to FIFO = 2181, EMIF = 2181.
+
+MSP channel 1 cmd_count: to FIFO = 3979, from FIFO = 3979, EMIF = 3979.
+MSP channel 1 resp_count: from FIFO = 3979, to FIFO = 3979, EMIF = 3979.
+
+MSP channel 2 cmd_count: to FIFO = 3719, from FIFO = 3719, EMIF = 3719.
+MSP channel 2 resp_count: from FIFO = 3719, to FIFO = 3719, EMIF = 3719.
+
+MSP channel 3 cmd_count: to FIFO = 1006, from FIFO = 1006, EMIF = 1006.
+MSP channel 3 resp_count: from FIFO = 1006, to FIFO = 1006, EMIF = 1006.
+
+MSP channel 4 cmd_count: to FIFO = 1441, from FIFO = 1441, EMIF = 1441.
+MSP channel 4 resp_count: from FIFO = 1441, to FIFO = 1441, EMIF = 1441.
+
+MSP channel 5 cmd_count: to FIFO = 1993, from FIFO = 1993, EMIF = 1993.
+MSP channel 5 resp_count: from FIFO = 1993, to FIFO = 1993, EMIF = 1993.
+
+MSP channel 6 cmd_count: to FIFO = 2130, from FIFO = 2130, EMIF = 2130.
+MSP channel 6 resp_count: from FIFO = 2130, to FIFO = 2130, EMIF = 2130.
+
+MSP channel 7 cmd_count: to FIFO = 2771, from FIFO = 2771, EMIF = 2771.
+MSP channel 7 resp_count: from FIFO = 2771, to FIFO = 2771, EMIF = 2771.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62516, max: 62632
+[STATUS]: pthread 10403 called __consumer_tsr_queue_destroy (CONSUMER_TID=10403, PRODUCER_TID=10409).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn4 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[4] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[4] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[4] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[4] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[4] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 548, from FIFO = 548, EMIF = 548.
+MSP channel 0 resp_count: from FIFO = 548, to FIFO = 548, EMIF = 548.
+
+MSP channel 1 cmd_count: to FIFO = 2361, from FIFO = 2361, EMIF = 2361.
+MSP channel 1 resp_count: from FIFO = 2361, to FIFO = 2361, EMIF = 2361.
+
+MSP channel 2 cmd_count: to FIFO = 1128, from FIFO = 1128, EMIF = 1128.
+MSP channel 2 resp_count: from FIFO = 1128, to FIFO = 1128, EMIF = 1128.
+
+MSP channel 3 cmd_count: to FIFO = 987, from FIFO = 987, EMIF = 987.
+MSP channel 3 resp_count: from FIFO = 987, to FIFO = 987, EMIF = 987.
+
+MSP channel 4 cmd_count: to FIFO = 1007, from FIFO = 1007, EMIF = 1007.
+MSP channel 4 resp_count: from FIFO = 1007, to FIFO = 1007, EMIF = 1007.
+
+MSP channel 5 cmd_count: to FIFO = 3218, from FIFO = 3218, EMIF = 3218.
+MSP channel 5 resp_count: from FIFO = 3218, to FIFO = 3218, EMIF = 3218.
+
+MSP channel 6 cmd_count: to FIFO = 623, from FIFO = 623, EMIF = 623.
+MSP channel 6 resp_count: from FIFO = 623, to FIFO = 623, EMIF = 623.
+
+MSP channel 7 cmd_count: to FIFO = 2992, from FIFO = 2992, EMIF = 2992.
+MSP channel 7 resp_count: from FIFO = 2992, to FIFO = 2992, EMIF = 2992.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62598, max: 62684
+[STATUS]: pthread 10416 called __consumer_tsr_queue_destroy (CONSUMER_TID=10416, PRODUCER_TID=10422).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn5 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[5] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[5] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[5] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[5] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[5] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1101, from FIFO = 1101, EMIF = 1101.
+MSP channel 0 resp_count: from FIFO = 1101, to FIFO = 1101, EMIF = 1101.
+
+MSP channel 1 cmd_count: to FIFO = 2762, from FIFO = 2762, EMIF = 2762.
+MSP channel 1 resp_count: from FIFO = 2762, to FIFO = 2762, EMIF = 2762.
+
+MSP channel 2 cmd_count: to FIFO = 1187, from FIFO = 1187, EMIF = 1187.
+MSP channel 2 resp_count: from FIFO = 1187, to FIFO = 1187, EMIF = 1187.
+
+MSP channel 3 cmd_count: to FIFO = 1920, from FIFO = 1920, EMIF = 1920.
+MSP channel 3 resp_count: from FIFO = 1920, to FIFO = 1920, EMIF = 1920.
+
+MSP channel 4 cmd_count: to FIFO = 3208, from FIFO = 3208, EMIF = 3208.
+MSP channel 4 resp_count: from FIFO = 3208, to FIFO = 3208, EMIF = 3208.
+
+MSP channel 5 cmd_count: to FIFO = 2278, from FIFO = 2278, EMIF = 2278.
+MSP channel 5 resp_count: from FIFO = 2278, to FIFO = 2278, EMIF = 2278.
+
+MSP channel 6 cmd_count: to FIFO = 3140, from FIFO = 3140, EMIF = 3140.
+MSP channel 6 resp_count: from FIFO = 3140, to FIFO = 3140, EMIF = 3140.
+
+MSP channel 7 cmd_count: to FIFO = 759, from FIFO = 759, EMIF = 759.
+MSP channel 7 resp_count: from FIFO = 759, to FIFO = 759, EMIF = 759.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62538, max: 62652
+[STATUS]: pthread 10413 called __consumer_tsr_queue_destroy (CONSUMER_TID=10413, PRODUCER_TID=10419).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn6 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[6] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[6] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[6] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[6] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[6] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 590, from FIFO = 590, EMIF = 590.
+MSP channel 0 resp_count: from FIFO = 590, to FIFO = 590, EMIF = 590.
+
+MSP channel 1 cmd_count: to FIFO = 3048, from FIFO = 3048, EMIF = 3048.
+MSP channel 1 resp_count: from FIFO = 3048, to FIFO = 3048, EMIF = 3048.
+
+MSP channel 2 cmd_count: to FIFO = 3071, from FIFO = 3071, EMIF = 3071.
+MSP channel 2 resp_count: from FIFO = 3071, to FIFO = 3071, EMIF = 3071.
+
+MSP channel 3 cmd_count: to FIFO = 1175, from FIFO = 1175, EMIF = 1175.
+MSP channel 3 resp_count: from FIFO = 1175, to FIFO = 1175, EMIF = 1175.
+
+MSP channel 4 cmd_count: to FIFO = 1394, from FIFO = 1394, EMIF = 1394.
+MSP channel 4 resp_count: from FIFO = 1394, to FIFO = 1394, EMIF = 1394.
+
+MSP channel 5 cmd_count: to FIFO = 2850, from FIFO = 2850, EMIF = 2850.
+MSP channel 5 resp_count: from FIFO = 2850, to FIFO = 2850, EMIF = 2850.
+
+MSP channel 6 cmd_count: to FIFO = 817, from FIFO = 817, EMIF = 817.
+MSP channel 6 resp_count: from FIFO = 817, to FIFO = 817, EMIF = 817.
+
+MSP channel 7 cmd_count: to FIFO = 184, from FIFO = 184, EMIF = 184.
+MSP channel 7 resp_count: from FIFO = 184, to FIFO = 184, EMIF = 184.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62501, max: 62662
+[STATUS]: pthread 10423 called __consumer_tsr_queue_destroy (CONSUMER_TID=10423, PRODUCER_TID=10427).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn7 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[7] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[7] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[7] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[7] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[7] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3150, from FIFO = 3150, EMIF = 3150.
+MSP channel 0 resp_count: from FIFO = 3150, to FIFO = 3150, EMIF = 3150.
+
+MSP channel 1 cmd_count: to FIFO = 3281, from FIFO = 3281, EMIF = 3281.
+MSP channel 1 resp_count: from FIFO = 3281, to FIFO = 3281, EMIF = 3281.
+
+MSP channel 2 cmd_count: to FIFO = 3463, from FIFO = 3463, EMIF = 3463.
+MSP channel 2 resp_count: from FIFO = 3463, to FIFO = 3463, EMIF = 3463.
+
+MSP channel 3 cmd_count: to FIFO = 3814, from FIFO = 3814, EMIF = 3814.
+MSP channel 3 resp_count: from FIFO = 3814, to FIFO = 3814, EMIF = 3814.
+
+MSP channel 4 cmd_count: to FIFO = 1945, from FIFO = 1945, EMIF = 1945.
+MSP channel 4 resp_count: from FIFO = 1945, to FIFO = 1945, EMIF = 1945.
+
+MSP channel 5 cmd_count: to FIFO = 1330, from FIFO = 1330, EMIF = 1330.
+MSP channel 5 resp_count: from FIFO = 1330, to FIFO = 1330, EMIF = 1330.
+
+MSP channel 6 cmd_count: to FIFO = 2356, from FIFO = 2356, EMIF = 2356.
+MSP channel 6 resp_count: from FIFO = 2356, to FIFO = 2356, EMIF = 2356.
+
+MSP channel 7 cmd_count: to FIFO = 1275, from FIFO = 1275, EMIF = 1275.
+MSP channel 7 resp_count: from FIFO = 1275, to FIFO = 1275, EMIF = 1275.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62469, max: 62616
+[STATUS]: pthread 10416 called __consumer_tsr_queue_destroy (CONSUMER_TID=10416, PRODUCER_TID=10430).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn8 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[8] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[8] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[8] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[8] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[8] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2854, from FIFO = 2854, EMIF = 2854.
+MSP channel 0 resp_count: from FIFO = 2854, to FIFO = 2854, EMIF = 2854.
+
+MSP channel 1 cmd_count: to FIFO = 623, from FIFO = 623, EMIF = 623.
+MSP channel 1 resp_count: from FIFO = 623, to FIFO = 623, EMIF = 623.
+
+MSP channel 2 cmd_count: to FIFO = 1855, from FIFO = 1855, EMIF = 1855.
+MSP channel 2 resp_count: from FIFO = 1855, to FIFO = 1855, EMIF = 1855.
+
+MSP channel 3 cmd_count: to FIFO = 45, from FIFO = 45, EMIF = 45.
+MSP channel 3 resp_count: from FIFO = 45, to FIFO = 45, EMIF = 45.
+
+MSP channel 4 cmd_count: to FIFO = 1972, from FIFO = 1972, EMIF = 1972.
+MSP channel 4 resp_count: from FIFO = 1972, to FIFO = 1972, EMIF = 1972.
+
+MSP channel 5 cmd_count: to FIFO = 1311, from FIFO = 1311, EMIF = 1311.
+MSP channel 5 resp_count: from FIFO = 1311, to FIFO = 1311, EMIF = 1311.
+
+MSP channel 6 cmd_count: to FIFO = 3818, from FIFO = 3818, EMIF = 3818.
+MSP channel 6 resp_count: from FIFO = 3818, to FIFO = 3818, EMIF = 3818.
+
+MSP channel 7 cmd_count: to FIFO = 1795, from FIFO = 1795, EMIF = 1795.
+MSP channel 7 resp_count: from FIFO = 1795, to FIFO = 1795, EMIF = 1795.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62578, max: 62738
+[STATUS]: pthread 10561 called __consumer_tsr_queue_destroy (CONSUMER_TID=10561, PRODUCER_TID=10567).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn9 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[9] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[9] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[9] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[9] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[9] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2489, from FIFO = 2489, EMIF = 2489.
+MSP channel 0 resp_count: from FIFO = 2489, to FIFO = 2489, EMIF = 2489.
+
+MSP channel 1 cmd_count: to FIFO = 1310, from FIFO = 1310, EMIF = 1310.
+MSP channel 1 resp_count: from FIFO = 1310, to FIFO = 1310, EMIF = 1310.
+
+MSP channel 2 cmd_count: to FIFO = 2530, from FIFO = 2530, EMIF = 2530.
+MSP channel 2 resp_count: from FIFO = 2530, to FIFO = 2530, EMIF = 2530.
+
+MSP channel 3 cmd_count: to FIFO = 854, from FIFO = 854, EMIF = 854.
+MSP channel 3 resp_count: from FIFO = 854, to FIFO = 854, EMIF = 854.
+
+MSP channel 4 cmd_count: to FIFO = 4064, from FIFO = 4064, EMIF = 4064.
+MSP channel 4 resp_count: from FIFO = 4064, to FIFO = 4064, EMIF = 4064.
+
+MSP channel 5 cmd_count: to FIFO = 3977, from FIFO = 3977, EMIF = 3977.
+MSP channel 5 resp_count: from FIFO = 3977, to FIFO = 3977, EMIF = 3977.
+
+MSP channel 6 cmd_count: to FIFO = 2992, from FIFO = 2992, EMIF = 2992.
+MSP channel 6 resp_count: from FIFO = 2992, to FIFO = 2992, EMIF = 2992.
+
+MSP channel 7 cmd_count: to FIFO = 2764, from FIFO = 2764, EMIF = 2764.
+MSP channel 7 resp_count: from FIFO = 2764, to FIFO = 2764, EMIF = 2764.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62539, max: 62665
+[STATUS]: pthread 10471 called __consumer_tsr_queue_destroy (CONSUMER_TID=10471, PRODUCER_TID=10477).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn10 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[10] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[10] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[10] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[10] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[10] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1488, from FIFO = 1488, EMIF = 1488.
+MSP channel 0 resp_count: from FIFO = 1488, to FIFO = 1488, EMIF = 1488.
+
+MSP channel 1 cmd_count: to FIFO = 1029, from FIFO = 1029, EMIF = 1029.
+MSP channel 1 resp_count: from FIFO = 1029, to FIFO = 1029, EMIF = 1029.
+
+MSP channel 2 cmd_count: to FIFO = 1017, from FIFO = 1017, EMIF = 1017.
+MSP channel 2 resp_count: from FIFO = 1017, to FIFO = 1017, EMIF = 1017.
+
+MSP channel 3 cmd_count: to FIFO = 2983, from FIFO = 2983, EMIF = 2983.
+MSP channel 3 resp_count: from FIFO = 2983, to FIFO = 2983, EMIF = 2983.
+
+MSP channel 4 cmd_count: to FIFO = 2094, from FIFO = 2094, EMIF = 2094.
+MSP channel 4 resp_count: from FIFO = 2094, to FIFO = 2094, EMIF = 2094.
+
+MSP channel 5 cmd_count: to FIFO = 1377, from FIFO = 1377, EMIF = 1377.
+MSP channel 5 resp_count: from FIFO = 1377, to FIFO = 1377, EMIF = 1377.
+
+MSP channel 6 cmd_count: to FIFO = 198, from FIFO = 198, EMIF = 198.
+MSP channel 6 resp_count: from FIFO = 198, to FIFO = 198, EMIF = 198.
+
+MSP channel 7 cmd_count: to FIFO = 1761, from FIFO = 1761, EMIF = 1761.
+MSP channel 7 resp_count: from FIFO = 1761, to FIFO = 1761, EMIF = 1761.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62506, max: 62670
+[STATUS]: pthread 10416 called __consumer_tsr_queue_destroy (CONSUMER_TID=10416, PRODUCER_TID=10422).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn11 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[11] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[11] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[11] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[11] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[11] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 331, from FIFO = 331, EMIF = 331.
+MSP channel 0 resp_count: from FIFO = 331, to FIFO = 331, EMIF = 331.
+
+MSP channel 1 cmd_count: to FIFO = 1457, from FIFO = 1457, EMIF = 1457.
+MSP channel 1 resp_count: from FIFO = 1457, to FIFO = 1457, EMIF = 1457.
+
+MSP channel 2 cmd_count: to FIFO = 2473, from FIFO = 2473, EMIF = 2473.
+MSP channel 2 resp_count: from FIFO = 2473, to FIFO = 2473, EMIF = 2473.
+
+MSP channel 3 cmd_count: to FIFO = 2690, from FIFO = 2690, EMIF = 2690.
+MSP channel 3 resp_count: from FIFO = 2690, to FIFO = 2690, EMIF = 2690.
+
+MSP channel 4 cmd_count: to FIFO = 3615, from FIFO = 3615, EMIF = 3615.
+MSP channel 4 resp_count: from FIFO = 3615, to FIFO = 3615, EMIF = 3615.
+
+MSP channel 5 cmd_count: to FIFO = 481, from FIFO = 481, EMIF = 481.
+MSP channel 5 resp_count: from FIFO = 481, to FIFO = 481, EMIF = 481.
+
+MSP channel 6 cmd_count: to FIFO = 2700, from FIFO = 2700, EMIF = 2700.
+MSP channel 6 resp_count: from FIFO = 2700, to FIFO = 2700, EMIF = 2700.
+
+MSP channel 7 cmd_count: to FIFO = 3856, from FIFO = 3856, EMIF = 3856.
+MSP channel 7 resp_count: from FIFO = 3856, to FIFO = 3856, EMIF = 3856.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62609, max: 62749
+[STATUS]: pthread 10401 called __consumer_tsr_queue_destroy (CONSUMER_TID=10401, PRODUCER_TID=10407).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn12 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[12] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[12] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[12] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[12] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[12] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2268, from FIFO = 2268, EMIF = 2268.
+MSP channel 0 resp_count: from FIFO = 2268, to FIFO = 2268, EMIF = 2268.
+
+MSP channel 1 cmd_count: to FIFO = 2033, from FIFO = 2033, EMIF = 2033.
+MSP channel 1 resp_count: from FIFO = 2033, to FIFO = 2033, EMIF = 2033.
+
+MSP channel 2 cmd_count: to FIFO = 2130, from FIFO = 2130, EMIF = 2130.
+MSP channel 2 resp_count: from FIFO = 2130, to FIFO = 2130, EMIF = 2130.
+
+MSP channel 3 cmd_count: to FIFO = 1555, from FIFO = 1555, EMIF = 1555.
+MSP channel 3 resp_count: from FIFO = 1555, to FIFO = 1555, EMIF = 1555.
+
+MSP channel 4 cmd_count: to FIFO = 2991, from FIFO = 2991, EMIF = 2991.
+MSP channel 4 resp_count: from FIFO = 2991, to FIFO = 2991, EMIF = 2991.
+
+MSP channel 5 cmd_count: to FIFO = 1740, from FIFO = 1740, EMIF = 1740.
+MSP channel 5 resp_count: from FIFO = 1740, to FIFO = 1740, EMIF = 1740.
+
+MSP channel 6 cmd_count: to FIFO = 756, from FIFO = 756, EMIF = 756.
+MSP channel 6 resp_count: from FIFO = 756, to FIFO = 756, EMIF = 756.
+
+MSP channel 7 cmd_count: to FIFO = 1811, from FIFO = 1811, EMIF = 1811.
+MSP channel 7 resp_count: from FIFO = 1811, to FIFO = 1811, EMIF = 1811.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62561, max: 62658
+[STATUS]: pthread 10430 called __consumer_tsr_queue_destroy (CONSUMER_TID=10430, PRODUCER_TID=10436).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn13 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[13] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[13] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[13] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[13] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[13] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3573, from FIFO = 3573, EMIF = 3573.
+MSP channel 0 resp_count: from FIFO = 3573, to FIFO = 3573, EMIF = 3573.
+
+MSP channel 1 cmd_count: to FIFO = 1814, from FIFO = 1814, EMIF = 1814.
+MSP channel 1 resp_count: from FIFO = 1814, to FIFO = 1814, EMIF = 1814.
+
+MSP channel 2 cmd_count: to FIFO = 2599, from FIFO = 2599, EMIF = 2599.
+MSP channel 2 resp_count: from FIFO = 2599, to FIFO = 2599, EMIF = 2599.
+
+MSP channel 3 cmd_count: to FIFO = 2230, from FIFO = 2230, EMIF = 2230.
+MSP channel 3 resp_count: from FIFO = 2230, to FIFO = 2230, EMIF = 2230.
+
+MSP channel 4 cmd_count: to FIFO = 3, from FIFO = 3, EMIF = 3.
+MSP channel 4 resp_count: from FIFO = 3, to FIFO = 3, EMIF = 3.
+
+MSP channel 5 cmd_count: to FIFO = 1378, from FIFO = 1378, EMIF = 1378.
+MSP channel 5 resp_count: from FIFO = 1378, to FIFO = 1378, EMIF = 1378.
+
+MSP channel 6 cmd_count: to FIFO = 1078, from FIFO = 1078, EMIF = 1078.
+MSP channel 6 resp_count: from FIFO = 1078, to FIFO = 1078, EMIF = 1078.
+
+MSP channel 7 cmd_count: to FIFO = 815, from FIFO = 815, EMIF = 815.
+MSP channel 7 resp_count: from FIFO = 815, to FIFO = 815, EMIF = 815.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62511, max: 62670
+[STATUS]: pthread 10435 called __consumer_tsr_queue_destroy (CONSUMER_TID=10435, PRODUCER_TID=10441).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn14 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[14] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[14] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[14] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[14] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[14] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2894, from FIFO = 2894, EMIF = 2894.
+MSP channel 0 resp_count: from FIFO = 2894, to FIFO = 2894, EMIF = 2894.
+
+MSP channel 1 cmd_count: to FIFO = 1211, from FIFO = 1211, EMIF = 1211.
+MSP channel 1 resp_count: from FIFO = 1211, to FIFO = 1211, EMIF = 1211.
+
+MSP channel 2 cmd_count: to FIFO = 2632, from FIFO = 2632, EMIF = 2632.
+MSP channel 2 resp_count: from FIFO = 2632, to FIFO = 2632, EMIF = 2632.
+
+MSP channel 3 cmd_count: to FIFO = 534, from FIFO = 534, EMIF = 534.
+MSP channel 3 resp_count: from FIFO = 534, to FIFO = 534, EMIF = 534.
+
+MSP channel 4 cmd_count: to FIFO = 3736, from FIFO = 3736, EMIF = 3736.
+MSP channel 4 resp_count: from FIFO = 3736, to FIFO = 3736, EMIF = 3736.
+
+MSP channel 5 cmd_count: to FIFO = 3822, from FIFO = 3822, EMIF = 3822.
+MSP channel 5 resp_count: from FIFO = 3822, to FIFO = 3822, EMIF = 3822.
+
+MSP channel 6 cmd_count: to FIFO = 308, from FIFO = 308, EMIF = 308.
+MSP channel 6 resp_count: from FIFO = 308, to FIFO = 308, EMIF = 308.
+
+MSP channel 7 cmd_count: to FIFO = 550, from FIFO = 550, EMIF = 550.
+MSP channel 7 resp_count: from FIFO = 550, to FIFO = 550, EMIF = 550.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62481, max: 62627
+[STATUS]: pthread 10438 called __consumer_tsr_queue_destroy (CONSUMER_TID=10438, PRODUCER_TID=10444).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn15 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[15] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[15] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[15] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[15] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[15] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3770, from FIFO = 3770, EMIF = 3770.
+MSP channel 0 resp_count: from FIFO = 3770, to FIFO = 3770, EMIF = 3770.
+
+MSP channel 1 cmd_count: to FIFO = 3667, from FIFO = 3667, EMIF = 3667.
+MSP channel 1 resp_count: from FIFO = 3667, to FIFO = 3667, EMIF = 3667.
+
+MSP channel 2 cmd_count: to FIFO = 2344, from FIFO = 2344, EMIF = 2344.
+MSP channel 2 resp_count: from FIFO = 2344, to FIFO = 2344, EMIF = 2344.
+
+MSP channel 3 cmd_count: to FIFO = 875, from FIFO = 875, EMIF = 875.
+MSP channel 3 resp_count: from FIFO = 875, to FIFO = 875, EMIF = 875.
+
+MSP channel 4 cmd_count: to FIFO = 1206, from FIFO = 1206, EMIF = 1206.
+MSP channel 4 resp_count: from FIFO = 1206, to FIFO = 1206, EMIF = 1206.
+
+MSP channel 5 cmd_count: to FIFO = 1790, from FIFO = 1790, EMIF = 1790.
+MSP channel 5 resp_count: from FIFO = 1790, to FIFO = 1790, EMIF = 1790.
+
+MSP channel 6 cmd_count: to FIFO = 3247, from FIFO = 3247, EMIF = 3247.
+MSP channel 6 resp_count: from FIFO = 3247, to FIFO = 3247, EMIF = 3247.
+
+MSP channel 7 cmd_count: to FIFO = 1867, from FIFO = 1867, EMIF = 1867.
+MSP channel 7 resp_count: from FIFO = 1867, to FIFO = 1867, EMIF = 1867.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62461, max: 62598
+[STATUS]: pthread 10440 called __consumer_tsr_queue_destroy (CONSUMER_TID=10440, PRODUCER_TID=10446).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn16 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[16] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[16] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[16] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[16] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[16] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1909, from FIFO = 1909, EMIF = 1909.
+MSP channel 0 resp_count: from FIFO = 1909, to FIFO = 1909, EMIF = 1909.
+
+MSP channel 1 cmd_count: to FIFO = 1996, from FIFO = 1996, EMIF = 1996.
+MSP channel 1 resp_count: from FIFO = 1996, to FIFO = 1996, EMIF = 1996.
+
+MSP channel 2 cmd_count: to FIFO = 2026, from FIFO = 2026, EMIF = 2026.
+MSP channel 2 resp_count: from FIFO = 2026, to FIFO = 2026, EMIF = 2026.
+
+MSP channel 3 cmd_count: to FIFO = 663, from FIFO = 663, EMIF = 663.
+MSP channel 3 resp_count: from FIFO = 663, to FIFO = 663, EMIF = 663.
+
+MSP channel 4 cmd_count: to FIFO = 682, from FIFO = 682, EMIF = 682.
+MSP channel 4 resp_count: from FIFO = 682, to FIFO = 682, EMIF = 682.
+
+MSP channel 5 cmd_count: to FIFO = 3756, from FIFO = 3756, EMIF = 3756.
+MSP channel 5 resp_count: from FIFO = 3756, to FIFO = 3756, EMIF = 3756.
+
+MSP channel 6 cmd_count: to FIFO = 2396, from FIFO = 2396, EMIF = 2396.
+MSP channel 6 resp_count: from FIFO = 2396, to FIFO = 2396, EMIF = 2396.
+
+MSP channel 7 cmd_count: to FIFO = 2705, from FIFO = 2705, EMIF = 2705.
+MSP channel 7 resp_count: from FIFO = 2705, to FIFO = 2705, EMIF = 2705.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62433, max: 62667
+[STATUS]: pthread 10609 called __consumer_tsr_queue_destroy (CONSUMER_TID=10609, PRODUCER_TID=10615).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn17 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[17] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[17] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[17] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[17] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[17] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3032, from FIFO = 3032, EMIF = 3032.
+MSP channel 0 resp_count: from FIFO = 3032, to FIFO = 3032, EMIF = 3032.
+
+MSP channel 1 cmd_count: to FIFO = 1485, from FIFO = 1485, EMIF = 1485.
+MSP channel 1 resp_count: from FIFO = 1485, to FIFO = 1485, EMIF = 1485.
+
+MSP channel 2 cmd_count: to FIFO = 1569, from FIFO = 1569, EMIF = 1569.
+MSP channel 2 resp_count: from FIFO = 1569, to FIFO = 1569, EMIF = 1569.
+
+MSP channel 3 cmd_count: to FIFO = 250, from FIFO = 250, EMIF = 250.
+MSP channel 3 resp_count: from FIFO = 250, to FIFO = 250, EMIF = 250.
+
+MSP channel 4 cmd_count: to FIFO = 2120, from FIFO = 2120, EMIF = 2120.
+MSP channel 4 resp_count: from FIFO = 2120, to FIFO = 2120, EMIF = 2120.
+
+MSP channel 5 cmd_count: to FIFO = 1846, from FIFO = 1846, EMIF = 1846.
+MSP channel 5 resp_count: from FIFO = 1846, to FIFO = 1846, EMIF = 1846.
+
+MSP channel 6 cmd_count: to FIFO = 2614, from FIFO = 2614, EMIF = 2614.
+MSP channel 6 resp_count: from FIFO = 2614, to FIFO = 2614, EMIF = 2614.
+
+MSP channel 7 cmd_count: to FIFO = 2285, from FIFO = 2285, EMIF = 2285.
+MSP channel 7 resp_count: from FIFO = 2285, to FIFO = 2285, EMIF = 2285.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62612, max: 62745
+[STATUS]: pthread 10464 called __consumer_tsr_queue_destroy (CONSUMER_TID=10464, PRODUCER_TID=10470).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn18 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[18] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[18] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[18] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[18] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[18] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1992, from FIFO = 1992, EMIF = 1992.
+MSP channel 0 resp_count: from FIFO = 1992, to FIFO = 1992, EMIF = 1992.
+
+MSP channel 1 cmd_count: to FIFO = 2167, from FIFO = 2167, EMIF = 2167.
+MSP channel 1 resp_count: from FIFO = 2167, to FIFO = 2167, EMIF = 2167.
+
+MSP channel 2 cmd_count: to FIFO = 3268, from FIFO = 3268, EMIF = 3268.
+MSP channel 2 resp_count: from FIFO = 3268, to FIFO = 3268, EMIF = 3268.
+
+MSP channel 3 cmd_count: to FIFO = 3111, from FIFO = 3111, EMIF = 3111.
+MSP channel 3 resp_count: from FIFO = 3111, to FIFO = 3111, EMIF = 3111.
+
+MSP channel 4 cmd_count: to FIFO = 352, from FIFO = 352, EMIF = 352.
+MSP channel 4 resp_count: from FIFO = 352, to FIFO = 352, EMIF = 352.
+
+MSP channel 5 cmd_count: to FIFO = 3044, from FIFO = 3044, EMIF = 3044.
+MSP channel 5 resp_count: from FIFO = 3044, to FIFO = 3044, EMIF = 3044.
+
+MSP channel 6 cmd_count: to FIFO = 3667, from FIFO = 3667, EMIF = 3667.
+MSP channel 6 resp_count: from FIFO = 3667, to FIFO = 3667, EMIF = 3667.
+
+MSP channel 7 cmd_count: to FIFO = 1491, from FIFO = 1491, EMIF = 1491.
+MSP channel 7 resp_count: from FIFO = 1491, to FIFO = 1491, EMIF = 1491.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62422, max: 62597
+[STATUS]: pthread 10562 called __consumer_tsr_queue_destroy (CONSUMER_TID=10562, PRODUCER_TID=10568).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn19 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[19] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[19] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[19] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[19] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[19] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1156, from FIFO = 1156, EMIF = 1156.
+MSP channel 0 resp_count: from FIFO = 1156, to FIFO = 1156, EMIF = 1156.
+
+MSP channel 1 cmd_count: to FIFO = 3173, from FIFO = 3173, EMIF = 3173.
+MSP channel 1 resp_count: from FIFO = 3173, to FIFO = 3173, EMIF = 3173.
+
+MSP channel 2 cmd_count: to FIFO = 2768, from FIFO = 2768, EMIF = 2768.
+MSP channel 2 resp_count: from FIFO = 2768, to FIFO = 2768, EMIF = 2768.
+
+MSP channel 3 cmd_count: to FIFO = 1180, from FIFO = 1180, EMIF = 1180.
+MSP channel 3 resp_count: from FIFO = 1180, to FIFO = 1180, EMIF = 1180.
+
+MSP channel 4 cmd_count: to FIFO = 3360, from FIFO = 3360, EMIF = 3360.
+MSP channel 4 resp_count: from FIFO = 3360, to FIFO = 3360, EMIF = 3360.
+
+MSP channel 5 cmd_count: to FIFO = 3662, from FIFO = 3662, EMIF = 3662.
+MSP channel 5 resp_count: from FIFO = 3662, to FIFO = 3662, EMIF = 3662.
+
+MSP channel 6 cmd_count: to FIFO = 3182, from FIFO = 3182, EMIF = 3182.
+MSP channel 6 resp_count: from FIFO = 3182, to FIFO = 3182, EMIF = 3182.
+
+MSP channel 7 cmd_count: to FIFO = 572, from FIFO = 572, EMIF = 572.
+MSP channel 7 resp_count: from FIFO = 572, to FIFO = 572, EMIF = 572.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62507, max: 62660
+[STATUS]: pthread 10465 called __consumer_tsr_queue_destroy (CONSUMER_TID=10465, PRODUCER_TID=10470).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn20 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[20] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[20] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[20] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[20] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[20] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3595, from FIFO = 3595, EMIF = 3595.
+MSP channel 0 resp_count: from FIFO = 3595, to FIFO = 3595, EMIF = 3595.
+
+MSP channel 1 cmd_count: to FIFO = 3029, from FIFO = 3029, EMIF = 3029.
+MSP channel 1 resp_count: from FIFO = 3029, to FIFO = 3029, EMIF = 3029.
+
+MSP channel 2 cmd_count: to FIFO = 3806, from FIFO = 3806, EMIF = 3806.
+MSP channel 2 resp_count: from FIFO = 3806, to FIFO = 3806, EMIF = 3806.
+
+MSP channel 3 cmd_count: to FIFO = 2976, from FIFO = 2976, EMIF = 2976.
+MSP channel 3 resp_count: from FIFO = 2976, to FIFO = 2976, EMIF = 2976.
+
+MSP channel 4 cmd_count: to FIFO = 2649, from FIFO = 2649, EMIF = 2649.
+MSP channel 4 resp_count: from FIFO = 2649, to FIFO = 2649, EMIF = 2649.
+
+MSP channel 5 cmd_count: to FIFO = 1659, from FIFO = 1659, EMIF = 1659.
+MSP channel 5 resp_count: from FIFO = 1659, to FIFO = 1659, EMIF = 1659.
+
+MSP channel 6 cmd_count: to FIFO = 8, from FIFO = 8, EMIF = 8.
+MSP channel 6 resp_count: from FIFO = 8, to FIFO = 8, EMIF = 8.
+
+MSP channel 7 cmd_count: to FIFO = 546, from FIFO = 546, EMIF = 546.
+MSP channel 7 resp_count: from FIFO = 546, to FIFO = 546, EMIF = 546.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62546, max: 62682
+[STATUS]: pthread 10465 called __consumer_tsr_queue_destroy (CONSUMER_TID=10465, PRODUCER_TID=10472).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn21 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[21] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[21] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[21] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[21] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[21] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 43, from FIFO = 43, EMIF = 43.
+MSP channel 0 resp_count: from FIFO = 43, to FIFO = 43, EMIF = 43.
+
+MSP channel 1 cmd_count: to FIFO = 3955, from FIFO = 3955, EMIF = 3955.
+MSP channel 1 resp_count: from FIFO = 3955, to FIFO = 3955, EMIF = 3955.
+
+MSP channel 2 cmd_count: to FIFO = 2983, from FIFO = 2983, EMIF = 2983.
+MSP channel 2 resp_count: from FIFO = 2983, to FIFO = 2983, EMIF = 2983.
+
+MSP channel 3 cmd_count: to FIFO = 659, from FIFO = 659, EMIF = 659.
+MSP channel 3 resp_count: from FIFO = 659, to FIFO = 659, EMIF = 659.
+
+MSP channel 4 cmd_count: to FIFO = 2139, from FIFO = 2139, EMIF = 2139.
+MSP channel 4 resp_count: from FIFO = 2139, to FIFO = 2139, EMIF = 2139.
+
+MSP channel 5 cmd_count: to FIFO = 2949, from FIFO = 2949, EMIF = 2949.
+MSP channel 5 resp_count: from FIFO = 2949, to FIFO = 2949, EMIF = 2949.
+
+MSP channel 6 cmd_count: to FIFO = 74, from FIFO = 74, EMIF = 74.
+MSP channel 6 resp_count: from FIFO = 74, to FIFO = 74, EMIF = 74.
+
+MSP channel 7 cmd_count: to FIFO = 2690, from FIFO = 2690, EMIF = 2690.
+MSP channel 7 resp_count: from FIFO = 2690, to FIFO = 2690, EMIF = 2690.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62490, max: 62619
+[STATUS]: pthread 10467 called __consumer_tsr_queue_destroy (CONSUMER_TID=10467, PRODUCER_TID=10473).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn22 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[22] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[22] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[22] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[22] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[22] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 494, from FIFO = 494, EMIF = 494.
+MSP channel 0 resp_count: from FIFO = 494, to FIFO = 494, EMIF = 494.
+
+MSP channel 1 cmd_count: to FIFO = 500, from FIFO = 500, EMIF = 500.
+MSP channel 1 resp_count: from FIFO = 500, to FIFO = 500, EMIF = 500.
+
+MSP channel 2 cmd_count: to FIFO = 652, from FIFO = 652, EMIF = 652.
+MSP channel 2 resp_count: from FIFO = 652, to FIFO = 652, EMIF = 652.
+
+MSP channel 3 cmd_count: to FIFO = 647, from FIFO = 647, EMIF = 647.
+MSP channel 3 resp_count: from FIFO = 647, to FIFO = 647, EMIF = 647.
+
+MSP channel 4 cmd_count: to FIFO = 3773, from FIFO = 3773, EMIF = 3773.
+MSP channel 4 resp_count: from FIFO = 3773, to FIFO = 3773, EMIF = 3773.
+
+MSP channel 5 cmd_count: to FIFO = 1998, from FIFO = 1998, EMIF = 1998.
+MSP channel 5 resp_count: from FIFO = 1998, to FIFO = 1998, EMIF = 1998.
+
+MSP channel 6 cmd_count: to FIFO = 47, from FIFO = 47, EMIF = 47.
+MSP channel 6 resp_count: from FIFO = 47, to FIFO = 47, EMIF = 47.
+
+MSP channel 7 cmd_count: to FIFO = 961, from FIFO = 961, EMIF = 961.
+MSP channel 7 resp_count: from FIFO = 961, to FIFO = 961, EMIF = 961.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62461, max: 62615
+[STATUS]: pthread 10473 called __consumer_tsr_queue_destroy (CONSUMER_TID=10473, PRODUCER_TID=10479).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn23 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[23] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[23] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[23] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[23] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[23] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3795, from FIFO = 3795, EMIF = 3795.
+MSP channel 0 resp_count: from FIFO = 3795, to FIFO = 3795, EMIF = 3795.
+
+MSP channel 1 cmd_count: to FIFO = 1175, from FIFO = 1175, EMIF = 1175.
+MSP channel 1 resp_count: from FIFO = 1175, to FIFO = 1175, EMIF = 1175.
+
+MSP channel 2 cmd_count: to FIFO = 2521, from FIFO = 2521, EMIF = 2521.
+MSP channel 2 resp_count: from FIFO = 2521, to FIFO = 2521, EMIF = 2521.
+
+MSP channel 3 cmd_count: to FIFO = 2573, from FIFO = 2573, EMIF = 2573.
+MSP channel 3 resp_count: from FIFO = 2573, to FIFO = 2573, EMIF = 2573.
+
+MSP channel 4 cmd_count: to FIFO = 3203, from FIFO = 3203, EMIF = 3203.
+MSP channel 4 resp_count: from FIFO = 3203, to FIFO = 3203, EMIF = 3203.
+
+MSP channel 5 cmd_count: to FIFO = 1997, from FIFO = 1997, EMIF = 1997.
+MSP channel 5 resp_count: from FIFO = 1997, to FIFO = 1997, EMIF = 1997.
+
+MSP channel 6 cmd_count: to FIFO = 13, from FIFO = 13, EMIF = 13.
+MSP channel 6 resp_count: from FIFO = 13, to FIFO = 13, EMIF = 13.
+
+MSP channel 7 cmd_count: to FIFO = 2019, from FIFO = 2019, EMIF = 2019.
+MSP channel 7 resp_count: from FIFO = 2019, to FIFO = 2019, EMIF = 2019.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62499, max: 62654
+[STATUS]: pthread 10469 called __consumer_tsr_queue_destroy (CONSUMER_TID=10469, PRODUCER_TID=10475).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn24 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[24] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[24] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[24] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[24] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[24] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 896, from FIFO = 896, EMIF = 896.
+MSP channel 0 resp_count: from FIFO = 896, to FIFO = 896, EMIF = 896.
+
+MSP channel 1 cmd_count: to FIFO = 3011, from FIFO = 3011, EMIF = 3011.
+MSP channel 1 resp_count: from FIFO = 3011, to FIFO = 3011, EMIF = 3011.
+
+MSP channel 2 cmd_count: to FIFO = 1571, from FIFO = 1571, EMIF = 1571.
+MSP channel 2 resp_count: from FIFO = 1571, to FIFO = 1571, EMIF = 1571.
+
+MSP channel 3 cmd_count: to FIFO = 3367, from FIFO = 3367, EMIF = 3367.
+MSP channel 3 resp_count: from FIFO = 3367, to FIFO = 3367, EMIF = 3367.
+
+MSP channel 4 cmd_count: to FIFO = 1337, from FIFO = 1337, EMIF = 1337.
+MSP channel 4 resp_count: from FIFO = 1337, to FIFO = 1337, EMIF = 1337.
+
+MSP channel 5 cmd_count: to FIFO = 401, from FIFO = 401, EMIF = 401.
+MSP channel 5 resp_count: from FIFO = 401, to FIFO = 401, EMIF = 401.
+
+MSP channel 6 cmd_count: to FIFO = 1716, from FIFO = 1716, EMIF = 1716.
+MSP channel 6 resp_count: from FIFO = 1716, to FIFO = 1716, EMIF = 1716.
+
+MSP channel 7 cmd_count: to FIFO = 339, from FIFO = 339, EMIF = 339.
+MSP channel 7 resp_count: from FIFO = 339, to FIFO = 339, EMIF = 339.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62543, max: 62681
+[STATUS]: pthread 10647 called __consumer_tsr_queue_destroy (CONSUMER_TID=10647, PRODUCER_TID=10653).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn25 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[25] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[25] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[25] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[25] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[25] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2341, from FIFO = 2341, EMIF = 2341.
+MSP channel 0 resp_count: from FIFO = 2341, to FIFO = 2341, EMIF = 2341.
+
+MSP channel 1 cmd_count: to FIFO = 95, from FIFO = 95, EMIF = 95.
+MSP channel 1 resp_count: from FIFO = 95, to FIFO = 95, EMIF = 95.
+
+MSP channel 2 cmd_count: to FIFO = 1082, from FIFO = 1082, EMIF = 1082.
+MSP channel 2 resp_count: from FIFO = 1082, to FIFO = 1082, EMIF = 1082.
+
+MSP channel 3 cmd_count: to FIFO = 882, from FIFO = 882, EMIF = 882.
+MSP channel 3 resp_count: from FIFO = 882, to FIFO = 882, EMIF = 882.
+
+MSP channel 4 cmd_count: to FIFO = 508, from FIFO = 508, EMIF = 508.
+MSP channel 4 resp_count: from FIFO = 508, to FIFO = 508, EMIF = 508.
+
+MSP channel 5 cmd_count: to FIFO = 2755, from FIFO = 2755, EMIF = 2755.
+MSP channel 5 resp_count: from FIFO = 2755, to FIFO = 2755, EMIF = 2755.
+
+MSP channel 6 cmd_count: to FIFO = 2762, from FIFO = 2762, EMIF = 2762.
+MSP channel 6 resp_count: from FIFO = 2762, to FIFO = 2762, EMIF = 2762.
+
+MSP channel 7 cmd_count: to FIFO = 1305, from FIFO = 1305, EMIF = 1305.
+MSP channel 7 resp_count: from FIFO = 1305, to FIFO = 1305, EMIF = 1305.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62501, max: 62614
+[STATUS]: pthread 10461 called __consumer_tsr_queue_destroy (CONSUMER_TID=10461, PRODUCER_TID=10467).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn26 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[26] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[26] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[26] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[26] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[26] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 2733, from FIFO = 2733, EMIF = 2733.
+MSP channel 0 resp_count: from FIFO = 2733, to FIFO = 2733, EMIF = 2733.
+
+MSP channel 1 cmd_count: to FIFO = 1639, from FIFO = 1639, EMIF = 1639.
+MSP channel 1 resp_count: from FIFO = 1639, to FIFO = 1639, EMIF = 1639.
+
+MSP channel 2 cmd_count: to FIFO = 3028, from FIFO = 3028, EMIF = 3028.
+MSP channel 2 resp_count: from FIFO = 3028, to FIFO = 3028, EMIF = 3028.
+
+MSP channel 3 cmd_count: to FIFO = 1605, from FIFO = 1605, EMIF = 1605.
+MSP channel 3 resp_count: from FIFO = 1605, to FIFO = 1605, EMIF = 1605.
+
+MSP channel 4 cmd_count: to FIFO = 552, from FIFO = 552, EMIF = 552.
+MSP channel 4 resp_count: from FIFO = 552, to FIFO = 552, EMIF = 552.
+
+MSP channel 5 cmd_count: to FIFO = 2978, from FIFO = 2978, EMIF = 2978.
+MSP channel 5 resp_count: from FIFO = 2978, to FIFO = 2978, EMIF = 2978.
+
+MSP channel 6 cmd_count: to FIFO = 1767, from FIFO = 1767, EMIF = 1767.
+MSP channel 6 resp_count: from FIFO = 1767, to FIFO = 1767, EMIF = 1767.
+
+MSP channel 7 cmd_count: to FIFO = 1829, from FIFO = 1829, EMIF = 1829.
+MSP channel 7 resp_count: from FIFO = 1829, to FIFO = 1829, EMIF = 1829.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62541, max: 62662
+[STATUS]: pthread 10401 called __consumer_tsr_queue_destroy (CONSUMER_TID=10401, PRODUCER_TID=10407).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn27 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[27] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[27] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[27] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[27] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[27] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 3499, from FIFO = 3499, EMIF = 3499.
+MSP channel 0 resp_count: from FIFO = 3499, to FIFO = 3499, EMIF = 3499.
+
+MSP channel 1 cmd_count: to FIFO = 557, from FIFO = 557, EMIF = 557.
+MSP channel 1 resp_count: from FIFO = 557, to FIFO = 557, EMIF = 557.
+
+MSP channel 2 cmd_count: to FIFO = 64, from FIFO = 64, EMIF = 64.
+MSP channel 2 resp_count: from FIFO = 64, to FIFO = 64, EMIF = 64.
+
+MSP channel 3 cmd_count: to FIFO = 1620, from FIFO = 1620, EMIF = 1620.
+MSP channel 3 resp_count: from FIFO = 1620, to FIFO = 1620, EMIF = 1620.
+
+MSP channel 4 cmd_count: to FIFO = 2418, from FIFO = 2418, EMIF = 2418.
+MSP channel 4 resp_count: from FIFO = 2418, to FIFO = 2418, EMIF = 2418.
+
+MSP channel 5 cmd_count: to FIFO = 2200, from FIFO = 2200, EMIF = 2200.
+MSP channel 5 resp_count: from FIFO = 2200, to FIFO = 2200, EMIF = 2200.
+
+MSP channel 6 cmd_count: to FIFO = 3669, from FIFO = 3669, EMIF = 3669.
+MSP channel 6 resp_count: from FIFO = 3669, to FIFO = 3669, EMIF = 3669.
+
+MSP channel 7 cmd_count: to FIFO = 2237, from FIFO = 2237, EMIF = 2237.
+MSP channel 7 resp_count: from FIFO = 2237, to FIFO = 2237, EMIF = 2237.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62527, max: 62672
+[STATUS]: pthread 10412 called __consumer_tsr_queue_destroy (CONSUMER_TID=10412, PRODUCER_TID=10418).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn28 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[28] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[28] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[28] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[28] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[28] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 625, from FIFO = 625, EMIF = 625.
+MSP channel 0 resp_count: from FIFO = 625, to FIFO = 625, EMIF = 625.
+
+MSP channel 1 cmd_count: to FIFO = 3493, from FIFO = 3493, EMIF = 3493.
+MSP channel 1 resp_count: from FIFO = 3493, to FIFO = 3493, EMIF = 3493.
+
+MSP channel 2 cmd_count: to FIFO = 1244, from FIFO = 1244, EMIF = 1244.
+MSP channel 2 resp_count: from FIFO = 1244, to FIFO = 1244, EMIF = 1244.
+
+MSP channel 3 cmd_count: to FIFO = 1619, from FIFO = 1619, EMIF = 1619.
+MSP channel 3 resp_count: from FIFO = 1619, to FIFO = 1619, EMIF = 1619.
+
+MSP channel 4 cmd_count: to FIFO = 2949, from FIFO = 2949, EMIF = 2949.
+MSP channel 4 resp_count: from FIFO = 2949, to FIFO = 2949, EMIF = 2949.
+
+MSP channel 5 cmd_count: to FIFO = 3339, from FIFO = 3339, EMIF = 3339.
+MSP channel 5 resp_count: from FIFO = 3339, to FIFO = 3339, EMIF = 3339.
+
+MSP channel 6 cmd_count: to FIFO = 3350, from FIFO = 3350, EMIF = 3350.
+MSP channel 6 resp_count: from FIFO = 3350, to FIFO = 3350, EMIF = 3350.
+
+MSP channel 7 cmd_count: to FIFO = 3981, from FIFO = 3981, EMIF = 3981.
+MSP channel 7 resp_count: from FIFO = 3981, to FIFO = 3981, EMIF = 3981.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62509, max: 62649
+[STATUS]: pthread 10441 called __consumer_tsr_queue_destroy (CONSUMER_TID=10441, PRODUCER_TID=10447).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn29 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[29] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[29] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[29] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[29] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[29] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 229, from FIFO = 229, EMIF = 229.
+MSP channel 0 resp_count: from FIFO = 229, to FIFO = 229, EMIF = 229.
+
+MSP channel 1 cmd_count: to FIFO = 1123, from FIFO = 1123, EMIF = 1123.
+MSP channel 1 resp_count: from FIFO = 1123, to FIFO = 1123, EMIF = 1123.
+
+MSP channel 2 cmd_count: to FIFO = 3659, from FIFO = 3659, EMIF = 3659.
+MSP channel 2 resp_count: from FIFO = 3659, to FIFO = 3659, EMIF = 3659.
+
+MSP channel 3 cmd_count: to FIFO = 577, from FIFO = 577, EMIF = 577.
+MSP channel 3 resp_count: from FIFO = 577, to FIFO = 577, EMIF = 577.
+
+MSP channel 4 cmd_count: to FIFO = 456, from FIFO = 456, EMIF = 456.
+MSP channel 4 resp_count: from FIFO = 456, to FIFO = 456, EMIF = 456.
+
+MSP channel 5 cmd_count: to FIFO = 491, from FIFO = 491, EMIF = 491.
+MSP channel 5 resp_count: from FIFO = 491, to FIFO = 491, EMIF = 491.
+
+MSP channel 6 cmd_count: to FIFO = 3937, from FIFO = 3937, EMIF = 3937.
+MSP channel 6 resp_count: from FIFO = 3937, to FIFO = 3937, EMIF = 3937.
+
+MSP channel 7 cmd_count: to FIFO = 247, from FIFO = 247, EMIF = 247.
+MSP channel 7 resp_count: from FIFO = 247, to FIFO = 247, EMIF = 247.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62552, max: 62685
+[STATUS]: pthread 10430 called __consumer_tsr_queue_destroy (CONSUMER_TID=10430, PRODUCER_TID=10436).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn30 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[30] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[30] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[30] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[30] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[30] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 246, from FIFO = 246, EMIF = 246.
+MSP channel 0 resp_count: from FIFO = 246, to FIFO = 246, EMIF = 246.
+
+MSP channel 1 cmd_count: to FIFO = 1435, from FIFO = 1435, EMIF = 1435.
+MSP channel 1 resp_count: from FIFO = 1435, to FIFO = 1435, EMIF = 1435.
+
+MSP channel 2 cmd_count: to FIFO = 4014, from FIFO = 4014, EMIF = 4014.
+MSP channel 2 resp_count: from FIFO = 4014, to FIFO = 4014, EMIF = 4014.
+
+MSP channel 3 cmd_count: to FIFO = 932, from FIFO = 932, EMIF = 932.
+MSP channel 3 resp_count: from FIFO = 932, to FIFO = 932, EMIF = 932.
+
+MSP channel 4 cmd_count: to FIFO = 3464, from FIFO = 3464, EMIF = 3464.
+MSP channel 4 resp_count: from FIFO = 3464, to FIFO = 3464, EMIF = 3464.
+
+MSP channel 5 cmd_count: to FIFO = 1832, from FIFO = 1832, EMIF = 1832.
+MSP channel 5 resp_count: from FIFO = 1832, to FIFO = 1832, EMIF = 1832.
+
+MSP channel 6 cmd_count: to FIFO = 1584, from FIFO = 1584, EMIF = 1584.
+MSP channel 6 resp_count: from FIFO = 1584, to FIFO = 1584, EMIF = 1584.
+
+MSP channel 7 cmd_count: to FIFO = 530, from FIFO = 530, EMIF = 530.
+MSP channel 7 resp_count: from FIFO = 530, to FIFO = 530, EMIF = 530.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62566, max: 62684
+[STATUS]: pthread 10427 called __consumer_tsr_queue_destroy (CONSUMER_TID=10427, PRODUCER_TID=10433).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
+-------------------- NODE sn31 --------------------
+[STATUS]: Found Stratix10 in device tree.
+[STATUS]: set_enable_gcs()...
+[STATUS]: seq_size=0x0000_0000_0080_0000
+[STATUS]: rqd_size=0x0000_0000_0fff_ff00
+[STATUS]: rqd_buffer_end_addr=0x0000_0000_107f_ff00
+[STATUS]: chkpt_start_addr=0x0000_0000_83ff_fa00
+[STATUS]: msp_base_addr=0x0000_0000_8400_0000
+[STATUS]: msp_limit_addr=0x0000_000f_7c00_0000
+[STATUS]: chkpt_val = 0x1
+[STATUS]: Received notification from another node to initiate checkpointing
+[STATUS]: checkpoint_node_phase1() Starting...
+[STATUS]: write_checkpoint_flag: Node[31] sending checkpoint flags (WRD to addr 0x83fffa00) to nodes 0-31
+[STATUS]: write_checkpoint_flag: Node[31] completed sending checkpoint flags
+[STATUS]: Verifying GC checkpoint for cluster[0].
+[STATUS]: Verifying GC checkpoint for cluster[1].
+[STATUS]: Verifying GC checkpoint for cluster[2].
+[STATUS]: Verifying GC checkpoint for cluster[3].
+[STATUS]: Verifying GC checkpoint for cluster[4].
+[STATUS]: Verifying GC checkpoint for cluster[5].
+[STATUS]: checkpoint_node_phase1() Concluded.
+[STATUS]: Done checkpointing node
+[STATUS]: checkpoint phase 2 complete.
+[STATUS]: checkpoint_node_phase3() Starting...
+[STATUS]: Ensure GC Checkpoints are done
+[STATUS]: Drain RQD
+[STATUS]: RQD drain on MSP[0] complete.
+[STATUS]: checkpoint_node_phase3() Concluding...
+[STATUS]: Node[31] sending checkpoint DONE flags to nodes 0-31
+[STATUS]: __checkpoint_step_done: Sending checkpoint DONE (ROR to addr 0x83fffa08) flags
+[STATUS]: __checkpoint_step_done: Completed sending checkpoint DONE flags
+[STATUS]: collective_checkpoint_step_done: Node[31] sending collective checkpoint value (read and send ROR at addr 0x83fffa08) to nodes 0-31
+[STATUS]: collective_checkpoint_step_done: Node[31] completed sending collective checkpoint.
+[STATUS]: emu_seq_handler_background: run_seq_frontend complete
+AID0:
+	QUEUE:	COUNT:
+	0x0	0
+	0x1	0
+	0x2	0
+	0x3	0
+	0x4	0
+	0x5	0
+	0x6	0
+	0x7	0
+	0x8	0
+	0x9	0
+	0xa	0
+	0xb	0
+	0xc	0
+	0xd	0
+	0xe	0
+	0xf	0
+[STATUS]: SEQ poll iterations between de-queue checks, min: 0, max: 0
+[STATUS]: RUNQ poll iterations between de-queue checks, min: 0, max: 0
+------------------------ ecc error counts ------------------------
+MSP channel 0 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 0 retry_count: double = 0, outer = 0.
+
+MSP channel 1 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 1 retry_count: double = 0, outer = 0.
+
+MSP channel 2 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 2 retry_count: double = 0, outer = 0.
+
+MSP channel 3 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 3 retry_count: double = 0, outer = 0.
+
+MSP channel 4 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 4 retry_count: double = 0, outer = 0.
+
+MSP channel 5 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 5 retry_count: double = 0, outer = 0.
+
+MSP channel 6 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 6 retry_count: double = 0, outer = 0.
+
+MSP channel 7 error_count: single = 0, double = 0, bdouble = 0, outer = 0, bouter = 0.
+MSP channel 7 retry_count: double = 0, outer = 0.
+------------------------------------------------------------------
+----------------- memory read transaction counts -----------------
+MSP channel 0 cmd_count: to FIFO = 1855, from FIFO = 1855, EMIF = 1855.
+MSP channel 0 resp_count: from FIFO = 1855, to FIFO = 1855, EMIF = 1855.
+
+MSP channel 1 cmd_count: to FIFO = 2039, from FIFO = 2039, EMIF = 2039.
+MSP channel 1 resp_count: from FIFO = 2039, to FIFO = 2039, EMIF = 2039.
+
+MSP channel 2 cmd_count: to FIFO = 639, from FIFO = 639, EMIF = 639.
+MSP channel 2 resp_count: from FIFO = 639, to FIFO = 639, EMIF = 639.
+
+MSP channel 3 cmd_count: to FIFO = 2664, from FIFO = 2664, EMIF = 2664.
+MSP channel 3 resp_count: from FIFO = 2664, to FIFO = 2664, EMIF = 2664.
+
+MSP channel 4 cmd_count: to FIFO = 2351, from FIFO = 2351, EMIF = 2351.
+MSP channel 4 resp_count: from FIFO = 2351, to FIFO = 2351, EMIF = 2351.
+
+MSP channel 5 cmd_count: to FIFO = 2607, from FIFO = 2607, EMIF = 2607.
+MSP channel 5 resp_count: from FIFO = 2607, to FIFO = 2607, EMIF = 2607.
+
+MSP channel 6 cmd_count: to FIFO = 850, from FIFO = 850, EMIF = 850.
+MSP channel 6 resp_count: from FIFO = 850, to FIFO = 850, EMIF = 850.
+
+MSP channel 7 cmd_count: to FIFO = 1692, from FIFO = 1692, EMIF = 1692.
+MSP channel 7 resp_count: from FIFO = 1692, to FIFO = 1692, EMIF = 1692.
+------------------------------------------------------------------
+[STATUS]: SEQ producer iterations between SRIO checks, min: 62547, max: 62671
+[STATUS]: pthread 10424 called __consumer_tsr_queue_destroy (CONSUMER_TID=10424, PRODUCER_TID=10430).
+[STATUS]: Threaded SEQ: max_elements 1
+[STATUS]: Threaded SEQ: alloc_elements 1
+[STATUS]: Threaded SEQ: put_elements 1
+[STATUS]: Threaded SEQ: get_elements 1
+[STATUS]: Threaded SEQ: empty_queue 1
+[STATUS]: Threaded SEQ: full_queue 0
