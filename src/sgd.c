@@ -36,14 +36,14 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
     printf("cluster_samples[%ld]: %ld, end_sample_count = %ld\n", n, cluster_samples[n], end_sample_count);
     fflush(stdout);
     for (long i = 0; i < threads_per_cluster; i++) {
-        printf("%ld/%ld\n", n, i);
-        fflush(stdout);
         cilk_migrate_hint(&model_vec[n]);
         cilk_spawn train(i, n, eta_gamma, beta_gamma, end_sample_count);
     }
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
+    printf("%ld/%ld Start\n", n, thread_id);
+    fflush(stdout);
     long* l_working_vec = working_vec[n];
     long* u_working_vec = working_vec[upstream[n]];
     long* l_model_vec = model_vec[n];
@@ -158,6 +158,9 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             }
         }
     }
+
+    printf("%ld/%ld Done\n", n, thread_id);
+    fflush(stdout);
 }
 
 void stripped_train_no_epochs_spawn_children(long tid) {
