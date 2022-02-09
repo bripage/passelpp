@@ -157,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-static void multi_node_read(void *local_ptr, uint64_t n, char *mode){
+static void multi_node_read(void *local_ptr, uint64_t n){
     FILE* fp = NULL;
     size_t read = 0;
     //TODO: uint64_t actual_node = NODE_ID()
@@ -174,7 +174,7 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *mode){
     fflush(NULL);
 
     MIGRATE(local_ptr); // Migrate to node
-    fp = mw_fopen(fname, mode, local_ptr);
+    fp = mw_fopen(fname, "rb", local_ptr);
     if (!fp) {
         fprintf(stderr, "mw_fopen opening %s on node%lu returned %p: %m.\n", fname, n, fp);
         fflush(NULL);
@@ -901,7 +901,7 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
-                cilk_spawn multi_node_read(local_ptr, n, mode);
+                cilk_spawn multi_node_read(local_ptr, n);
             }
             cilk_sync;
             printf("Local done.\n");
