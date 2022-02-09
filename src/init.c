@@ -157,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode){
+static void multi_node_read(void *local_ptr, uint64_t n, char *mode){
     FILE* fp = NULL;
     size_t read = 0;
     //TODO: uint64_t actual_node = NODE_ID()
@@ -165,6 +165,11 @@ static void multi_node_read(void *local_ptr, uint64_t n, char *fname, char *mode
     void* from_disk_buf = NULL;
     void* from_disk = NULL;
     //printf("local_ptr = %p.\n", local_ptr);
+    char* fname = malloc(strlen(train_data_path)+10);
+    sprintf(fname, "%sp%ld.bin", train_data_path, node);
+    printf("Node %ld loading file %s\n", n, fname);
+    fflush(stdout);
+
     fprintf(stderr, "node%lu %s\n", n, fname);
     fflush(NULL);
 
@@ -895,18 +900,12 @@ void init() {
             char *mode = "rb";
 
             for (n = 0; n < cluster_count; n++) {
-                // Add .nlet# to string buffer
-                snprintf(buf, 1024, "%sp%ld.bin1", train_data_path, n);
-                printf("Node %ld loading file %s\n", n, buf);
-                fflush(stdout);
-
-                fnames[n] = strdup(buf); // Create duplicate string
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
-                cilk_spawn multi_node_read(local_ptr, n, fnames[n], mode);
+                cilk_spawn multi_node_read(local_ptr, n, mode);
             }
             cilk_sync;
             printf("Local done.\n");
-
+/*
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
                 repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
@@ -917,6 +916,7 @@ void init() {
             }
             cilk_sync;
             printf("Replicated done.\n");
+            */
 
             double d_temp;
             long l_temp;
