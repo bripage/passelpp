@@ -196,7 +196,7 @@ void populateTrainingData(long node) {
         }
         non_zeros = points / 4;
         */
-        void * local_ptr;
+        long* local_ptr = (long*) malloc(sizeof(long));
         FILE * multi_load_train_data = mw_fopen(node_train_data, "rb", local_ptr);
         if (multi_load_train_data == NULL) {
             printf("Failed to open training feature file.\n");
