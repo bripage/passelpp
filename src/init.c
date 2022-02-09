@@ -894,7 +894,7 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 // Add .nlet# to string buffer
-                snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
+                snprintf(buf, 1024, "%sp%ld.bin1", train_data_path, n);
                 printf("Node %ld loading file %s\n", n, buf);
                 fflush(stdout);
 
