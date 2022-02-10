@@ -265,6 +265,15 @@ void node_load_from_n0(long n, long t){
                 ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
                 run_flag[n] = 1;
             }
+            while (done != cluster_count) {
+                for (n = 0; n < cluster_count; n++) {
+                    if (ATOMIC_SWAP(&points_to_read[0][n], 0) == 1) {
+                        ATOMIC_SWAP(&points_to_read[0][n], 0);
+                        ATOMIC_SWAP(&points_to_read[n][0], -1);
+                        done++;
+                    }
+                }
+            }
         }
         printf("Done reading in data\n");
         fflush(stdout);
