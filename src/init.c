@@ -267,8 +267,7 @@ void node_load_from_n0(long n, long t){
             }
             while (done != cluster_count) {
                 for (n = 0; n < cluster_count; n++) {
-                    if (ATOMIC_SWAP(&points_to_read[0][n], 0) == 1) {
-                        ATOMIC_SWAP(&points_to_read[0][n], 0);
+                    if (ATOMIC_CAS(&points_to_read[0][n], -1, 1) == 1) {
                         ATOMIC_SWAP(&points_to_read[n][0], -1);
                         done++;
                     }
