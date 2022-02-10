@@ -297,16 +297,16 @@ void node_load_from_n0(long node, long t){
             RESCHEDULE();
         }
 
-        printf("Node%ld reading from buffer on 0\n", n);
+        printf("Node%ld reading from buffer on 0\n", node);
         fflush(stdout);
 
         long* data_buffer = data_read_buffer[0][node];
 
         while (points_to_read[node][0] != -1) {
-            printf("Node%ld isnt done being assigned data\n", n);
+            printf("Node%ld isnt done being assigned data\n", node);
             fflush(stdout);
             if (points_to_read[node][0] != 0) {
-                printf("Node%ld has %ld points to read\n", n, points_to_read[node][0]);
+                printf("Node%ld has %ld points to read\n", node, points_to_read[node][0]);
                 fflush(stdout);
                 for (i = 0; i < points_to_read[node][0]; i += 4) {
                     sample = data_buffer[i];
@@ -348,17 +348,17 @@ void node_load_from_n0(long node, long t){
                 }
                 ATOMIC_SWAP(&points_to_read[node][0], 0);
                 ATOMIC_SWAP(&points_to_read[0][node], 1);
-                printf("Node%ld set points to 0 and notified node0\n", n);
+                printf("Node%ld set points to 0 and notified node0\n", node);
                 fflush(stdout);
             }
         }
-        printf("Node%ld DONE getting data\n", n);
+        printf("Node%ld DONE getting data\n", node);
         fflush(stdout);
         train_s[node][sample_count + 1] = j; // add sample id end ptr
         train_s[node][0] = 0;
 
     }
-    printf("Node%ld t%ld DONE\n", n, t);
+    printf("Node%ld t%ld DONE\n", node, t);
     fflush(stdout);
 }
 static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
