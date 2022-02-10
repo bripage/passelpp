@@ -908,15 +908,15 @@ void init() {
                 // Add .nlet# to string buffer
                 snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
                 fnames[n] = strdup(buf); // Create duplicate string
-                printf("fnames[%ld] = %s, size = %ld\n", n, fnames[n], sizeof(fnames[n]));
+                printf("fnames[%ld] = %s, size = %ld\n", n, fnames[n], strlen(fnames[n]));
                 fflush(stdout);
             }
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
+                repl_fnames[n] = mw_localmalloc(strlen(fnames[n]) + 1, local_ptr);
                 //repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
-                memcpy(repl_fnames[n], fnames[n], sizeof(fnames[n]) + 1);
+                memcpy(repl_fnames[n], fnames[n], strlen(fnames[n]) + 1);
                 //memcpy(repl_mode[n], mode, sizeof(mode) + 1);
                 cilk_spawn multi_node_read(local_ptr, n, repl_fnames[n]);
             }
