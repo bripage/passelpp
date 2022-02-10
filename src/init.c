@@ -901,7 +901,7 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                cilk_migrate_hint(local_ptr);
+                cilk_migrate_hint(&model_vec[n]);
                 cilk_spawn multi_node_read(local_ptr, n, train_data_path);
             }
             cilk_sync;
