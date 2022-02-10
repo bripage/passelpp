@@ -317,8 +317,8 @@ void node_load_from_n0(long n, long t){
             ATOMIC_SWAP(&points_to_read[0][n], 1);
         }
 
-        train_s[sample_count + 1] = j; // add sample id end ptr
-        train_s[0] = 0;
+        train_s[n][sample_count + 1] = j; // add sample id end ptr
+        train_s[n][0] = 0;
     }
 
 }
@@ -1130,11 +1130,11 @@ void init() {
             */
             for (int n = 0; n < cluster_count; n++) {
                 if (n == 0){
-                    cilk_migrate_hint(&file_read_ready[n]);
-                    cilk_sync node_load_from_n0(n, 1);
+                    cilk_migrate_hint(&data_read_buffer[n]);
+                    cilk_spawn node_load_from_n0(n, 1);
                 }
-                cilk_migrate_hint(&file_read_ready[n]);
-                cilk_sync node_load_from_n0(n, 0);
+                cilk_migrate_hint(&data_read_buffer[n]);
+                cilk_spawn node_load_from_n0(n, 0);
             }
             cilk_sync;
 
@@ -1145,7 +1145,7 @@ void init() {
                 d_temp /= (double) feat_deg_recip[0][i];
                 d_temp *= 16777216;
                 l_temp = (long) d_temp;
-                for (n = 0; n < cluster_count; n++) {
+                for (long n = 0; n < cluster_count; n++) {
                     feat_deg_recip[n][i] = l_temp;
                 }
             }
