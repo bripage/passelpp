@@ -904,8 +904,7 @@ void init() {
                 cilk_spawn multi_node_read(local_ptr, n);
             }
             cilk_sync;
-            printf("Local done.\n");
-/*
+            /*
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
                 repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
