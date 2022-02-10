@@ -57,6 +57,7 @@ replicated long** train_c; // training sample classes (single value for each sam
 replicated long** feat_deg_recip;
 replicated long** accuracies;
 replicated long** data_read_buffer;
+replicated long** points_to_read;
 
 replicated long* train_s_stripped;
 replicated long* train_f_stripped;
@@ -73,8 +74,6 @@ replicated long* cluster_samples;
 replicated long* upstream;
 replicated long* token;
 replicated long* samples_since_token;
-replicated long* file_read_ready;
-replicated long* file_non_zeros;
 
 void parse_args(int argc, char * argv[]);
 void init();

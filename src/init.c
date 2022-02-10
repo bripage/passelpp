@@ -157,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-void node_load_from_n0(long n){
+void node_load_from_n0(long n, long t){
     long i;
     long sample = -1;
     long feature;
@@ -169,17 +169,21 @@ void node_load_from_n0(long n){
     long non_zeros;
     long points;
 
-    if (n == 0) {
-        long *binBuffer;
+    if (n == 0 && t == 0) {
         long bytesRead;
         long num_bytes;
-        FILE** file_ptrs = malloc(cluster_count * sizeof(FILE*));
-        //char **fnames = malloc(nodes * sizeof(char *));
+        FILE **file_ptrs = malloc(cluster_count * sizeof(FILE * ));
+        long chunk_points;
+        long using_chunk_loading = 0;
+        long done = 0;
+        long *file_points = malloc(cluster_count * sizeof(long));
+        long *chunk_count = malloc(cluster_count * sizeof(long));
+        long *chunks_read = malloc(cluster_count * sizeof(long));
 
         for (n = 0; n < cluster_count; n++) {
-            char* fname = malloc(strlen(train_path)+10);
+            char *fname = malloc(strlen(train_path) + 10);
             sprintf(fname, "%sp%ld.bin", train_data_path, n)
-            printf("fnames[%ld] = %s, size = %ld\n", n, fnames, strlen(fnames));
+            printf("node%ld filename = %s\n", n, fnames);
             fflush(stdout);
 
             file_ptrs[n] = fopen(train_data_path, "rb");
@@ -190,17 +194,128 @@ void node_load_from_n0(long n){
 
             fseek(file_ptrs[n], 0, SEEK_END);
             num_bytes = ftell(file_ptrs[n]);
-            points = num_bytes / 8;
-            non_zeros = points / 4;
+            file_points[n] = num_bytes / 8;
             fseek(file_ptrs[n], 0, SEEK_SET);
-            printf("non-zeros = %ld, points = %ld\n", non_zeros, points);
+            printf("node%ld non-zeros = %ld\n", n, file_points[n] / 4);
             fflush(stdout);
 
+            if (file_points[n] > 16777216) {
+                using_chunk_loading = 1;
+                chunk_points = 16777216;
+                chunk_count[n] = (file_points[n]) / chunk_points;
+                long final_chunk_points = file_points[n] - (chunk_count[n] * chunk_points);
+                if (final_chunk_points != 0) {
+                    chunk_count[n]++;
+                }
+            }
         }
+
+        if (using_chunk_loading) {
+            // read first chunk
+            for (n = 0; n < cluster_count; n++) {
+                if (chunk_count[n] > 0) {
+                    bytesRead = fread(data_read_buffer[n], sizeof(long), 16777216, file_ptrs[n]);
+                    ATOMIC_SWAP(&points_to_read[n][0], 16777216);
+                } else {
+                    bytesRead = fread(data_read_buffer[n], sizeof(long), file_points[n], file_ptrs[n]);
+                    ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
+                }
+                chunks_read[n]++;
+            }
+
+            // read remaining chunks
+            while (done != cluster_count) {
+                for (n = 0; n < cluster_count; n++) {
+                    if (ATOMIC_SWAP(&points_to_read[0][n], 0) == 1) { // remote done reading and is ready for more
+                        if (chunks_read[n] < chunk_count[n]) {
+                            if (chunks_read[n] + 1 == chunk_count[n] - 1) {
+                                chunk_points = file_points - (chunks_read[n] * 16777216);
+                                bytesRead = fread(data_read_buffer[n], sizeof(long), chunk_points, file_ptrs[n]);
+                                if (bytesRead != chunk_points) {
+                                    printf("Error in reading final file chunk\n");
+                                    exit(1);
+                                }
+                                ATOMIC_SWAP(&points_to_read[n][0], chunk_points);
+                                chunks_read[n]++;
+                            } else {
+                                bytesRead = fread(data_read_buffer[n], sizeof(long), 16777216, file_ptrs[n]);
+                                if (bytesRead != chunk_points) {
+                                    printf("Error in reading file chunk %ld\n", c + 1);
+                                    exit(1);
+                                }
+                                ATOMIC_SWAP(&points_to_read[n][0], 16777216);
+                                chunks_read[n]++;
+                            }
+                        } else {
+                            ATOMIC_SWAP(&points_to_read[0][n], 0);
+                            ATOMIC_SWAP(&points_to_read[n][0], -1);
+                            done++;
+                        }
+                    }
+                }
+            }
+        } else {
+            bytesRead = fread(data_read_buffer[n], sizeof(long), file_points[n], file_ptrs[n]);
+            ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
+        }
+
+        for (n = 0; n < cluster_count; n++) {
+            fclose(file_ptrs[n]);
+            free(file_ptrs[n]);
+            //mw_free(data_read_buffer);
+        }
+        //mw_free(data_read_buffer);
+        free(file_ptrs);
+        free(file_points);
+        free(chunk_count);
+        free(chunks_read);
     } else {
+        while (points_to_read[n][0] != -1) {
+            for (i = 0; i < points_to_read[n][0]; i += 4) {
+                sample = binBuffer[i];
+                feature = binBuffer[i + 1];
+                fixed_value = binBuffer[i + 2];
+                class = binBuffer[i + 3];
 
+                if (non_standard_classes) {
+                    if (class == class1) {
+                        class = -1;
+                    } else if (class == class2) {
+                        class = 1;
+                    } else {
+                        printf("ERROR: Training Data classes do not match class range\n");
+                        fflush(stdout);
+                        exit(2);
+                    }
+                }
+
+                if (sample != current_sample) {
+                    sample_count++;
+                    current_sample = sample;
+                    train_s[n][sample_count] = j;
+                    train_c[n][sample_count] = class;
+                    train_f[n][j] = 0;
+                    train_v[n][j] = 1;
+                    REMOTE_ADD(&feat_deg_recip[0][0], 1);
+                    j++;
+                    train_f[n][j] = feature;
+                    train_v[n][j] = fixed_value;
+                    REMOTE_ADD(&feat_deg_recip[0][feature0], 1);
+                } else {
+                    train_f[n][j] = feature;
+                    train_v[n][j] = fixed_value;
+                    REMOTE_ADD(&feat_deg_recip[0][feature], 1);
+
+                }
+                j++;
+            }
+            ATOMIC_SWAP(&points_to_read[n][0], 0);
+            ATOMIC_SWAP(&points_to_read[0][n], 1);
+        }
+
+        train_s[sample_count + 1] = j; // add sample id end ptr
+        train_s[0] = 0;
     }
-
 
 }
 static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
@@ -789,6 +904,10 @@ void populateTrainingDataStripped() {
 void init_cluster(long n) {
     for (long i = 0; i < cluster_count; i++){
         accuracies[n][i] = 0;
+        points_to_read[n][i] = 0;
+    }
+    for (long i = 0; i < 16777216; i++){
+        data_read_buffer[n][i] = 0;
     }
     cluster_samples[n] = 0;
     total_evaluated_sample_count[n] = 0;
@@ -913,17 +1032,17 @@ void init() {
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
 
     if (multi_file_load){
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), 134217728 * sizeof(long)); //1 GB per node
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), 16777216 * sizeof(long)); //128 MB per node
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&data_read_buffer, nlet);
             *ptr = l2d_ptr;
         }
 
-        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &file_read_ready, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &file_non_zeros, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long)); //128 MB per node
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&points_to_read, nlet);
+            *ptr = l2d_ptr;
+        }
     }
 
     printf("--- Memmory Allocation Complete ---\n");
@@ -1006,8 +1125,25 @@ void init() {
             }
             */
             for (int n = 0; n < cluster_count; n++) {
+                if (n == 0){
+                    cilk_migrate_hint(&file_read_ready[n]);
+                    cilk_sync node_load_from_n0(n, 1);
+                }
                 cilk_migrate_hint(&file_read_ready[n]);
-                cilk_sync node_load_from_n0(n);
+                cilk_sync node_load_from_n0(n, 0);
+            }
+            cilk_sync;
+
+            double d_temp;
+            long l_temp;
+            for (long i = 0; i <= featureSetSize; i++) {
+                d_temp = 1.0;
+                d_temp /= (double) feat_deg_recip[0][i];
+                d_temp *= 16777216;
+                l_temp = (long) d_temp;
+                for (n = 0; n < cluster_count; n++) {
+                    feat_deg_recip[n][i] = l_temp;
+                }
             }
         } else {
             MIGRATE(&model_vec[0]);
