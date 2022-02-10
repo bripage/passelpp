@@ -212,6 +212,8 @@ void node_load_from_n0(long n, long t){
                 }
             }
         }
+        printf("Done opening data files");
+        fflush(stdout);
 
 
 
@@ -219,10 +221,10 @@ void node_load_from_n0(long n, long t){
             // read first chunk
             for (n = 0; n < cluster_count; n++) {
                 if (chunk_count[n] > 0) {
-                    bytesRead = fread(data_read_buffer[0][n][0], sizeof(long), 16777216, file_ptrs[n]);
+                    bytesRead = fread(data_read_buffer[0][n], sizeof(long), 16777216, file_ptrs[n]);
                     ATOMIC_SWAP(&points_to_read[n][0], 16777216);
                 } else {
-                    bytesRead = fread(data_read_buffer[0][n][0], sizeof(long), file_points[n], file_ptrs[n]);
+                    bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
                     ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
                 }
                 chunks_read[n]++;
@@ -235,14 +237,14 @@ void node_load_from_n0(long n, long t){
                         if (chunks_read[n] < chunk_count[n]) {
                             if (chunks_read[n] + 1 == chunk_count[n] - 1) {
                                 chunk_points = file_points[n] - (chunks_read[n] * 16777216);
-                                bytesRead = fread(data_read_buffer[0][n][0], sizeof(long), chunk_points, file_ptrs[n]);
+                                bytesRead = fread(data_read_buffer[0][n], sizeof(long), chunk_points, file_ptrs[n]);
                                 if (bytesRead != chunk_points) {
                                     exit(1);
                                 }
                                 ATOMIC_SWAP(&points_to_read[n][0], chunk_points);
                                 chunks_read[n]++;
                             } else {
-                                bytesRead = fread(data_read_buffer[0][n][0], sizeof(long), 16777216, file_ptrs[n]);
+                                bytesRead = fread(data_read_buffer[0][n], sizeof(long), 16777216, file_ptrs[n]);
                                 if (bytesRead != chunk_points) {
                                     exit(1);
                                 }
@@ -258,20 +260,30 @@ void node_load_from_n0(long n, long t){
                 }
             }
         } else {
-            bytesRead = fread(data_read_buffer[0][n][0], sizeof(long), file_points[n], file_ptrs[n]);
-            ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
+            printf("Chunk Loading: FALSE\n");
+            fflush(stdout);
+            for (n = 0; n < cluster_count; n++) {
+                bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
+                ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
+            }
         }
+        printf("Done reading in data\n");
+        fflush(stdout);
 
         for (n = 0; n < cluster_count; n++) {
             fclose(file_ptrs[n]);
             free(file_ptrs[n]);
             //mw_free(data_read_buffer);
         }
+        printf("Done freeing file pointers\n");
+        fflush(stdout);
         //mw_free(data_read_buffer);
         free(file_ptrs);
         free(file_points);
         free(chunk_count);
         free(chunks_read);
+        printf("Done freeing temp arrays\n");
+        fflush(stdout);
     } else {
 
         long* data_buffer = data_read_buffer[0][n];
