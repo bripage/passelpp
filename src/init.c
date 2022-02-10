@@ -923,16 +923,16 @@ void init() {
             cilk_sync;
             printf("Replicated done.\n");
 
-            for (nlet = 0; nlet < nlets; nlet++) {
-                char *path = repl_fnames[nlet];
+            for (n = 0; n < cluster_count; n++) {
+                char *path = repl_fnames[n];
                 MIGRATE(path);
                 int ret = unlink(path);
                 if (ret == -1) {
-                    fprintf(stderr, "unlink: %s -lmemoryweb: %m.\n", repl_fnames[nlet]);
+                    fprintf(stderr, "unlink: %s -lmemoryweb: %m.\n", repl_fnames[n]);
                     exit(nlet << 32 | 1 << 24 | EXIT_FAILURE);
                 }
-                mw_localfree(repl_fnames[nlet]);
-                free(fnames[nlet]);
+                mw_localfree(repl_fnames[n]);
+                free(fnames[n]);
             }
 
             double d_temp;
