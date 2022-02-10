@@ -1073,7 +1073,7 @@ void init() {
         }
 
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &run_flag, (long) l1d_ptr)
+        mw_replicated_init((long *) &run_flag, (long) l1d_ptr);
     }
 
     printf("--- Memmory Allocation Complete ---\n");
