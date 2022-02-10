@@ -35,6 +35,7 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
     long end_sample_count = cluster_samples[n] * epoch;
     printf("cluster_samples[%ld]: %ld, end_sample_count = %ld\n", n, cluster_samples[n], end_sample_count);
     fflush(stdout);
+    cilk_sync;
     for (long i = 0; i < threads_per_cluster; i++) {
         cilk_migrate_hint(&model_vec[n]);
         cilk_spawn train(i, n, eta_gamma, beta_gamma, end_sample_count);
