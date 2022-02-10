@@ -934,6 +934,8 @@ void init() {
                 mw_localfree(repl_fnames[n]);
                 free(fnames[n]);
             }
+            free(fnames);
+            free(repl_fnames);
 
             double d_temp;
             long l_temp;
