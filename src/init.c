@@ -892,7 +892,7 @@ void init() {
             uint64_t n = 0;
             char buf[1024] = {0};
             char* fname = malloc(strlen(train_data_path)+10);
-            //char **fnames = malloc(nodes * sizeof(char *));
+            char **fnames = malloc(nodes * sizeof(char *));
             char **repl_fnames = malloc(nodes * sizeof(char *));
             //char **repl_mode = malloc(nodes * sizeof(char *));
             char *mode = "rb";
@@ -905,12 +905,18 @@ void init() {
             //cilk_sync;
 
             for (n = 0; n < cluster_count; n++) {
+                // Add .nlet# to string buffer
+                snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
+                fnames[n] = strdup(buf); // Create duplicate string
+            }
+
+            for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
                 sprintf(fname, "%sp%ld.bin", train_data_path, n);
 
-                repl_fnames[n] = mw_localmalloc(sizeof(fname) + 1, local_ptr);
+                repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
                 //repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
-                memcpy(repl_fnames[n], fname, sizeof(fname) + 1);
+                memcpy(repl_fnames[n], fname, sizeof(fname[n]) + 1);
                 //memcpy(repl_mode[n], mode, sizeof(mode) + 1);
                 cilk_spawn multi_node_read(local_ptr, n, repl_fnames[n]);
             }
