@@ -181,7 +181,6 @@ void node_load_from_n0(long n, long t){
         long *chunks_read = malloc(cluster_count * sizeof(long));
 
 
-
         for (n = 0; n < cluster_count; n++) {
             data_read_buffer[0][n] = (long*) malloc(16777216 * sizeof(long));
             char *fname = malloc(strlen(train_data_path) + 10);
@@ -228,7 +227,9 @@ void node_load_from_n0(long n, long t){
                     ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
                 }
                 chunks_read[n]++;
+                run_flag[n] = 1;
             }
+
 
             // read remaining chunks
             while (done != cluster_count) {
@@ -265,6 +266,7 @@ void node_load_from_n0(long n, long t){
             for (n = 0; n < cluster_count; n++) {
                 bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
                 ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
+                run_flag[n] = 1;
             }
         }
         printf("Done reading in data\n");
@@ -285,6 +287,9 @@ void node_load_from_n0(long n, long t){
         printf("Done freeing temp arrays\n");
         fflush(stdout);
     } else {
+        while(&run_flag[n] == 0){
+            RESCHEDULE();
+        }
 
         long* data_buffer = data_read_buffer[0][n];
 
@@ -335,7 +340,7 @@ void node_load_from_n0(long n, long t){
 
         train_s[n][sample_count + 1] = j; // add sample id end ptr
         train_s[n][0] = 0;
-        
+
     }
 
 }
@@ -948,6 +953,8 @@ void init_cluster(long n) {
     } else {
         token[n] = 0;
     }
+
+    run_flag[n] = 0;
 }
 
 void init() {
@@ -1064,6 +1071,9 @@ void init() {
             long ***ptr = (long ***) mw_get_nth(&points_to_read, nlet);
             *ptr = l2d_ptr;
         }
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &run_flag, (long) l1d_ptr)
     }
 
     printf("--- Memmory Allocation Complete ---\n");

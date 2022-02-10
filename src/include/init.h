@@ -74,6 +74,7 @@ replicated long* cluster_samples;
 replicated long* upstream;
 replicated long* token;
 replicated long* samples_since_token;
+replicated long* run_flag;
 
 void parse_args(int argc, char * argv[]);
 void init();
