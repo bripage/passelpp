@@ -891,7 +891,7 @@ void init() {
             long *local_ptr = (long *) ((uint64_t) &node0);
             uint64_t n = 0;
             char buf[1024] = {0};
-            char* fname = malloc(strlen(train_path)+10);
+            char* fname = malloc(strlen(train_data_path)+10);
             //char **fnames = malloc(nodes * sizeof(char *));
             char **repl_fnames = malloc(nodes * sizeof(char *));
             //char **repl_mode = malloc(nodes * sizeof(char *));
@@ -906,7 +906,6 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                char* fname = malloc(strlen(train_path)+10);
                 sprintf(fname, "%sp%ld.bin", train_data_path, n);
 
                 repl_fnames[n] = mw_localmalloc(sizeof(fname) + 1, local_ptr);
