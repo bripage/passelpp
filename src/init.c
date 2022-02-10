@@ -168,8 +168,9 @@ void node_load_from_n0(long node, long t){
     long current_sample = -1;
     long non_zeros;
     long points;
+    long n;
 
-    if (n == 0 && t == 0) {
+    if (node == 0 && t == 0) {
         long bytesRead;
         long num_bytes;
         FILE **file_ptrs = malloc(cluster_count * sizeof(FILE * ));
