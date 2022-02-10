@@ -212,18 +212,13 @@ int main(int argc, char **argv)
     for (nlet = 0; nlet < nlets; nlet++) {
         char *path = repl_fnames[nlet];
         MIGRATE(path);
-        int ret = unlink(path);
-        if (ret == -1) {
-            fprintf(stderr, "unlink: %s -lmemoryweb: %m.\n", repl_fnames[nlet]);
-            exit(nlet << 32 | 1 << 24 | EXIT_FAILURE);
-        }
         mw_localfree(repl_fnames[nlet]);
         mw_localfree(repl_mode[nlet]);
         free(fnames[nlet]);
     }
     free(fnames);
     free(repl_fnames);
-    free(repl_mode);
+
 
     return 0;
 }

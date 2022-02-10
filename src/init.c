@@ -926,11 +926,6 @@ void init() {
             for (n = 0; n < cluster_count; n++) {
                 char *path = repl_fnames[n];
                 MIGRATE(path);
-                int ret = unlink(path);
-                if (ret == -1) {
-                    fprintf(stderr, "unlink: %s -lmemoryweb: %m.\n", repl_fnames[n]);
-                    exit(n << 32 | 1 << 24 | EXIT_FAILURE);
-                }
                 mw_localfree(repl_fnames[n]);
                 free(fnames[n]);
             }
