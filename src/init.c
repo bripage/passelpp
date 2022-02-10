@@ -8,7 +8,7 @@
 #include "include/init.h"
 #include "include/accuracy.h"
 
-static long nodelet0;
+static long node0;
 
 double SolveBeta(long num_clusters) {
     double start = 0.6;
@@ -891,7 +891,7 @@ void init() {
         if (multi_file_load){
             uint64_t bpn = BYTES_PER_NODE();
             uint64_t nlets = cluster_count;
-            long *local_ptr = (long *) ((uint64_t) &nodteelet0);
+            long *local_ptr = (long *) ((uint64_t) &node0);
             uint64_t n = 0;
             //char buf[1024] = {0};
             //char **fnames = malloc(nlets * sizeof(char *));
@@ -900,14 +900,14 @@ void init() {
             //char *mode = "rb";
 
             for (n = 0; n < cluster_count; n++) {
-                local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
+                local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
                 cilk_migrate_hint(local_ptr);
                 cilk_spawn multi_node_read(local_ptr, n, train_data_path);
             }
             cilk_sync;
             /*
             for (n = 0; n < cluster_count; n++) {
-                local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
+                local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
                 repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
                 repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
                 memcpy(repl_fnames[n], fnames[n], sizeof(fnames[n]) + 1);
