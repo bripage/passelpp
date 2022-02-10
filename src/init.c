@@ -906,8 +906,10 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 // Add .nlet# to string buffer
-                sprintf(fnames[n], "%sp%ld.bin", train_data_path, n);
-                //fnames[n] = strdup(buf); // Create duplicate string
+                snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
+                fnames[n] = strdup(buf); // Create duplicate string
+                printf("fnames[%ld] = %s\n", n, fname);
+                fflush(stdout);
             }
 
             for (n = 0; n < cluster_count; n++) {
