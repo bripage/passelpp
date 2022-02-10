@@ -189,7 +189,7 @@ void node_load_from_n0(long n, long t){
             printf("node%ld filename = %s\n", n, fname);
             fflush(stdout);
 
-            file_ptrs[n] = fopen(train_data_path, "rb");
+            file_ptrs[n] = fopen(fname, "rb");
             if (train_data == NULL) {
                 printf("Failed to open training feature file.\n");
                 exit(1);
@@ -273,8 +273,9 @@ void node_load_from_n0(long n, long t){
         free(chunk_count);
         free(chunks_read);
     } else {
+
+        long* data_buffer = *data_read_buffer[0][n];
         /*
-        long* data_buffer = data_read_buffer[0][n];
         while (points_to_read[n][0] != -1) {
             if (points_to_read[n][0] != 0) {
                 for (i = 0; i < points_to_read[n][0]; i += 4) {
