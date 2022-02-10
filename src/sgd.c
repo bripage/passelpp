@@ -43,8 +43,8 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
-    printf("%ld/%ld Starting on %ld\n", n, thread_id, NODE_ID());
-    fflush(stdout);
+    //printf("%ld/%ld Starting on %ld\n", n, thread_id, NODE_ID());
+    //fflush(stdout);
     long* l_working_vec = working_vec[n];
     long* u_working_vec = working_vec[upstream[n]];
     long* l_model_vec = model_vec[n];
