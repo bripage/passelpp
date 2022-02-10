@@ -157,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-void node_load_from_n0(long n, long t){
+void node_load_from_n0(long node, long t){
     long i;
     long j = 0;
     long sample = -1;
@@ -292,22 +292,22 @@ void node_load_from_n0(long n, long t){
         printf("Done freeing temp arrays\n");
         fflush(stdout);
     } else {
-        while(run_flag[n] == 0){
+        while(run_flag[node] == 0){
             RESCHEDULE();
         }
 
         printf("Node%ld reading from buffer on 0\n", n);
         fflush(stdout);
 
-        long* data_buffer = data_read_buffer[0][n];
+        long* data_buffer = data_read_buffer[0][node];
 
-        while (points_to_read[n][0] != -1) {
+        while (points_to_read[node][0] != -1) {
             printf("Node%ld isnt done being assigned data\n", n);
             fflush(stdout);
-            if (points_to_read[n][0] != 0) {
-                printf("Node%ld has %ld points to read\n", n, points_to_read[n][0]);
+            if (points_to_read[node][0] != 0) {
+                printf("Node%ld has %ld points to read\n", n, points_to_read[node][0]);
                 fflush(stdout);
-                for (i = 0; i < points_to_read[n][0]; i += 4) {
+                for (i = 0; i < points_to_read[node][0]; i += 4) {
                     sample = data_buffer[i];
                     feature = data_buffer[i + 1];
                     fixed_value = data_buffer[i + 2];
@@ -328,33 +328,33 @@ void node_load_from_n0(long n, long t){
                     if (sample != current_sample) {
                         sample_count++;
                         current_sample = sample;
-                        train_s[n][sample_count] = j;
-                        train_c[n][sample_count] = class;
-                        train_f[n][j] = 0;
-                        train_v[n][j] = 1;
+                        train_s[node][sample_count] = j;
+                        train_c[node][sample_count] = class;
+                        train_f[node][j] = 0;
+                        train_v[node][j] = 1;
                         REMOTE_ADD(&feat_deg_recip[0][0], 1);
                         j++;
-                        train_f[n][j] = feature;
-                        train_v[n][j] = fixed_value;
+                        train_f[node][j] = feature;
+                        train_v[node][j] = fixed_value;
                         REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                     } else {
-                        train_f[n][j] = feature;
-                        train_v[n][j] = fixed_value;
+                        train_f[node][j] = feature;
+                        train_v[node][j] = fixed_value;
                         REMOTE_ADD(&feat_deg_recip[0][feature], 1);
 
                     }
                     j++;
                 }
-                ATOMIC_SWAP(&points_to_read[n][0], 0);
-                ATOMIC_SWAP(&points_to_read[0][n], 1);
+                ATOMIC_SWAP(&points_to_read[node][0], 0);
+                ATOMIC_SWAP(&points_to_read[0][node], 1);
                 printf("Node%ld set points to 0 and notified node0\n", n);
                 fflush(stdout);
             }
         }
         printf("Node%ld DONE getting data\n", n);
         fflush(stdout);
-        train_s[n][sample_count + 1] = j; // add sample id end ptr
-        train_s[n][0] = 0;
+        train_s[node][sample_count + 1] = j; // add sample id end ptr
+        train_s[node][0] = 0;
 
     }
     printf("Node%ld t%ld DONE\n", n, t);
