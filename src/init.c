@@ -157,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-static void multi_node_read(void *local_ptr, uint64_t n){
+static void multi_node_read(void *local_ptr, uint64_t n, char * train_path){
     FILE* fp = NULL;
     size_t read = 0;
     //TODO: uint64_t actual_node = NODE_ID()
@@ -165,7 +165,7 @@ static void multi_node_read(void *local_ptr, uint64_t n){
     void* from_disk_buf = NULL;
     void* from_disk = NULL;
     //printf("local_ptr = %p.\n", local_ptr);
-    char* fname = malloc(strlen(train_data_path)+10);
+    char* fname = malloc(strlen(train_path)+10);
     sprintf(fname, "%sp%ld.bin", train_data_path, n);
     printf("Node %ld loading file %s\n", n, fname);
     fflush(stdout);
@@ -893,15 +893,15 @@ void init() {
             uint64_t nlets = cluster_count;
             long *local_ptr = (long *) ((uint64_t) &nodelet0);
             uint64_t n = 0;
-            char buf[1024] = {0};
-            char **fnames = malloc(nlets * sizeof(char *));
-            char **repl_fnames = malloc(nlets * sizeof(char *));
-            char **repl_mode = malloc(nlets * sizeof(char *));
-            char *mode = "rb";
+            //char buf[1024] = {0};
+            //char **fnames = malloc(nlets * sizeof(char *));
+            //char **repl_fnames = malloc(nlets * sizeof(char *));
+            //char **repl_mode = malloc(nlets * sizeof(char *));
+            //char *mode = "rb";
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
-                cilk_spawn multi_node_read(local_ptr, n);
+                cilk_spawn multi_node_read(local_ptr, n, train_data_path);
             }
             cilk_sync;
             /*
