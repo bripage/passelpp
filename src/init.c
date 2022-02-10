@@ -912,11 +912,9 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                sprintf(fname, "%sp%ld.bin", train_data_path, n);
-
                 repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
                 //repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
-                memcpy(repl_fnames[n], fname, sizeof(fname[n]) + 1);
+                memcpy(repl_fnames[n], fname, sizeof(fnames[n]) + 1);
                 //memcpy(repl_mode[n], mode, sizeof(mode) + 1);
                 cilk_spawn multi_node_read(local_ptr, n, repl_fnames[n]);
             }
