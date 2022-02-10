@@ -214,8 +214,6 @@ void node_load_from_n0(long n, long t){
         printf("Done opening data files");
         fflush(stdout);
 
-
-
         if (using_chunk_loading) {
             // read first chunk
             for (n = 0; n < cluster_count; n++) {
@@ -229,7 +227,6 @@ void node_load_from_n0(long n, long t){
                 chunks_read[n]++;
                 run_flag[n] = 1;
             }
-
 
             // read remaining chunks
             while (done != cluster_count) {
@@ -287,7 +284,7 @@ void node_load_from_n0(long n, long t){
         printf("Done freeing temp arrays\n");
         fflush(stdout);
     } else {
-        while(&run_flag[n] == 0){
+        while(run_flag[n] == 0){
             RESCHEDULE();
         }
 
@@ -1160,8 +1157,8 @@ void init() {
                     cilk_migrate_hint(&data_read_buffer[n]);
                     cilk_spawn node_load_from_n0(n, 0);
                 }
-                //cilk_migrate_hint(&data_read_buffer[n]);
-                //cilk_spawn node_load_from_n0(n, 0);
+                cilk_migrate_hint(&data_read_buffer[n]);
+                cilk_spawn node_load_from_n0(n, 0);
             }
             cilk_sync;
 
