@@ -356,7 +356,7 @@ void node_load_from_n0(long node, long t){
         fflush(stdout);
         train_s[node][sample_count + 1] = j; // add sample id end ptr
         train_s[node][0] = 0;
-        cluster_samples[n] = sample_count + 1;
+        cluster_samples[node] = sample_count + 1;
 
     }
     printf("Node%ld t%ld DONE\n", node, t);
