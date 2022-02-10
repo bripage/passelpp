@@ -43,11 +43,12 @@ double initial_step_size;                // becomes eta
 double initial_step_decay;               // becomes gamma
 FILE * train_data;                       // training data file ptr
 char * train_data_path;                  // path to training data file
-char * class_data_path;                  // path to training sample class file
 char* test_feature_path;                 // path to accuracy testing file
 char* test_label_path;                   // path to accuracy testing sample class filez
 
 /// Data allocation and misc globals
+replicated long*** data_read_buffer;
+
 replicated long** model_vec;        // working vector for each node
 replicated long** working_vec;       // working vector for each node
 replicated long** train_s; // training data sample id's
@@ -56,7 +57,6 @@ replicated long** train_v;          // training data values (non-zero values for
 replicated long** train_c; // training sample classes (single value for each sample)
 replicated long** feat_deg_recip;
 replicated long** accuracies;
-replicated long** data_read_buffer;
 replicated long** points_to_read;
 
 replicated long* train_s_stripped;

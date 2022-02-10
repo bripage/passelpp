@@ -159,11 +159,11 @@ void parse_args(int argc, char * argv[]) {
 
 void node_load_from_n0(long n, long t){
     long i;
+    long j = 0;
     long sample = -1;
     long feature;
     long fixed_value;
     long class;
-    long n;
     long sample_count = -1;
     long current_sample = -1;
     long non_zeros;
@@ -180,10 +180,13 @@ void node_load_from_n0(long n, long t){
         long *chunk_count = malloc(cluster_count * sizeof(long));
         long *chunks_read = malloc(cluster_count * sizeof(long));
 
+
+
         for (n = 0; n < cluster_count; n++) {
-            char *fname = malloc(strlen(train_path) + 10);
-            sprintf(fname, "%sp%ld.bin", train_data_path, n)
-            printf("node%ld filename = %s\n", n, fnames);
+            data_read_buffer[0][n] = (long*) malloc(16777216 * sizeof(long));
+            char *fname = malloc(strlen(train_data_path) + 10);
+            sprintf(fname, "%sp%ld.bin", train_data_path, n);
+            printf("node%ld filename = %s\n", n, fname);
             fflush(stdout);
 
             file_ptrs[n] = fopen(train_data_path, "rb");
@@ -210,14 +213,16 @@ void node_load_from_n0(long n, long t){
             }
         }
 
+
+
         if (using_chunk_loading) {
             // read first chunk
             for (n = 0; n < cluster_count; n++) {
                 if (chunk_count[n] > 0) {
-                    bytesRead = fread(data_read_buffer[n], sizeof(long), 16777216, file_ptrs[n]);
+                    bytesRead = fread(data_read_buffer[0][n], sizeof(long), 16777216, file_ptrs[n]);
                     ATOMIC_SWAP(&points_to_read[n][0], 16777216);
                 } else {
-                    bytesRead = fread(data_read_buffer[n], sizeof(long), file_points[n], file_ptrs[n]);
+                    bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
                     ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
                 }
                 chunks_read[n]++;
@@ -229,18 +234,16 @@ void node_load_from_n0(long n, long t){
                     if (ATOMIC_SWAP(&points_to_read[0][n], 0) == 1) { // remote done reading and is ready for more
                         if (chunks_read[n] < chunk_count[n]) {
                             if (chunks_read[n] + 1 == chunk_count[n] - 1) {
-                                chunk_points = file_points - (chunks_read[n] * 16777216);
-                                bytesRead = fread(data_read_buffer[n], sizeof(long), chunk_points, file_ptrs[n]);
+                                chunk_points = file_points[n] - (chunks_read[n] * 16777216);
+                                bytesRead = fread(data_read_buffer[0][n], sizeof(long), chunk_points, file_ptrs[n]);
                                 if (bytesRead != chunk_points) {
-                                    printf("Error in reading final file chunk\n");
                                     exit(1);
                                 }
                                 ATOMIC_SWAP(&points_to_read[n][0], chunk_points);
                                 chunks_read[n]++;
                             } else {
-                                bytesRead = fread(data_read_buffer[n], sizeof(long), 16777216, file_ptrs[n]);
+                                bytesRead = fread(data_read_buffer[0][n], sizeof(long), 16777216, file_ptrs[n]);
                                 if (bytesRead != chunk_points) {
-                                    printf("Error in reading file chunk %ld\n", c + 1);
                                     exit(1);
                                 }
                                 ATOMIC_SWAP(&points_to_read[n][0], 16777216);
@@ -255,7 +258,7 @@ void node_load_from_n0(long n, long t){
                 }
             }
         } else {
-            bytesRead = fread(data_read_buffer[n], sizeof(long), file_points[n], file_ptrs[n]);
+            bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
             ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
         }
 
@@ -270,12 +273,13 @@ void node_load_from_n0(long n, long t){
         free(chunk_count);
         free(chunks_read);
     } else {
+        long* data_buffer = data_read_buffer[0][n];
         while (points_to_read[n][0] != -1) {
             for (i = 0; i < points_to_read[n][0]; i += 4) {
-                sample = binBuffer[i];
-                feature = binBuffer[i + 1];
-                fixed_value = binBuffer[i + 2];
-                class = binBuffer[i + 3];
+                sample = data_buffer[i];
+                feature = data_buffer[i + 1];
+                fixed_value = data_buffer[i + 2];
+                class = data_buffer[i + 3];
 
                 if (non_standard_classes) {
                     if (class == class1) {
@@ -300,7 +304,7 @@ void node_load_from_n0(long n, long t){
                     j++;
                     train_f[n][j] = feature;
                     train_v[n][j] = fixed_value;
-                    REMOTE_ADD(&feat_deg_recip[0][feature0], 1);
+                    REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                 } else {
                     train_f[n][j] = feature;
                     train_v[n][j] = fixed_value;
@@ -1032,10 +1036,10 @@ void init() {
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
 
     if (multi_file_load){
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), 16777216 * sizeof(long)); //128 MB per node
+        long*** l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), 16777216 * sizeof(long*)); //128 MB per node
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&data_read_buffer, nlet);
-            *ptr = l2d_ptr;
+            long ****ptr = (long ****) mw_get_nth(&data_read_buffer, nlet);
+            *ptr = l3d_ptr;
         }
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long)); //128 MB per node
