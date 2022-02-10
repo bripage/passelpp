@@ -10,11 +10,6 @@
 
 static long nodelet0;
 
-// NOTE: must be marked volatile to avoid infinite loop of TPCx: JMP TPCx in
-// while (barrier != GO);
-//static replicated long volatile barrier = 0;
-
-
 static void __do_open_write_read_memcmp(void *local_ptr, uint64_t nlet,char *fname, char *mode, uint64_t buf_sz)
 {
     FILE *fp = NULL;

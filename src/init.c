@@ -157,6 +157,52 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
+void node_load_from_n0(long n){
+    long i;
+    long sample = -1;
+    long feature;
+    long fixed_value;
+    long class;
+    long n;
+    long sample_count = -1;
+    long current_sample = -1;
+    long non_zeros;
+    long points;
+
+    if (n == 0) {
+        long *binBuffer;
+        long bytesRead;
+        long num_bytes;
+        FILE** file_ptrs = malloc(cluster_count * sizeof(FILE*));
+        //char **fnames = malloc(nodes * sizeof(char *));
+
+        for (n = 0; n < cluster_count; n++) {
+            char* fname = malloc(strlen(train_path)+10);
+            sprintf(fname, "%sp%ld.bin", train_data_path, n)
+            printf("fnames[%ld] = %s, size = %ld\n", n, fnames, strlen(fnames));
+            fflush(stdout);
+
+            file_ptrs[n] = fopen(train_data_path, "rb");
+            if (train_data == NULL) {
+                printf("Failed to open training feature file.\n");
+                exit(1);
+            }
+
+            fseek(file_ptrs[n], 0, SEEK_END);
+            num_bytes = ftell(file_ptrs[n]);
+            points = num_bytes / 8;
+            non_zeros = points / 4;
+            fseek(file_ptrs[n], 0, SEEK_SET);
+            printf("non-zeros = %ld, points = %ld\n", non_zeros, points);
+            fflush(stdout);
+
+        }
+    } else {
+
+    }
+
+
+}
 static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
     FILE* fp = NULL;
     size_t read = 0;
@@ -866,6 +912,20 @@ void init() {
     l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
 
+    if (multi_file_load){
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), 134217728 * sizeof(long)); //1 GB per node
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&data_read_buffer, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &file_read_ready, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &file_non_zeros, (long) l1d_ptr);
+    }
+
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
 
@@ -886,6 +946,7 @@ void init() {
     fflush(stdout);
     if (using_clusters) {
         if (multi_file_load){
+            /*
             uint64_t bpn = BYTES_PER_NODE();
             uint64_t nodes = cluster_count;
             long *local_ptr = (long *) ((uint64_t) &node0);
@@ -942,6 +1003,11 @@ void init() {
                 for (n = 0; n < cluster_count; n++) {
                     feat_deg_recip[n][i] = l_temp;
                 }
+            }
+            */
+            for (int n = 0; n < cluster_count; n++) {
+                cilk_migrate_hint(&file_read_ready[n]);
+                cilk_sync node_load_from_n0(n);
             }
         } else {
             MIGRATE(&model_vec[0]);
