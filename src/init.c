@@ -273,6 +273,7 @@ void node_load_from_n0(long n, long t){
         free(chunk_count);
         free(chunks_read);
     } else {
+        /*
         long* data_buffer = data_read_buffer[0][n];
         while (points_to_read[n][0] != -1) {
             if (points_to_read[n][0] != 0) {
@@ -321,6 +322,7 @@ void node_load_from_n0(long n, long t){
 
         train_s[n][sample_count + 1] = j; // add sample id end ptr
         train_s[n][0] = 0;
+        */
     }
 
 }
