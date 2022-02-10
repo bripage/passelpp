@@ -275,43 +275,45 @@ void node_load_from_n0(long n, long t){
     } else {
         long* data_buffer = data_read_buffer[0][n];
         while (points_to_read[n][0] != -1) {
-            for (i = 0; i < points_to_read[n][0]; i += 4) {
-                sample = data_buffer[i];
-                feature = data_buffer[i + 1];
-                fixed_value = data_buffer[i + 2];
-                class = data_buffer[i + 3];
+            if (points_to_read[n][0] != 0) {
+                for (i = 0; i < points_to_read[n][0]; i += 4) {
+                    sample = data_buffer[i];
+                    feature = data_buffer[i + 1];
+                    fixed_value = data_buffer[i + 2];
+                    class = data_buffer[i + 3];
 
-                if (non_standard_classes) {
-                    if (class == class1) {
-                        class = -1;
-                    } else if (class == class2) {
-                        class = 1;
-                    } else {
-                        printf("ERROR: Training Data classes do not match class range\n");
-                        fflush(stdout);
-                        exit(2);
+                    if (non_standard_classes) {
+                        if (class == class1) {
+                            class = -1;
+                        } else if (class == class2) {
+                            class = 1;
+                        } else {
+                            printf("ERROR: Training Data classes do not match class range\n");
+                            fflush(stdout);
+                            exit(2);
+                        }
                     }
-                }
 
-                if (sample != current_sample) {
-                    sample_count++;
-                    current_sample = sample;
-                    train_s[n][sample_count] = j;
-                    train_c[n][sample_count] = class;
-                    train_f[n][j] = 0;
-                    train_v[n][j] = 1;
-                    REMOTE_ADD(&feat_deg_recip[0][0], 1);
+                    if (sample != current_sample) {
+                        sample_count++;
+                        current_sample = sample;
+                        train_s[n][sample_count] = j;
+                        train_c[n][sample_count] = class;
+                        train_f[n][j] = 0;
+                        train_v[n][j] = 1;
+                        REMOTE_ADD(&feat_deg_recip[0][0], 1);
+                        j++;
+                        train_f[n][j] = feature;
+                        train_v[n][j] = fixed_value;
+                        REMOTE_ADD(&feat_deg_recip[0][feature], 1);
+                    } else {
+                        train_f[n][j] = feature;
+                        train_v[n][j] = fixed_value;
+                        REMOTE_ADD(&feat_deg_recip[0][feature], 1);
+
+                    }
                     j++;
-                    train_f[n][j] = feature;
-                    train_v[n][j] = fixed_value;
-                    REMOTE_ADD(&feat_deg_recip[0][feature], 1);
-                } else {
-                    train_f[n][j] = feature;
-                    train_v[n][j] = fixed_value;
-                    REMOTE_ADD(&feat_deg_recip[0][feature], 1);
-
                 }
-                j++;
             }
             ATOMIC_SWAP(&points_to_read[n][0], 0);
             ATOMIC_SWAP(&points_to_read[0][n], 1);
