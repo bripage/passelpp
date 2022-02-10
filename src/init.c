@@ -157,7 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
-static void multi_node_read(void *local_ptr, uint64_t n, char * train_path){
+static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
     FILE* fp = NULL;
     size_t read = 0;
     //TODO: uint64_t actual_node = NODE_ID()
@@ -165,13 +165,10 @@ static void multi_node_read(void *local_ptr, uint64_t n, char * train_path){
     void* from_disk_buf = NULL;
     void* from_disk = NULL;
     //printf("local_ptr = %p.\n", local_ptr);
-    char* fname = malloc(strlen(train_path)+10);
-    sprintf(fname, "%sp%ld.bin", train_data_path, n);
-    printf("Node %ld loading file %s\n", n, fname);
+    //char* fname = malloc(strlen(train_path)+10);
+    //sprintf(fname, "%sp%ld.bin", train_data_path, n);
+    printf("Node %ld loading file %s\n", NODE_ID(), fname);
     fflush(stdout);
-
-    fprintf(stderr, "node%lu %s\n", n, fname);
-    fflush(NULL);
 
     MIGRATE(local_ptr); // Migrate to node
     fp = mw_fopen(fname, "rb", local_ptr);
@@ -890,33 +887,37 @@ void init() {
     if (using_clusters) {
         if (multi_file_load){
             uint64_t bpn = BYTES_PER_NODE();
-            uint64_t nlets = cluster_count;
+            uint64_t nodes = cluster_count;
             long *local_ptr = (long *) ((uint64_t) &node0);
             uint64_t n = 0;
-            //char buf[1024] = {0};
-            //char **fnames = malloc(nlets * sizeof(char *));
-            //char **repl_fnames = malloc(nlets * sizeof(char *));
-            //char **repl_mode = malloc(nlets * sizeof(char *));
-            //char *mode = "rb";
+            char buf[1024] = {0};
+            char* fname = malloc(strlen(train_path)+10);
+            //char **fnames = malloc(nodes * sizeof(char *));
+            char **repl_fnames = malloc(nodes * sizeof(char *));
+            //char **repl_mode = malloc(nodes * sizeof(char *));
+            char *mode = "rb";
+
+            //for (n = 0; n < cluster_count; n++) {
+            //    local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
+            //    cilk_migrate_hint(&model_vec[n]);
+            //    cilk_spawn multi_node_read(local_ptr, n, train_data_path);
+            //}
+            //cilk_sync;
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                cilk_migrate_hint(&model_vec[n]);
-                cilk_spawn multi_node_read(local_ptr, n, train_data_path);
-            }
-            cilk_sync;
-            /*
-            for (n = 0; n < cluster_count; n++) {
-                local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                repl_fnames[n] = mw_localmalloc(sizeof(fnames[n]) + 1, local_ptr);
-                repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
-                memcpy(repl_fnames[n], fnames[n], sizeof(fnames[n]) + 1);
-                memcpy(repl_mode[n], mode, sizeof(mode) + 1);
-                cilk_spawn multi_node_read(local_ptr, n,repl_fnames[n],repl_mode[n]);
+                char* fname = malloc(strlen(train_path)+10);
+                sprintf(fname, "%sp%ld.bin", train_data_path, n);
+
+                repl_fnames[n] = mw_localmalloc(sizeof(fname) + 1, local_ptr);
+                //repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
+                memcpy(repl_fnames[n], fname, sizeof(fname) + 1);
+                //memcpy(repl_mode[n], mode, sizeof(mode) + 1);
+                cilk_spawn multi_node_read(local_ptr, n, repl_fnames[n]);
             }
             cilk_sync;
             printf("Replicated done.\n");
-            */
+
 
             double d_temp;
             long l_temp;
