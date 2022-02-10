@@ -1155,7 +1155,7 @@ void init() {
             for (int n = 0; n < cluster_count; n++) {
                 if (n == 0){
                     cilk_migrate_hint(&data_read_buffer[n]);
-                    cilk_spawn node_load_from_n0(n, 0);
+                    cilk_spawn node_load_from_n0(n, 1);
                 }
                 cilk_migrate_hint(&data_read_buffer[n]);
                 cilk_spawn node_load_from_n0(n, 0);
