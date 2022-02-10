@@ -908,7 +908,7 @@ void init() {
                 // Add .nlet# to string buffer
                 snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
                 fnames[n] = strdup(buf); // Create duplicate string
-                printf("fnames[%ld] = %s\n", n, fnames[n]);
+                printf("fnames[%ld] = %s, size = %ld\n", n, fnames[n], sizeof(fnames[n]);
                 fflush(stdout);
             }
 
