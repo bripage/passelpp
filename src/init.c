@@ -272,22 +272,22 @@ void node_load_from_n0(long n, long t){
 
         for (n = 0; n < cluster_count; n++) {
             fclose(file_ptrs[n]);
-            free(file_ptrs[n]);
+            //free(file_ptrs[n]);
             //mw_free(data_read_buffer);
         }
         printf("Done freeing file pointers\n");
         fflush(stdout);
         //mw_free(data_read_buffer);
-        free(file_ptrs);
-        free(file_points);
-        free(chunk_count);
-        free(chunks_read);
+        //free(file_ptrs);
+        //free(file_points);
+        //free(chunk_count);
+        //free(chunks_read);
         printf("Done freeing temp arrays\n");
         fflush(stdout);
     } else {
 
         long* data_buffer = data_read_buffer[0][n];
-        /*
+
         while (points_to_read[n][0] != -1) {
             if (points_to_read[n][0] != 0) {
                 for (i = 0; i < points_to_read[n][0]; i += 4) {
@@ -335,7 +335,7 @@ void node_load_from_n0(long n, long t){
 
         train_s[n][sample_count + 1] = j; // add sample id end ptr
         train_s[n][0] = 0;
-        */
+        
     }
 
 }
