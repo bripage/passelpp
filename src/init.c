@@ -891,7 +891,7 @@ void init() {
         if (multi_file_load){
             uint64_t bpn = BYTES_PER_NODE();
             uint64_t nlets = cluster_count;
-            long *local_ptr = (long *) ((uint64_t) &nodelet0);
+            long *local_ptr = (long *) ((uint64_t) &nodteelet0);
             uint64_t n = 0;
             //char buf[1024] = {0};
             //char **fnames = malloc(nlets * sizeof(char *));
@@ -901,6 +901,7 @@ void init() {
 
             for (n = 0; n < cluster_count; n++) {
                 local_ptr = (long *) ((uint64_t) &nodelet0 + (bpn * n));
+                cilk_migrate_hint(local_ptr);
                 cilk_spawn multi_node_read(local_ptr, n, train_data_path);
             }
             cilk_sync;
