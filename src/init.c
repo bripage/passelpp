@@ -190,7 +190,7 @@ void node_load_from_n0(long n, long t){
             fflush(stdout);
 
             file_ptrs[n] = fopen(fname, "rb");
-            if (train_data == NULL) {
+            if (file_ptrs[n] == NULL) {
                 printf("Failed to open training feature file.\n");
                 exit(1);
             }
