@@ -385,23 +385,23 @@ void node_load_from_n0(long t) {
     long file_points;
     long chunk_count;
     long chunks_read;
-    long *data_read_buffer = malloc(16777216 * sizeof(long));
-
+    long *data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
+    long* data_buffer = data_read_buffer[0][t];
     char *fname = malloc(strlen(train_data_path) + 10);
     sprintf(fname, "%sp%ld.bin", train_data_path, t);
     printf("node%ld filename = %s\n", t, fname);
     fflush(stdout);
 
     file_ptr = fopen(fname, "rb");
-    if (file_ptrs == NULL) {
+    if (file_ptr == NULL) {
         printf("Failed to open training feature file.\n");
         exit(1);
     }
 
-    fseek(file_ptrs, 0, SEEK_END);
-    num_bytes = ftell(file_ptrs);
+    fseek(file_ptr, 0, SEEK_END);
+    num_bytes = ftell(file_ptr);
     file_points = num_bytes / 8;
-    fseek(file_ptrs, 0, SEEK_SET);
+    fseek(file_ptr, 0, SEEK_SET);
     printf("node%ld non-zeros = %ld\n", n, file_points / 4);
     fflush(stdout);
 
