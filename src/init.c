@@ -4,11 +4,8 @@
 // 2^22 = 4194304
 // 2^24 = 16777216
 //
-
 #include "include/init.h"
 #include "include/accuracy.h"
-
-static long node0;
 
 double SolveBeta(long num_clusters) {
     double start = 0.6;
@@ -156,213 +153,6 @@ void parse_args(int argc, char * argv[]) {
     //printf("--- Parsing Arguments Complete ---\n");
     //fflush(stdout);
 }
-
-/*
-void node_load_from_n0(long node, long t){
-    long i;
-    long j = 0;
-    long sample = -1;
-    long feature;
-    long fixed_value;
-    long class;
-    long sample_count = -1;
-    long current_sample = -1;
-    long non_zeros;
-    long points;
-    long n;
-
-    if (node == 0 && t == 0) {
-        long bytesRead;
-        long num_bytes;
-        FILE **file_ptrs = malloc(cluster_count * sizeof(FILE * ));
-        long chunk_points;
-        long using_chunk_loading = 0;
-        long done = 0;
-        long *file_points = malloc(cluster_count * sizeof(long));
-        long *chunk_count = malloc(cluster_count * sizeof(long));
-        long *chunks_read = malloc(cluster_count * sizeof(long));
-
-        for (n = 0; n < cluster_count; n++) {
-            data_read_buffer[0][n] = (long*) malloc(16777216 * sizeof(long));
-            char *fname = malloc(strlen(train_data_path) + 10);
-            sprintf(fname, "%sp%ld.bin", train_data_path, n);
-            printf("node%ld filename = %s\n", n, fname);
-            fflush(stdout);
-
-            file_ptrs[n] = fopen(fname, "rb");
-            if (file_ptrs[n] == NULL) {
-                printf("Failed to open training feature file.\n");
-                exit(1);
-            }
-
-            fseek(file_ptrs[n], 0, SEEK_END);
-            num_bytes = ftell(file_ptrs[n]);
-            file_points[n] = num_bytes / 8;
-            fseek(file_ptrs[n], 0, SEEK_SET);
-            printf("node%ld non-zeros = %ld\n", n, file_points[n] / 4);
-            fflush(stdout);
-
-            if (file_points[n] > 16777216) {
-                using_chunk_loading = 1;
-                chunk_points = 16777216;
-                chunk_count[n] = (file_points[n]) / chunk_points;
-                long final_chunk_points = file_points[n] - (chunk_count[n] * chunk_points);
-                if (final_chunk_points != 0) {
-                    chunk_count[n]++;
-                }
-            }
-        }
-        printf("Done opening data files");
-        fflush(stdout);
-
-        if (using_chunk_loading) {
-            // read first chunk
-            for (n = 0; n < cluster_count; n++) {
-                if (chunk_count[n] > 0) {
-                    bytesRead = fread(data_read_buffer[0][n], sizeof(long), 16777216, file_ptrs[n]);
-                    ATOMIC_SWAP(&points_to_read[n][0], 16777216);
-                } else {
-                    bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
-                    ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
-                }
-                chunks_read[n]++;
-                run_flag[n] = 1;
-            }
-
-            // read remaining chunks
-            while (done != cluster_count) {
-                for (n = 0; n < cluster_count; n++) {
-                    if (ATOMIC_SWAP(&points_to_read[0][n], 0) == 1) { // remote done reading and is ready for more
-                        if (chunks_read[n] < chunk_count[n]) {
-                            if (chunks_read[n] + 1 == chunk_count[n] - 1) {
-                                chunk_points = file_points[n] - (chunks_read[n] * 16777216);
-                                bytesRead = fread(data_read_buffer[0][n], sizeof(long), chunk_points, file_ptrs[n]);
-                                if (bytesRead != chunk_points) {
-                                    exit(1);
-                                }
-                                ATOMIC_SWAP(&points_to_read[n][0], chunk_points);
-                                chunks_read[n]++;
-                            } else {
-                                bytesRead = fread(data_read_buffer[0][n], sizeof(long), 16777216, file_ptrs[n]);
-                                if (bytesRead != chunk_points) {
-                                    exit(1);
-                                }
-                                ATOMIC_SWAP(&points_to_read[n][0], 16777216);
-                                chunks_read[n]++;
-                            }
-                        } else {
-                            ATOMIC_SWAP(&points_to_read[0][n], 0);
-                            ATOMIC_SWAP(&points_to_read[n][0], -1);
-                            done++;
-                        }
-                    }
-                }
-            }
-        } else {
-            printf("Chunk Loading: FALSE\n");
-            fflush(stdout);
-            for (n = 0; n < cluster_count; n++) {
-                bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
-                ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
-                run_flag[n] = 1;
-            }
-            while (done != cluster_count) {
-                for (n = 0; n < cluster_count; n++) {
-                    if (ATOMIC_CAS(&points_to_read[0][n], -1, 1) == 1) {
-                        ATOMIC_SWAP(&points_to_read[n][0], -1);
-                        done++;
-                    }
-                }
-            }
-        }
-        printf("Done reading in data\n");
-        fflush(stdout);
-
-        for (n = 0; n < cluster_count; n++) {
-            fclose(file_ptrs[n]);
-            //free(file_ptrs[n]);
-            //mw_free(data_read_buffer);
-        }
-        printf("Done freeing file pointers\n");
-        fflush(stdout);
-        //mw_free(data_read_buffer);
-        //free(file_ptrs);
-        //free(file_points);
-        //free(chunk_count);
-        //free(chunks_read);
-        printf("Done freeing temp arrays\n");
-        fflush(stdout);
-    } else {
-        while(run_flag[node] == 0){
-            RESCHEDULE();
-        }
-
-        printf("Node%ld reading from buffer on 0\n", node);
-        fflush(stdout);
-
-        long* data_buffer = data_read_buffer[0][node];
-
-        while (points_to_read[node][0] != -1) {
-            printf("Node%ld isnt done being assigned data\n", node);
-            fflush(stdout);
-            if (points_to_read[node][0] != 0) {
-                printf("Node%ld has %ld points to read\n", node, points_to_read[node][0]);
-                fflush(stdout);
-                for (i = 0; i < points_to_read[node][0]; i += 4) {
-                    sample = data_buffer[i];
-                    feature = data_buffer[i + 1];
-                    fixed_value = data_buffer[i + 2];
-                    class = data_buffer[i + 3];
-
-                    if (non_standard_classes) {
-                        if (class == class1) {
-                            class = -1;
-                        } else if (class == class2) {
-                            class = 1;
-                        } else {
-                            printf("ERROR: Training Data classes do not match class range\n");
-                            fflush(stdout);
-                            exit(2);
-                        }
-                    }
-
-                    if (sample != current_sample) {
-                        sample_count++;
-                        current_sample = sample;
-                        train_s[node][sample_count] = j;
-                        train_c[node][sample_count] = class;
-                        train_f[node][j] = 0;
-                        train_v[node][j] = 1;
-                        REMOTE_ADD(&feat_deg_recip[0][0], 1);
-                        j++;
-                        train_f[node][j] = feature;
-                        train_v[node][j] = fixed_value;
-                        REMOTE_ADD(&feat_deg_recip[0][feature], 1);
-                    } else {
-                        train_f[node][j] = feature;
-                        train_v[node][j] = fixed_value;
-                        REMOTE_ADD(&feat_deg_recip[0][feature], 1);
-
-                    }
-                    j++;
-                }
-                ATOMIC_SWAP(&points_to_read[node][0], 0);
-                ATOMIC_SWAP(&points_to_read[0][node], 1);
-                printf("Node%ld set points to 0 and notified node0\n", node);
-                fflush(stdout);
-            }
-        }
-        printf("Node%ld DONE getting data\n", node);
-        fflush(stdout);
-        train_s[node][sample_count + 1] = j; // add sample id end ptr
-        train_s[node][0] = 0;
-        cluster_samples[node] = sample_count + 1;
-
-    }
-    printf("Node%ld t%ld DONE\n", node, t);
-    fflush(stdout);
-}
-*/
 
 void node_load_from_n0(long t) {
     long i;
@@ -524,149 +314,6 @@ void node_load_from_n0(long t) {
     fflush(stdout);
 }
 
-static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
-    FILE* fp = NULL;
-    size_t read = 0;
-    //TODO: uint64_t actual_node = NODE_ID()
-    int ret;
-    void* from_disk_buf = NULL;
-    void* from_disk = NULL;
-    //printf("local_ptr = %p.\n", local_ptr);
-    //char* fname = malloc(strlen(train_path)+10);
-    //sprintf(fname, "%sp%ld.bin", train_data_path, n);
-    printf("Node %ld loading file %s\n", NODE_ID(), fname);
-    fflush(stdout);
-
-    MIGRATE(local_ptr); // Migrate to node
-    fp = mw_fopen(fname, "rb", local_ptr);
-    if (!fp) {
-        fprintf(stderr, "mw_fopen opening %s on node%lu returned %p: %m.\n", fname, n, fp);
-        fflush(NULL);
-        exit(0 << 16 | EXIT_FAILURE);
-    }
-
-    printf("node%lu, fp = %p.\n", n, fp); fflush(stdout);
-    long node = n;
-    long node1 = gc_addr_abs_node_num((uint64_t)fp);
-    if ( node != node1 ) {
-        fprintf(stderr, "%d: fp=%p supposed to be on node%lu but is on node%lu.\n", __LINE__, fp, node, node1);
-        fflush(NULL);
-        exit(1 << 16 | EXIT_FAILURE);
-    }
-
-#if 0
-    if (n != NODE_ID()) {
-        fprintf(stderr, "%d: on node%lu but supposed to be on node%lu.\n",
-                __LINE__, NODE_ID(), n);
-        exit(EXIT_FAILURE);
-    }
-#endif
-
-    fseek(fp, 0, SEEK_END);
-    long num_bytes = ftell(fp);
-    long points = num_bytes / 8;
-    long non_zeros = points / 4;
-    fseek(fp, 0, SEEK_SET);
-    printf("non-zeros = %ld, points = %ld\n", non_zeros, points);
-    fflush(stdout);
-
-    from_disk_buf = mw_localmalloc(1 * num_bytes + 0x000, local_ptr);
-    if (!from_disk_buf) {
-        fprintf(stderr, "mw_localmalloc/malloc returned %p.\n", from_disk_buf);
-        fflush(NULL);
-        //if (!from_disk_buf) {
-        exit(4 << 16 | EXIT_FAILURE);
-    }
-    //from_disk = (void *) (((uint64_t) from_disk_buf & ~0xff) + ((((uint64_t) from_disk_buf & 0xFF) != 0x0) << 8) + 0x000);
-    from_disk = from_disk_buf;
-
-#if 0
-    if (n != NODE_ID()) {
-        fprintf(stderr, "%d: on node%lu but supposed to be on node%lu.\n",
-                __LINE__, NODE_ID(), n);
-        exit(EXIT_FAILURE);
-    }
-#endif
-
-    read = mw_fread(from_disk, 1, num_bytes, fp);
-    if (read != num_bytes) {
-        fprintf(stderr, "mw_fread returned %lu but buf_sz = %lu.\n", read, num_bytes);
-        fflush(NULL);
-        exit(5 << 16 | EXIT_FAILURE);
-    }
-    MIGRATE(local_ptr);
-
-    ret = mw_fclose(fp);
-    if (ret == EOF) {
-        fprintf(stderr, "mw_fclose returned EOF=%d: %m.\n", ret);
-        fflush(NULL);
-        exit(8 << 16 | EXIT_FAILURE);
-    }
-
-#if 0
-    if (n != NODE_ID()) {
-        fprintf(stderr, "%d: on node%lu but supposed to be on node%lu.\n",
-                __LINE__, NODE_ID(), n);
-        exit(EXIT_FAILURE);
-    }
-#endif
-
-    MIGRATE(local_ptr);
-    long sample = -1;
-    long feature;
-    long fixed_value;
-    long class;
-    long sample_count = -1;
-    long current_sample = -1;
-    long j = 0;
-    long* data_buf = from_disk;
-    for (long i = 0; i < points; i += 4) {
-        sample = data_buf[i];
-        feature = data_buf[i + 1];
-        fixed_value = data_buf[i + 2];
-        class = data_buf[i + 3];
-
-        if (non_standard_classes) {
-            if (class == class1) {
-                class = -1;
-            } else if (class == class2) {
-                class = 1;
-            } else {
-                printf("ERROR: Training Data classes do not match class range\n");
-                fflush(stdout);
-                exit(2);
-            }
-        }
-
-        if (sample != current_sample) {
-            sample_count++;
-            //printf("sample %ld\n", sample_count);
-            //fflush(stdout);
-            train_s[n][sample_count] = j;
-            train_c[n][sample_count] = class;
-            train_f[n][j] = 0;
-            train_v[n][j] = 1;
-            REMOTE_ADD(&feat_deg_recip[0][0], 1);
-            j++;
-            train_f[n][j] = feature;
-            train_v[n][j] = fixed_value;
-            REMOTE_ADD(&feat_deg_recip[0][feature], 1);
-            current_sample = sample;
-        } else {
-            train_f[n][j] = feature;
-            train_v[n][j] = fixed_value;
-            REMOTE_ADD(&feat_deg_recip[0][feature], 1);
-        }
-        j++;
-    }
-
-    train_s[n][sample_count + 1] = j; // add sample id end ptr
-    train_s[n][0] = 0;
-    cluster_samples[n] = sample_count + 1;
-
-    mw_localfree(from_disk_buf);
-}
-
 void populateTrainingData() {
     //printf("inside populate_data()\n");
     //fflush(stdout);
@@ -685,9 +332,8 @@ void populateTrainingData() {
     long points;
     long *binBuffer;
     long bytesRead;
-    //printf("points = %ld\n", points);
-    //fflush(stdout);
-
+    printf("points = %ld\n", points);
+    fflush(stdout);
 
     long *sample_placement = (long *) malloc(cluster_count * sizeof(long));
     long *data_placement = (long *) malloc(cluster_count * sizeof(long));
@@ -695,6 +341,8 @@ void populateTrainingData() {
         data_placement[n] = 0;
         sample_placement[n] = 0;
     }
+    printf("1\n", points);
+    fflush(stdout);
 
     non_zeros = total_train_points - train_sample_count;
     points = non_zeros * 4;
@@ -703,7 +351,8 @@ void populateTrainingData() {
         printf("Failed to open training feature file.\n");
         exit(1);
     }
-
+    printf("2\n", points);
+    fflush(stdout);
     if (non_zeros > 30000000) {
         long chunk_points = 30000000 * 4;
         long chunk_count = 0, final_chunk_points = 0;
@@ -825,11 +474,14 @@ void populateTrainingData() {
         points = non_zeros * 4;
         binBuffer = (long *) malloc(points * sizeof(long));
         bytesRead = fread(binBuffer, sizeof(long), points, train_data);
-
+        printf("3\n", points);
+        fflush(stdout);
         if (bytesRead != (points)) {
             printf("*** Feature File Read Failure ***\n");
             exit(1);
         }
+        printf("4\n", points);
+        fflush(stdout);
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
             feature = binBuffer[i + 1];
@@ -881,6 +533,8 @@ void populateTrainingData() {
             }
             data_placement[n]++;
         }
+        printf("5\n", points);
+        fflush(stdout);
 
         for (n = 0; n < cluster_count; n++) {
             train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
@@ -888,9 +542,11 @@ void populateTrainingData() {
         }
     }
 
+    printf("6\n", points);
+    fflush(stdout);
+
     fclose(train_data);
     free(binBuffer);
-
 
     double d_temp;
     long l_temp;
@@ -903,11 +559,9 @@ void populateTrainingData() {
             feat_deg_recip[n][i] = l_temp;
         }
     }
+    printf("7\n", points);
+    fflush(stdout);
 
-    //printf("SAMPLE COUNT: %ld\n", sample_count);
-    //fflush(stdout);
-    //printf("populate_data() done\n");
-    //fflush(stdout);
 }
 
 void populateTrainingDataStripped() {
@@ -1110,10 +764,6 @@ void populateTrainingDataStripped() {
 void init_cluster(long n) {
     for (long i = 0; i < cluster_count; i++){
         accuracies[n][i] = 0;
-        points_to_read[n][i] = 0;
-    }
-    for (long i = 0; i < 16777216; i++){
-        data_read_buffer[n][i] = 0;
     }
     cluster_samples[n] = 0;
     total_evaluated_sample_count[n] = 0;
@@ -1133,8 +783,6 @@ void init_cluster(long n) {
     } else {
         token[n] = 0;
     }
-
-    run_flag[n] = 0;
 }
 
 void init() {
@@ -1240,20 +888,11 @@ void init() {
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
 
     if (multi_file_load){
-        long*** l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), 16777216 * sizeof(long*)); //128 MB per node
+        long*** l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long*));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ****ptr = (long ****) mw_get_nth(&data_read_buffer, nlet);
             *ptr = l3d_ptr;
         }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long)); //128 MB per node
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&points_to_read, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-        mw_replicated_init((long *) &run_flag, (long) l1d_ptr);
     }
 
     printf("--- Memmory Allocation Complete ---\n");
@@ -1277,65 +916,6 @@ void init() {
     if (using_clusters) {
         volatile uint64_t start_load_time = CLOCK();
         if (multi_file_load){
-            /*
-            uint64_t bpn = BYTES_PER_NODE();
-            uint64_t nodes = cluster_count;
-            long *local_ptr = (long *) ((uint64_t) &node0);
-            uint64_t n = 0;
-            char buf[1024] = {0};
-            //char* fname = malloc(strlen(train_data_path)+10);
-            char **fnames = malloc(nodes * sizeof(char *));
-            char **repl_fnames = malloc(nodes * sizeof(char *));
-            //char **repl_mode = malloc(nodes * sizeof(char *));
-            char *mode = "rb";
-
-            //for (n = 0; n < cluster_count; n++) {
-            //    local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-            //    cilk_migrate_hint(&model_vec[n]);
-            //    cilk_spawn multi_node_read(local_ptr, n, train_data_path);
-            //}
-            //cilk_sync;
-
-            for (n = 0; n < cluster_count; n++) {
-                // Add .nlet# to string buffer
-                snprintf(buf, 1024, "%sp%ld.bin", train_data_path, n);
-                fnames[n] = strdup(buf); // Create duplicate string
-                printf("fnames[%ld] = %s, size = %ld\n", n, fnames[n], strlen(fnames[n]));
-                fflush(stdout);
-            }
-
-            for (n = 0; n < cluster_count; n++) {
-                local_ptr = (long *) ((uint64_t) &node0 + (bpn * n));
-                repl_fnames[n] = mw_localmalloc(strlen(fnames[n]) + 1, local_ptr);
-                //repl_mode[n] = mw_localmalloc(sizeof(mode) + 1, local_ptr);
-                memcpy(repl_fnames[n], fnames[n], strlen(fnames[n]) + 1);
-                //memcpy(repl_mode[n], mode, sizeof(mode) + 1);
-                cilk_spawn multi_node_read(local_ptr, n, repl_fnames[n]);
-            }
-            cilk_sync;
-            printf("Replicated done.\n");
-
-            for (n = 0; n < cluster_count; n++) {
-                char *path = repl_fnames[n];
-                MIGRATE(path);
-                mw_localfree(repl_fnames[n]);
-                free(fnames[n]);
-            }
-            free(fnames);
-            free(repl_fnames);
-
-            double d_temp;
-            long l_temp;
-            for (long i = 0; i <= featureSetSize; i++) {
-                d_temp = 1.0;
-                d_temp /= (double) feat_deg_recip[0][i];
-                d_temp *= 16777216;
-                l_temp = (long) d_temp;
-                for (n = 0; n < cluster_count; n++) {
-                    feat_deg_recip[n][i] = l_temp;
-                }
-            }
-            */
             for (int n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn node_load_from_n0(n);
