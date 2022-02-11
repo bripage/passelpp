@@ -332,7 +332,7 @@ void populateTrainingData() {
     long points;
     long *binBuffer;
     long bytesRead;
-    printf("points = %ld\n", points);
+    printf("0\n");
     fflush(stdout);
 
     long *sample_placement = (long *) malloc(cluster_count * sizeof(long));
@@ -341,7 +341,7 @@ void populateTrainingData() {
         data_placement[n] = 0;
         sample_placement[n] = 0;
     }
-    printf("1\n", points);
+    printf("1\n");
     fflush(stdout);
 
     non_zeros = total_train_points - train_sample_count;
@@ -351,7 +351,7 @@ void populateTrainingData() {
         printf("Failed to open training feature file.\n");
         exit(1);
     }
-    printf("2\n", points);
+    printf("2\n");
     fflush(stdout);
     if (non_zeros > 30000000) {
         long chunk_points = 30000000 * 4;
@@ -474,13 +474,13 @@ void populateTrainingData() {
         points = non_zeros * 4;
         binBuffer = (long *) malloc(points * sizeof(long));
         bytesRead = fread(binBuffer, sizeof(long), points, train_data);
-        printf("3\n", points);
+        printf("3\n");
         fflush(stdout);
         if (bytesRead != (points)) {
             printf("*** Feature File Read Failure ***\n");
             exit(1);
         }
-        printf("4\n", points);
+        printf("4\n");
         fflush(stdout);
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
@@ -533,7 +533,7 @@ void populateTrainingData() {
             }
             data_placement[n]++;
         }
-        printf("5\n", points);
+        printf("5\n");
         fflush(stdout);
 
         for (n = 0; n < cluster_count; n++) {
@@ -542,7 +542,7 @@ void populateTrainingData() {
         }
     }
 
-    printf("6\n", points);
+    printf("6\n");
     fflush(stdout);
 
     fclose(train_data);
