@@ -385,7 +385,7 @@ void node_load_from_n0(long t) {
     long file_points;
     long chunk_count;
     long chunks_read;
-    long *data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
+    data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
     char *fname = malloc(strlen(train_data_path) + 10);
     sprintf(fname, "%sp%ld.bin", train_data_path, t);
