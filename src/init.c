@@ -1275,6 +1275,7 @@ void init() {
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
     if (using_clusters) {
+        volatile uint64_t start_load_time = CLOCK();
         if (multi_file_load){
             /*
             uint64_t bpn = BYTES_PER_NODE();
@@ -1356,6 +1357,9 @@ void init() {
             MIGRATE(&model_vec[0]);
             populateTrainingData();
         }
+        volatile uint64_t total_load_time = CLOCK() - start_load_time;
+        printf("Training Data Load Time: %lf\n", (double) total_load_time / 215000000);
+        fflush(stdout);
     } else {
         MIGRATE(&model_vec_stripped[0]);
         populateTrainingDataStripped();
