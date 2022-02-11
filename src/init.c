@@ -186,8 +186,8 @@ void node_load_from_n0(long node, long t){
             data_read_buffer[0][n] = (long*) malloc(16777216 * sizeof(long));
             char *fname = malloc(strlen(train_data_path) + 10);
             sprintf(fname, "%sp%ld.bin", train_data_path, n);
-            //printf("node%ld filename = %s\n", n, fname);
-            //fflush(stdout);
+            printf("node%ld filename = %s\n", n, fname);
+            fflush(stdout);
 
             file_ptrs[n] = fopen(fname, "rb");
             if (file_ptrs[n] == NULL) {
@@ -199,8 +199,8 @@ void node_load_from_n0(long node, long t){
             num_bytes = ftell(file_ptrs[n]);
             file_points[n] = num_bytes / 8;
             fseek(file_ptrs[n], 0, SEEK_SET);
-            //printf("node%ld non-zeros = %ld\n", n, file_points[n] / 4);
-            //fflush(stdout);
+            printf("node%ld non-zeros = %ld\n", n, file_points[n] / 4);
+            fflush(stdout);
 
             if (file_points[n] > 16777216) {
                 using_chunk_loading = 1;
@@ -212,8 +212,8 @@ void node_load_from_n0(long node, long t){
                 }
             }
         }
-        //printf("Done opening data files");
-        //fflush(stdout);
+        printf("Done opening data files");
+        fflush(stdout);
 
         if (using_chunk_loading) {
             // read first chunk
@@ -259,8 +259,8 @@ void node_load_from_n0(long node, long t){
                 }
             }
         } else {
-            //printf("Chunk Loading: FALSE\n");
-            //fflush(stdout);
+            printf("Chunk Loading: FALSE\n");
+            fflush(stdout);
             for (n = 0; n < cluster_count; n++) {
                 bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
                 ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
@@ -281,7 +281,7 @@ void node_load_from_n0(long node, long t){
         for (n = 0; n < cluster_count; n++) {
             fclose(file_ptrs[n]);
             //free(file_ptrs[n]);
-            //free(data_read_buffer[0][n]);
+            //mw_free(data_read_buffer);
         }
         printf("Done freeing file pointers\n");
         fflush(stdout);
@@ -290,24 +290,24 @@ void node_load_from_n0(long node, long t){
         //free(file_points);
         //free(chunk_count);
         //free(chunks_read);
-        printf("Done freeing temps\n");
+        printf("Done freeing temp arrays\n");
         fflush(stdout);
     } else {
         while(run_flag[node] == 0){
             RESCHEDULE();
         }
 
-        //printf("Node%ld reading from buffer on 0\n", node);
-        //fflush(stdout);
+        printf("Node%ld reading from buffer on 0\n", node);
+        fflush(stdout);
 
         long* data_buffer = data_read_buffer[0][node];
 
         while (points_to_read[node][0] != -1) {
-            //printf("Node%ld isnt done being assigned data\n", node);
-            //fflush(stdout);
+            printf("Node%ld isnt done being assigned data\n", node);
+            fflush(stdout);
             if (points_to_read[node][0] != 0) {
-                //printf("Node%ld has %ld points to read\n", node, points_to_read[node][0]);
-                //fflush(stdout);
+                printf("Node%ld has %ld points to read\n", node, points_to_read[node][0]);
+                fflush(stdout);
                 for (i = 0; i < points_to_read[node][0]; i += 4) {
                     sample = data_buffer[i];
                     feature = data_buffer[i + 1];
@@ -348,19 +348,19 @@ void node_load_from_n0(long node, long t){
                 }
                 ATOMIC_SWAP(&points_to_read[node][0], 0);
                 ATOMIC_SWAP(&points_to_read[0][node], 1);
-                //printf("Node%ld set points to 0 and notified node0\n", node);
-                //fflush(stdout);
+                printf("Node%ld set points to 0 and notified node0\n", node);
+                fflush(stdout);
             }
         }
-        //printf("Node%ld DONE getting data\n", node);
-        //fflush(stdout);
+        printf("Node%ld DONE getting data\n", node);
+        fflush(stdout);
         train_s[node][sample_count + 1] = j; // add sample id end ptr
         train_s[node][0] = 0;
         cluster_samples[node] = sample_count + 1;
 
     }
-    //printf("Node%ld t%ld DONE\n", node, t);
-    //fflush(stdout);
+    printf("Node%ld t%ld DONE\n", node, t);
+    fflush(stdout);
 }
 static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
     FILE* fp = NULL;
@@ -1205,6 +1205,6 @@ void init() {
     MIGRATE(&model_vec[0]);
     populateTestDataStripped();
 
-	printf("--- Initialization Complete ---\n");
-	fflush(stdout);
+    printf("--- Initialization Complete ---\n");
+    fflush(stdout);
 }
