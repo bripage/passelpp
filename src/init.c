@@ -373,18 +373,15 @@ void node_load_from_n0(long t) {
     long class;
     long sample_count = -1;
     long current_sample = -1;
-    long non_zeros;
-    long points;
     long n;
     long bytesRead;
     long num_bytes;
     FILE *file_ptr;
     long chunk_points;
     long using_chunk_loading = 0;
-    long done = 0;
     long file_points;
     long chunk_count;
-    long chunks_read;
+
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
     char *fname = malloc(strlen(train_data_path) + 10);
@@ -402,7 +399,7 @@ void node_load_from_n0(long t) {
     num_bytes = ftell(file_ptr);
     file_points = num_bytes / 8;
     fseek(file_ptr, 0, SEEK_SET);
-    printf("node%ld non-zeros = %ld\n", n, file_points / 4);
+    printf("node%ld non-zeros = %ld\n", t, file_points / 4);
     fflush(stdout);
 
     if (file_points > 16777216) {
@@ -420,7 +417,7 @@ void node_load_from_n0(long t) {
 
     if (using_chunk_loading) {
         for (long c = 0; c < chunk_count; c++) {
-            if (chunks_read + 1 == chunk_count - 1) {
+            if (c + 1 == chunk_count - 1) {
                 chunk_points = file_points - (c * 16777216);
                 bytesRead = fread(data_read_buffer, sizeof(long), chunk_points, file_ptr);
                 if (bytesRead != chunk_points) {
