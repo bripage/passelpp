@@ -157,6 +157,7 @@ void parse_args(int argc, char * argv[]) {
     //fflush(stdout);
 }
 
+/*
 void node_load_from_n0(long node, long t){
     long i;
     long j = 0;
@@ -180,7 +181,6 @@ void node_load_from_n0(long node, long t){
         long *file_points = malloc(cluster_count * sizeof(long));
         long *chunk_count = malloc(cluster_count * sizeof(long));
         long *chunks_read = malloc(cluster_count * sizeof(long));
-
 
         for (n = 0; n < cluster_count; n++) {
             data_read_buffer[0][n] = (long*) malloc(16777216 * sizeof(long));
@@ -362,6 +362,172 @@ void node_load_from_n0(long node, long t){
     printf("Node%ld t%ld DONE\n", node, t);
     fflush(stdout);
 }
+*/
+
+void node_load_from_n0(long t) {
+    long i;
+    long j = 0;
+    long sample = -1;
+    long feature;
+    long fixed_value;
+    long class;
+    long sample_count = -1;
+    long current_sample = -1;
+    long non_zeros;
+    long points;
+    long n;
+    long bytesRead;
+    long num_bytes;
+    FILE *file_ptr;
+    long chunk_points;
+    long using_chunk_loading = 0;
+    long done = 0;
+    long file_points;
+    long chunk_count;
+    long chunks_read;
+    long *data_read_buffer = malloc(16777216 * sizeof(long));
+
+    char *fname = malloc(strlen(train_data_path) + 10);
+    sprintf(fname, "%sp%ld.bin", train_data_path, t);
+    printf("node%ld filename = %s\n", t, fname);
+    fflush(stdout);
+
+    file_ptr = fopen(fname, "rb");
+    if (file_ptrs == NULL) {
+        printf("Failed to open training feature file.\n");
+        exit(1);
+    }
+
+    fseek(file_ptrs, 0, SEEK_END);
+    num_bytes = ftell(file_ptrs);
+    file_points = num_bytes / 8;
+    fseek(file_ptrs, 0, SEEK_SET);
+    printf("node%ld non-zeros = %ld\n", n, file_points / 4);
+    fflush(stdout);
+
+    if (file_points > 16777216) {
+        using_chunk_loading = 1;
+        chunk_points = 16777216;
+        chunk_count = file_points / chunk_points;
+        long final_chunk_points = file_points - (chunk_count * chunk_points);
+        if (final_chunk_points != 0) {
+            chunk_count++;
+        }
+    }
+
+    printf("Done opening files");
+    fflush(stdout);
+
+    if (using_chunk_loading) {
+        for (long c = 0; c < chunk_count; c++) {
+            if (chunks_read + 1 == chunk_count - 1) {
+                chunk_points = file_points - (c * 16777216);
+                bytesRead = fread(data_read_buffer, sizeof(long), chunk_points, file_ptr);
+                if (bytesRead != chunk_points) {
+                    exit(1);
+                }
+            } else {
+                chunk_points = 16777216;
+                bytesRead = fread(data_read_buffer, sizeof(long), 16777216, file_ptr);
+                if (bytesRead != chunk_points) {
+                    exit(1);
+                }
+            }
+
+            for (i = 0; i < chunk_points; i += 4) {
+                sample = data_buffer[i];
+                feature = data_buffer[i + 1];
+                fixed_value = data_buffer[i + 2];
+                class = data_buffer[i + 3];
+
+                if (non_standard_classes) {
+                    if (class == class1) {
+                        class = -1;
+                    } else if (class == class2) {
+                        class = 1;
+                    } else {
+                        printf("ERROR: Training Data classes do not match class range\n");
+                        fflush(stdout);
+                        exit(2);
+                    }
+                }
+
+                if (sample != current_sample) {
+                    sample_count++;
+                    current_sample = sample;
+                    train_s[t][sample_count] = j;
+                    train_c[t][sample_count] = class;
+                    train_f[t][j] = 0;
+                    train_v[t][j] = 1;
+                    feat_deg_recip[0][0]++;
+                    j++;
+                    train_f[t][j] = feature;
+                    train_v[t][j] = fixed_value;
+                    feat_deg_recip[0][feature]++;
+                } else {
+                    train_f[t][j] = feature;
+                    train_v[t][j] = fixed_value;
+                    feat_deg_recip[0][feature]++;
+                }
+                j++;
+            }
+
+        }
+    } else {
+        printf("Chunk Loading: FALSE\n");
+        fflush(stdout);
+        bytesRead = fread(data_read_buffer, sizeof(long), file_points, file_ptr);
+
+        for (i = 0; i < file_points; i += 4) {
+            sample = data_buffer[i];
+            feature = data_buffer[i + 1];
+            fixed_value = data_buffer[i + 2];
+            class = data_buffer[i + 3];
+
+            if (non_standard_classes) {
+                if (class == class1) {
+                    class = -1;
+                } else if (class == class2) {
+                    class = 1;
+                } else {
+                    printf("ERROR: Training Data classes do not match class range\n");
+                    fflush(stdout);
+                    exit(2);
+                }
+            }
+
+            if (sample != current_sample) {
+                sample_count++;
+                current_sample = sample;
+                train_s[t][sample_count] = j;
+                train_c[t][sample_count] = class;
+                train_f[t][j] = 0;
+                train_v[t][j] = 1;
+                feat_deg_recip[0][0]++;
+                j++;
+                train_f[t][j] = feature;
+                train_v[t][j] = fixed_value;
+                feat_deg_recip[0][feature]++;
+            } else {
+                train_f[t][j] = feature;
+                train_v[t][j] = fixed_value;
+                feat_deg_recip[0][feature]++;
+            }
+            j++;
+        }
+    }
+    train_s[t][sample_count + 1] = j; // add sample id end ptr
+    train_s[t][0] = 0;
+    cluster_samples[t] = sample_count + 1;
+    printf("Done reading in data\n");
+    fflush(stdout);
+
+    fclose(file_ptr);
+    free(data_read_buffer);
+    printf("Done freeing temp arrays\n");
+    fflush(stdout);
+}
+
 static void multi_node_read(void *local_ptr, uint64_t n, char* fname){
     FILE* fp = NULL;
     size_t read = 0;
@@ -1174,12 +1340,8 @@ void init() {
             }
             */
             for (int n = 0; n < cluster_count; n++) {
-                if (n == 0){
-                    cilk_migrate_hint(&data_read_buffer[n]);
-                    cilk_spawn node_load_from_n0(n, 1);
-                }
-                cilk_migrate_hint(&data_read_buffer[n]);
-                cilk_spawn node_load_from_n0(n, 0);
+                cilk_migrate_hint(&data_read_buffer[0]);
+                cilk_spawn node_load_from_n0(n);
             }
             cilk_sync;
 
