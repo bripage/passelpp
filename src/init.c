@@ -281,7 +281,7 @@ void node_load_from_n0(long node, long t){
         for (n = 0; n < cluster_count; n++) {
             fclose(file_ptrs[n]);
             //free(file_ptrs[n]);
-            free(data_read_buffer[0][n]);
+            //free(data_read_buffer[0][n]);
         }
         printf("Done freeing file pointers\n");
         fflush(stdout);
