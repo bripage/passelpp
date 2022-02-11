@@ -373,7 +373,6 @@ void node_load_from_n0(long t) {
     long class;
     long sample_count = -1;
     long current_sample = -1;
-    long n;
     long bytesRead;
     long num_bytes;
     FILE *file_ptr;
@@ -419,13 +418,13 @@ void node_load_from_n0(long t) {
         for (long c = 0; c < chunk_count; c++) {
             if (c + 1 == chunk_count - 1) {
                 chunk_points = file_points - (c * 16777216);
-                bytesRead = fread(data_read_buffer, sizeof(long), chunk_points, file_ptr);
+                bytesRead = fread(data_buffer, sizeof(long), chunk_points, file_ptr);
                 if (bytesRead != chunk_points) {
                     exit(1);
                 }
             } else {
                 chunk_points = 16777216;
-                bytesRead = fread(data_read_buffer, sizeof(long), 16777216, file_ptr);
+                bytesRead = fread(data_buffer, sizeof(long), 16777216, file_ptr);
                 if (bytesRead != chunk_points) {
                     exit(1);
                 }
@@ -473,7 +472,7 @@ void node_load_from_n0(long t) {
     } else {
         printf("Chunk Loading: FALSE\n");
         fflush(stdout);
-        bytesRead = fread(data_read_buffer, sizeof(long), file_points, file_ptr);
+        bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
 
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
