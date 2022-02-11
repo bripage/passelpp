@@ -186,8 +186,8 @@ void node_load_from_n0(long node, long t){
             data_read_buffer[0][n] = (long*) malloc(16777216 * sizeof(long));
             char *fname = malloc(strlen(train_data_path) + 10);
             sprintf(fname, "%sp%ld.bin", train_data_path, n);
-            printf("node%ld filename = %s\n", n, fname);
-            fflush(stdout);
+            //printf("node%ld filename = %s\n", n, fname);
+            //fflush(stdout);
 
             file_ptrs[n] = fopen(fname, "rb");
             if (file_ptrs[n] == NULL) {
@@ -199,8 +199,8 @@ void node_load_from_n0(long node, long t){
             num_bytes = ftell(file_ptrs[n]);
             file_points[n] = num_bytes / 8;
             fseek(file_ptrs[n], 0, SEEK_SET);
-            printf("node%ld non-zeros = %ld\n", n, file_points[n] / 4);
-            fflush(stdout);
+            //printf("node%ld non-zeros = %ld\n", n, file_points[n] / 4);
+            //fflush(stdout);
 
             if (file_points[n] > 16777216) {
                 using_chunk_loading = 1;
@@ -212,8 +212,8 @@ void node_load_from_n0(long node, long t){
                 }
             }
         }
-        printf("Done opening data files");
-        fflush(stdout);
+        //printf("Done opening data files");
+        //fflush(stdout);
 
         if (using_chunk_loading) {
             // read first chunk
@@ -259,8 +259,8 @@ void node_load_from_n0(long node, long t){
                 }
             }
         } else {
-            printf("Chunk Loading: FALSE\n");
-            fflush(stdout);
+            //printf("Chunk Loading: FALSE\n");
+            //fflush(stdout);
             for (n = 0; n < cluster_count; n++) {
                 bytesRead = fread(data_read_buffer[0][n], sizeof(long), file_points[n], file_ptrs[n]);
                 ATOMIC_SWAP(&points_to_read[n][0], file_points[n]);
@@ -281,7 +281,7 @@ void node_load_from_n0(long node, long t){
         for (n = 0; n < cluster_count; n++) {
             fclose(file_ptrs[n]);
             //free(file_ptrs[n]);
-            mw_free(data_read_buffer[0][n]);
+            free(data_read_buffer[0][n]);
         }
         printf("Done freeing file pointers\n");
         fflush(stdout);
