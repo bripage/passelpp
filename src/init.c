@@ -519,7 +519,7 @@ void node_load_from_n0(long t) {
     fflush(stdout);
 
     fclose(file_ptr);
-    free(data_read_buffer);
+    free(data_read_buffer[0][t]);
     printf("Done freeing temp arrays\n");
     fflush(stdout);
 }
