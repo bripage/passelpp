@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
             }
         }
         current_accuracy = (double) best_model_acc / (double) 16777216;
-        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 210000000, current_accuracy);
+        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
         fflush(stdout);
     } else {
         //printf("--- Starting ---\n");
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
         get_stripped_accuracy();
         MIGRATE(&model_vec_stripped[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 210000000, current_accuracy);
+        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 215000000, current_accuracy);
         fflush(stdout);
     }
 
