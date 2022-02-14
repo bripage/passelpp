@@ -206,6 +206,8 @@ void node_load_from_n0(long t) {
 
     if (using_chunk_loading) {
         for (long c = 0; c < chunk_count; c++) {
+            printf("node%ld loading %ld/%ld\n", t, c, chunk_count);
+            fflush(stdout);
             if (c + 1 == chunk_count - 1) {
                 chunk_points = file_points - (c * 16777216);
                 bytesRead = fread(data_buffer, sizeof(long), chunk_points, file_ptr);
