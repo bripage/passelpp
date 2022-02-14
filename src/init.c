@@ -201,7 +201,7 @@ void node_load_from_n0(long t) {
         }
     }
 
-    printf("Done opening files");
+    printf("Done opening files\n");
     fflush(stdout);
 
     if (using_chunk_loading) {
