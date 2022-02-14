@@ -304,10 +304,12 @@ void node_load_from_n0(long t) {
             j++;
         }
     }
+    printf("Done reading in data\n");
+    fflush(stdout);
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
     cluster_samples[t] = sample_count + 1;
-    printf("Done reading in data\n");
+    printf("Done Finalizing Sample Pointers\n");
     fflush(stdout);
 
     fclose(file_ptr);
