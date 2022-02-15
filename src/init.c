@@ -215,14 +215,26 @@ void node_load_from_n0(long t) {
             fflush(stdout);
             if (c + 1 == chunk_count - 1) {
                 chunk_points = file_points - (c * 16777216);
+                if (chunk_points >= 16777216){
+                    printf("ERROR: node%ld read buffer too small (%ld/16777216)\n", t, chunk_points);
+                    fflush(stdout);
+                }
                 bytesRead = fread(data_buffer, sizeof(long), chunk_points, file_ptr);
                 if (bytesRead != chunk_points) {
+                    printf("ERROR: node%ld attempting to load past file end (%ld/%ld)\n", t, (c*16777216)+chunk_points, file_points);
+                    fflush(stdout);
                     exit(1);
                 }
             } else {
                 chunk_points = 16777216;
+                if (chunk_points >= 16777216){
+                    printf("ERROR: node%ld read buffer too small (%ld/16777216)\n", t);
+                    fflush(stdout);
+                }
                 bytesRead = fread(data_buffer, sizeof(long), 16777216, file_ptr);
                 if (bytesRead != chunk_points) {
+                    printf("ERROR: node%ld attempting to load past file end (%ld/%ld)\n", t, (c*16777216)+chunk_points, file_points);
+                    fflush(stdout);
                     exit(1);
                 }
             }
