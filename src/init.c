@@ -170,6 +170,7 @@ void node_load_from_n0(long t) {
     long using_chunk_loading = 0;
     long file_points;
     long chunk_count;
+    long non_zeros_per_cluster = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
 
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
@@ -190,6 +191,10 @@ void node_load_from_n0(long t) {
     fseek(file_ptr, 0, SEEK_SET);
     printf("node%ld non-zeros = %ld\n", t, file_points / 4);
     fflush(stdout);
+    if (file_points / 4 >= non_zeros_per_cluster){
+        printf("node%ld: file larger than allocated space %ld >= $ld\n", t, file_points / 4, non_zeros_per_cluster);
+        fflush(stdout);
+    }
 
     if (file_points > 16777216) {
         using_chunk_loading = 1;
@@ -242,6 +247,10 @@ void node_load_from_n0(long t) {
 
                 if (sample != current_sample) {
                     sample_count++;
+                    if (sample_count >= samples_per_cluster){
+                        printf("node%ld: sample %ld >= $ld\n", t, sample_count, samples_per_cluster);
+                        fflush(stdout);
+                    }
                     current_sample = sample;
                     train_s[t][sample_count] = j;
                     train_c[t][sample_count] = class;
@@ -249,6 +258,10 @@ void node_load_from_n0(long t) {
                     train_v[t][j] = 1;
                     feat_deg_recip[0][0]++;
                     j++;
+                    if (j >= non_zeros_per_cluster){
+                        printf("node%ld: nnz %ld >= $ld\n", t, j, non_zeros_per_cluster);
+                        fflush(stdout);
+                    }
                     train_f[t][j] = feature;
                     train_v[t][j] = fixed_value;
                     feat_deg_recip[0][feature]++;
@@ -258,6 +271,10 @@ void node_load_from_n0(long t) {
                     feat_deg_recip[0][feature]++;
                 }
                 j++;
+                if (j >= non_zeros_per_cluster){
+                    printf("node%ld: nnz %ld >= $ld\n", t, j, non_zeros_per_cluster);
+                    fflush(stdout);
+                }
             }
 
         }
@@ -306,6 +323,10 @@ void node_load_from_n0(long t) {
     }
     printf("Done reading in data\n");
     fflush(stdout);
+    if (sample_count+1 >= samples_per_cluster){
+        printf("node%ld: sample %ld >= $ld\n", t, sample_count+1, samples_per_cluster);
+        fflush(stdout);
+    }
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
     cluster_samples[t] = sample_count + 1;
