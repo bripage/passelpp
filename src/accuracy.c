@@ -182,9 +182,6 @@ void populateTestDataStripped() {
                 }
             }
         }
-        for (n = 0; n < cluster_count; n++) {
-            train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
-        }
     } else {
         points = non_zeros * 4;
         binBuffer = (long *) malloc(points * sizeof(long));
@@ -227,8 +224,8 @@ void populateTestDataStripped() {
             }
             j++;
         }
-        test_s_stripped[sample + 1] = j; // add sample id end ptr
     }
+    test_s_stripped[sample + 1] = j; // add sample id end ptr
     fclose(test_features);
     free(binBuffer);
 }
