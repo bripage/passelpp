@@ -214,7 +214,7 @@ void node_load_from_n0(long t) {
             printf("node%ld loading %ld/%ld\n", t, c, chunk_count);
             fflush(stdout);
             if (c + 1 == chunk_count - 1) {
-                chunk_points = file_points - (c * 16777216);
+                chunk_points = file_points - ((c+1) * 16777216);
                 if (chunk_points > 16777216){
                     printf("ERROR: node%ld read buffer too small (%ld/16777216)\n", t, chunk_points);
                     fflush(stdout);
