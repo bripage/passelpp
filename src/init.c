@@ -958,7 +958,8 @@ void init() {
                 cilk_spawn node_load_from_n0(n);
             }
             cilk_sync;
-
+            printf("Training Data Load Done\n");
+            fflush(stdout);
             double d_temp;
             long l_temp;
             for (long i = 0; i <= featureSetSize; i++) {
@@ -970,6 +971,8 @@ void init() {
                     feat_deg_recip[n][i] = l_temp;
                 }
             }
+            printf("F degree dis Done\n");
+            fflush(stdout);
         } else {
             MIGRATE(&model_vec[0]);
             populateTrainingData();
