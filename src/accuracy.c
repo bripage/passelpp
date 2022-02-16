@@ -104,57 +104,131 @@ void populateTestDataStripped() {
     }
 
     long non_zeros = total_test_points - test_sample_count;
-    long points;
+    long points = non_zeros * 4;
     long *binBuffer;
     long bytesRead;
 
-    points = non_zeros * 4;
-    //printf("points = %ld\n", points);
-    //fflush(stdout);
-    binBuffer = (long *) malloc(points * sizeof(long));
-    bytesRead = fread(binBuffer, sizeof(long), points, test_features);
-    if (bytesRead != (points)) {
-        printf("*** Test Feature File Read Failure ***\n");
-        exit(1);
-    }
-    //printf("bytesRead = %ld\n", bytesRead);
-    //fflush(stdout);
-    for (i = 0; i < points; i += 4) {
-        //printf("%ld\n", i);
-        //fflush(stdout);
-        sample = binBuffer[i];
-        feature = binBuffer[i + 1];
-        fixed_value = binBuffer[i + 2];
-        class = binBuffer[i + 3];
+    if (points > 67108864) {
+        long chunk_points = 67108864;
+        long chunk_count = 0, final_chunk_points = 0;
 
-        if (non_standard_classes) {
-            if (class == class1) {
-                class = -1;
-            } else if (class == class2) {
-                class = 1;
-            } else {
-                printf("ERROR: Training Data classes do not match class range\n");
-                fflush(stdout);
-                exit(2);
+        chunk_count = points / 67108864;
+        final_chunk_points = points - (chunk_count * chunk_points);
+        if (final_chunk_points != 0) {
+            chunk_count++;
+        }
+        printf("chunk_count = %ld\n", chunk_count);
+        fflush(stdout);
+        binBuffer = (long *) malloc(chunk_points * sizeof(long));
+        if (binBuffer == NULL) {
+            printf("Failed to allocate initial buffer chunk.\n");
+            exit(1);
+        }
+        bytesRead = fread(binBuffer, sizeof(long), chunk_points, test_features);
+
+        for (long c = 0; c < chunk_count; c++) {
+            for (i = 0; i < chunk_points; i += 4) {
+                sample = binBuffer[i];
+                feature = binBuffer[i + 1];
+                fixed_value = binBuffer[i + 2];
+                class = binBuffer[i + 3];
+
+                if (non_standard_classes) {
+                    if (class == class1) {
+                        class = -1;
+                    } else if (class == class2) {
+                        class = 1;
+                    } else {
+                        printf("ERROR: Training Data classes do not match class range\n");
+                        fflush(stdout);
+                        exit(2);
+                    }
+                }
+
+                if (sample != current_sample) {
+                    test_f_stripped[j] = 0;
+                    test_v_stripped[j] = 1;
+                    j++;
+                    test_s_stripped[sample] = j;
+                    test_f_stripped[j] = feature;
+                    test_v_stripped[j] = fixed_value;
+                    test_c_stripped[sample] = class;
+                    current_sample = sample;
+                } else {
+                    test_f_stripped[j] = feature;
+                    test_v_stripped[j] = fixed_value;
+                }
+                j++;
+            }
+
+            if (chunk_count > 1 && c != chunk_count - 1) {
+                if (c + 1 == chunk_count - 1) {
+                    bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, test_features);
+                    if (bytesRead != final_chunk_points) {
+                        printf("Error in reading final file chunk\n");
+                        exit(1);
+                    }
+                    printf("final file chunk copied into buffer\n");
+                    fflush(stdout);
+                    chunk_points = final_chunk_points;
+                } else {
+                    bytesRead = fread(binBuffer, sizeof(long), chunk_points, test_features);
+                    if (bytesRead != chunk_points) {
+                        printf("Error in reading file chunk %ld\n", c + 1);
+                        exit(1);
+                    }
+                    printf("file chunk %ld of %ld copied into buffer\n", c + 1, chunk_count);
+                    fflush(stdout);
+                }
             }
         }
-
-        if (sample != current_sample) {
-            test_f_stripped[j] = 0;
-            test_v_stripped[j] = 1;
-            j++;
-            test_s_stripped[sample] = j;
-            test_f_stripped[j] = feature;
-            test_v_stripped[j] = fixed_value;
-            test_c_stripped[sample] = class;
-            current_sample = sample;
-        } else {
-            test_f_stripped[j] = feature;
-            test_v_stripped[j] = fixed_value;
+        for (n = 0; n < cluster_count; n++) {
+            train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
         }
-        j++;
+    } else {
+        points = non_zeros * 4;
+        binBuffer = (long *) malloc(points * sizeof(long));
+        bytesRead = fread(binBuffer, sizeof(long), points, test_features);
+        if (bytesRead != (points)) {
+            printf("*** Test Feature File Read Failure ***\n");
+            exit(1);
+        }
+
+        for (i = 0; i < points; i += 4) {
+            sample = binBuffer[i];
+            feature = binBuffer[i + 1];
+            fixed_value = binBuffer[i + 2];
+            class = binBuffer[i + 3];
+
+            if (non_standard_classes) {
+                if (class == class1) {
+                    class = -1;
+                } else if (class == class2) {
+                    class = 1;
+                } else {
+                    printf("ERROR: Training Data classes do not match class range\n");
+                    fflush(stdout);
+                    exit(2);
+                }
+            }
+
+            if (sample != current_sample) {
+                test_f_stripped[j] = 0;
+                test_v_stripped[j] = 1;
+                j++;
+                test_s_stripped[sample] = j;
+                test_f_stripped[j] = feature;
+                test_v_stripped[j] = fixed_value;
+                test_c_stripped[sample] = class;
+                current_sample = sample;
+            } else {
+                test_f_stripped[j] = feature;
+                test_v_stripped[j] = fixed_value;
+            }
+            j++;
+        }
+        test_s_stripped[sample + 1] = j; // add sample id end ptr
     }
-    test_s_stripped[sample + 1] = j; // add sample id end ptr
     fclose(test_features);
     free(binBuffer);
 }
