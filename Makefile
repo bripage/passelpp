@@ -1,4 +1,4 @@
-CC=/tools/emu/pathfinder-sw/22.02/bin/emu-cc
+CC=/tools/emu/pathfinder-sw/21.06/bin/emu-cc
 CFILES=$(wildcard src/*.c)
 
 all:
