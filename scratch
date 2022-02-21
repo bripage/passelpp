@@ -16,3 +16,4 @@ emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/covtype/c
 emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/kdd12/kdd_train1.bin --train-samples 134675194 --train-points 1346751940 --test-data /netscratch/sgd_data/kdd12/kdd_test1.bin --test-samples 14963911 --test-points 149639110 -f 1355191 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 1 --test-id 1 --using-clusters --update-period 100
 
 emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/splits/2/ --train-samples 17948 --train-points 8209201 --test-data /netscratch/sgd_data/news20/news20_test1.bin --test-samples 1994 --test-points 868761 -f 1355191 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --regularization-scalar 1 --threads-per-cluster 1 -c 2 --test-id 1 --using-clusters --update-period 100 --multi-load
+
