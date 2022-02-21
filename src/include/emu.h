@@ -4,7 +4,7 @@
 // Main header file for EMU
 //
 
-#include "memoryweb.h"
+#include "memoryweb/memoryweb.h"
 #include "malloc.h"
 #include "cilk.h"
 #include "timing.h"
