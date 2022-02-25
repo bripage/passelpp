@@ -601,7 +601,7 @@ void populateTrainingData() {
 
 }
 
-void populateTrainingDataStripped() {
+void populateTraining_featurepartitioned() {
     //printf("inside populate_stripped_data()\n");
     //fflush(stdout);
 
@@ -609,9 +609,16 @@ void populateTrainingDataStripped() {
             sample = -1,
             feature,
             fixed_value,
-            class;
+            class,
+            n,
+            assigned_node;
     long sample_count = -1;
     long current_sample = -1;
+    long *data_placement = (long *) malloc(node_count * sizeof(long));
+    for (n = 0; n < node_count; n++) {
+        data_placement[n] = 0;
+    }
+
     train_data = NULL;
     train_data = fopen(train_data_path, "rb");
     if (train_data == NULL) {
@@ -742,6 +749,7 @@ void populateTrainingDataStripped() {
             feature = binBuffer[i + 1];
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
+            assigned_node = feature % node_count;
 
             if (non_standard_classes) {
                 if (class == class1) {
@@ -758,25 +766,28 @@ void populateTrainingDataStripped() {
             if (sample != current_sample) {
                 sample_count++;
                 current_sample = sample;
-                train_s_stripped[sample_count] = j;
-                train_c_stripped[sample_count] = class;
-                train_f_stripped[j] = 0;
-                train_v_stripped[j] = 1;
-                feat_deg_recip_stripped[0]++;
-                j++;
-                train_f_stripped[j] = feature;
-                train_v_stripped[j] = fixed_value;
+                for (n = 0; n < node_count; n++) {
+                    train_s_stripped[sample_count] = data_placement[n];
+                    train_c_stripped[sample_count] = class;
+                    train_f_stripped[data_placement[n]] = 0;
+                    train_v_stripped[data_placement[n]] = 1;
+                    feat_deg_recip_stripped[0]++;
+                    data_placement[n]++;
+                }
+                train_f_stripped[data_placement[assigned_node]] = feature;
+                train_v_stripped[data_placement[assigned_node]] = fixed_value;
                 feat_deg_recip_stripped[feature]++;
             } else {
-                train_f_stripped[j] = feature;
-                train_v_stripped[j] = fixed_value;
+                train_f_stripped[data_placement[assigned_node]] = feature;
+                train_v_stripped[data_placement[assigned_node]] = fixed_value;
                 feat_deg_recip_stripped[feature]++;
+                data_placement[assigned_node]++;
             }
-            j++;
         }
-
-        train_s_stripped[sample_count + 1] = j; // add sample id end ptr
-        train_s_stripped[0] = 0;
+        for (n = 0; n < node_count; n++) {
+            train_s_stripped[sample_count + 1] = data_placement[n]; // add sample id end ptr
+            train_s_stripped[0] = 0;
+        }
     }
     fclose(train_data);
     free(binBuffer);
@@ -838,8 +849,8 @@ void init() {
     }
 
     if (using_clusters) {
-        long non_zeros_per_cluster = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
-        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        long non_zeros_per_node = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
+        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
@@ -851,12 +862,6 @@ void init() {
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&working_vec, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
             *ptr = l2d_ptr;
         }
 
@@ -872,13 +877,13 @@ void init() {
             *ptr = l2d_ptr;
         }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
             *ptr = l2d_ptr;
         }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
             *ptr = l2d_ptr;
@@ -899,23 +904,45 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
-        l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
-        mw_replicated_init((long *) &train_s_stripped, (long) l1d_ptr);
+        long non_zeros_per_node = ceil(1.25 * ((double) total_train_points / (double) node_count));
+        printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
+        fflush(stdout);
 
-        l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
-        mw_replicated_init((long *) &train_f_stripped, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (train_sample_count + 1) * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
+            *ptr = l2d_ptr;
+        }
 
-        l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
-        mw_replicated_init((long *) &train_v_stripped, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), train_sample_count * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_c, nlet);
+            *ptr = l2d_ptr;
+        }
 
-        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
-        mw_replicated_init((long *) &train_c_stripped, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l1d_ptr = (long *) mw_malloc1dlong(threads_per_cluster);
+        mw_replicated_init((long *) &gradients, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &model_vec_stripped, (long) l1d_ptr);
+    }
 
-        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
-        mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
+        *ptr = l2d_ptr;
     }
 
     l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
@@ -951,6 +978,9 @@ void init() {
         for (long i = 0; i < featureSetSize; i++){
             model_vec_stripped[i] = 0;
             feat_deg_recip_stripped[i] = 0;
+        }
+        for (long i = 0; i < threads_per_cluster; i++){
+            gradients[i] = 0;
         }
     }
 
@@ -990,7 +1020,7 @@ void init() {
         fflush(stdout);
     } else {
         MIGRATE(&model_vec_stripped[0]);
-        populateTrainingDataStripped();
+        populateTraining_featurepartitioned();
     }
     MIGRATE(&model_vec[0]);
     populateTestDataStripped();

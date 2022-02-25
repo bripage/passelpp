@@ -13,7 +13,33 @@ emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/covtype/c
 
 
 
-emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/kdd12/kdd_train1.bin --train-samples 134675194 --train-points 1346751940 --test-data /netscratch/sgd_data/kdd12/kdd_test1.bin --test-samples 14963911 --test-points 149639110 -f 1355191 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 1 --test-id 1 --using-clusters --update-period 100
+emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/kdd12/kdd_train1.bin --train-samples 134675194 --train-points 1346751940 --test-data /netscratch/sgd_data/kdd12/kdd_test1.bin --test-samples 14963911 --test-points 149639110 -f 54686452 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 1 --test-id 1 --using-clusters --update-period 100 --multi-load
 
 emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/splits/2/ --train-samples 17948 --train-points 8209201 --test-data /netscratch/sgd_data/news20/news20_test1.bin --test-samples 1994 --test-points 868761 -f 1355191 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --regularization-scalar 1 --threads-per-cluster 1 -c 2 --test-id 1 --using-clusters --update-period 100 --multi-load
 
+{"LL_author":"SpaghettiMonster72","LL_parent_author":"MaisyMoo88","LL_platform":8,"all_awardings":[],
+"associated_award":null,"author":"SpaghettiMonster72",
+"author_created_utc":1547261010,"author_flair_background_color":null,"author_flair_css_class":null,
+"author_flair_richtext":[],"author_flair_template_id":null,
+"author_flair_text":null,"author_flair_text_color":null,"author_flair_type":"text",
+"author_fullname":"t2_2z69ck9m","author_patreon_flair":false,
+"author_premium":false,"awarders":[],"body":"Can you say cunt for me","can_gild":true,
+"can_mod_post":false,"collapsed":false,"collapsed_because_crowd_control":null,
+"collapsed_reason":null,"controversiality":0,"created_utc":1577836683,"distinguished":null,
+"edited":false,"gilded":0,"gildings":{},"id":"t1_fconizq",
+"is_submitter":false,"link_id":"t3_ei1udu",
+"locked":false,
+"no_follow":true,
+"parent_id":"t3_ei1udu",
+"permalink":"/r/TeensMeetTeens/comments/ei1udu/13_and_female_i_do_pole_dancing_for_fitness_and/fconizq/",
+"quarantined":false,
+"removal_reason":null,
+"retrieved_on":1586450200,
+"score":0,"send_replies":true,
+"stickied":false,
+"subreddit":"TeensMeetTeens",
+"subreddit_id":"t5_20ywkr",
+"subreddit_name_prefixed":"r/TeensMeetTeens",
+"subreddit_type":"public",
+"total_awards_received":0,
+"treatment_tags":[]}
