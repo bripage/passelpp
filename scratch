@@ -2,7 +2,7 @@ emu_system_cmd -p -c {0..3} -- 'emu_chassis_update_flash -l {0..7} /usr/ncdimm/n
 emu_system_cmd -p -c {0..3} -- 'emu_chassis_start -o -u 10 -l {0..7}'
 
 passel
-emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/news20_train1.bin --train-samples 17948 --train-points 8209201 --test-data /netscratch/sgd_data/news20/news20_test1.bin --test-samples 1994 --test-points 868761 -f 1355191 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 32 -c 1 --test-id 1
+emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/news20_train1.bin --train-samples 17948 --train-points 8209201 --test-data /netscratch/sgd_data/news20/news20_test1.bin --test-samples 1994 --test-points 868761 -f 1355191 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 1 --test-id 1
 emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/webspam/webspam_train1.bin --train-samples 315000 --train-points 26497900 --test-data /netscratch/sgd_data/webspam/webspam_test1.bin --test-samples 35000 --test-points 2948433 -f 254 -e 10 --initial-step-size 0.2 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 1 --test-id 1
 emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/covtype/covtype_train1.bin --train-samples 522911 --train-points 6246280 --test-data /netscratch/sgd_data/covtype/covtype_test1.bin --test-samples 58101 --test-points 694158 -f 54 -e 10 --initial-step-size 0.005 --initial-step-decay 0.85 --class-values 1 2 --threads-per-cluster 1 -c 1 --test-id 1
 

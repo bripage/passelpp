@@ -957,7 +957,7 @@ void init() {
     } else {
         for (long i = 0; i < featureSetSize; i++){
             model_vec_stripped[i] = 0;
-            feat_deg_recip_stripped[i] = 0;
+            feat_deg_recip[i] = 0;
         }
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
