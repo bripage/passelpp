@@ -51,7 +51,7 @@ void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count);
 void stripped_train_no_epochs_spawn_children(long tid);
 void get_partial_gradient(long n, long tid, long sample);
-void child_train_pos(long sample, long eta_gamma);
-void child_train_neg(long sample, long eta_gamma, long di);
+void child_train_pos(long n, long sample, long eta_gamma);
+void child_train_neg(long n, long sample, long eta_gamma, long di);
 
 #endif //EMUSGD_SGD_H
