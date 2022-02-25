@@ -751,7 +751,7 @@ void populateTraining_featurepartitioned() {
                     train_c[n][sample_count] = class;
                     train_f[n][data_placement[n]] = 0;
                     train_v[n][data_placement[n]] = 1;
-                    feat_deg_recip_stripped[0][0]++;
+                    feat_deg_recip[0][0]++;
                     data_placement[n]++;
                 }
                 train_f[assigned_node][data_placement[assigned_node]] = feature;
