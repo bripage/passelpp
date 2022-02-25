@@ -611,7 +611,7 @@ void populateTraining_featurepartitioned() {
             assigned_node;
     long sample_count = -1;
     long current_sample = -1;
-    long *data_placement = (long *) malloc(node_count * sizeof(long));
+    long* data_placement = (long *) malloc(node_count * sizeof(long));
     for (n = 0; n < node_count; n++) {
         data_placement[n] = 0;
     }
@@ -669,20 +669,20 @@ void populateTraining_featurepartitioned() {
                     sample_count++;
                     current_sample = sample;
                     for (n = 0; n < node_count; n++) {
-                        train_s[sample_count] = data_placement[n];
-                        train_c[sample_count] = class;
-                        train_f[data_placement[n]] = 0;
-                        train_v[data_placement[n]] = 1;
-                        feat_deg_recip_stripped[0]++;
+                        train_s[n][sample_count] = data_placement[n];
+                        train_c[n][sample_count] = class;
+                        train_f[n][data_placement[n]] = 0;
+                        train_v[n][data_placement[n]] = 1;
+                        feat_deg_recip[0][0]++;
                         data_placement[n]++;
                     }
-                    train_f[data_placement[assigned_node]] = feature;
-                    train_v[data_placement[assigned_node]] = fixed_value;
-                    feat_deg_recip[feature]++;
+                    train_f[assigned_node][data_placement[assigned_node]] = feature;
+                    train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                    feat_deg_recip[0][feature]++;
                 } else {
-                    train_f[data_placement[assigned_node]] = feature;
-                    train_v[data_placement[assigned_node]] = fixed_value;
-                    feat_deg_recip[feature]++;
+                    train_f[assigned_node][data_placement[assigned_node]] = feature;
+                    train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                    feat_deg_recip[0][feature]++;
                     data_placement[assigned_node]++;
                 }
             }
@@ -712,8 +712,8 @@ void populateTraining_featurepartitioned() {
             }
         }
         for (n = 0; n < node_count; n++) {
-            train_s[sample_count + 1] = data_placement[n]; // add sample id end ptr
-            train_s[0] = 0;
+            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
+            train_s[n][0] = 0;
         }
     } else {
         points = non_zeros * 4;
@@ -747,26 +747,26 @@ void populateTraining_featurepartitioned() {
                 sample_count++;
                 current_sample = sample;
                 for (n = 0; n < node_count; n++) {
-                    train_s[sample_count] = data_placement[n];
-                    train_c[sample_count] = class;
-                    train_f[data_placement[n]] = 0;
-                    train_v[data_placement[n]] = 1;
-                    feat_deg_recip_stripped[0]++;
+                    train_s[n][sample_count] = data_placement[n];
+                    train_c[n][sample_count] = class;
+                    train_f[n][data_placement[n]] = 0;
+                    train_v[n][data_placement[n]] = 1;
+                    feat_deg_recip_stripped[0][0]++;
                     data_placement[n]++;
                 }
-                train_f[data_placement[assigned_node]] = feature;
-                train_v[data_placement[assigned_node]] = fixed_value;
-                feat_deg_recip[feature]++;
+                train_f[assigned_node][data_placement[assigned_node]] = feature;
+                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                feat_deg_recip[0][feature]++;
             } else {
-                train_f[data_placement[assigned_node]] = feature;
-                train_v[data_placement[assigned_node]] = fixed_value;
-                feat_deg_recip[feature]++;
+                train_f[assigned_node][data_placement[assigned_node]] = feature;
+                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                feat_deg_recip[0][feature]++;
                 data_placement[assigned_node]++;
             }
         }
         for (n = 0; n < node_count; n++) {
-            train_s[sample_count + 1] = data_placement[n]; // add sample id end ptr
-            train_s[0] = 0;
+            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
+            train_s[n][0] = 0;
         }
     }
     fclose(train_data);
@@ -784,7 +784,7 @@ void populateTraining_featurepartitioned() {
         }
     }
 
-    
+
     printf("populate_data() done\n");
     fflush(stdout);
 }
