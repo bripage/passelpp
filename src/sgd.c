@@ -226,7 +226,6 @@ void get_partial_gradient(long n, long tid, long sample){
 void child_train_pos(long n, long sample, long eta_gamma) {
     long feature, l_temp, mv_orig, mv_new;
     long* local_train_f = train_f[n];
-    long* local_train_v = train_v[n];
     long* local_feat_deg = feat_deg_recip[n];
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
