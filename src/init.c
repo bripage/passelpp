@@ -381,7 +381,7 @@ void populateTrainingData() {
     printf("1\n");
     fflush(stdout);
 
-    non_zeros = total_train_points;
+    non_zeros = total_train_points - train_sample_count;
     points = non_zeros * 4;
     train_data = fopen(train_data_path, "rb");
     if (train_data == NULL) {
@@ -610,7 +610,7 @@ void populateTraining_featurepartitioned() {
         exit(1);
     }
 
-    long non_zeros = total_train_points;
+    long non_zeros = total_train_points - train_sample_count;
     long points;
     long *binBuffer;
     long bytesRead;
