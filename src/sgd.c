@@ -210,7 +210,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 for (long n = 0; n < node_count; n++) {
                     long feature, l_temp, mv_orig, mv_new;
                     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
-                        feature = local_train_f[n]train_f[i];
+                        feature = train_f[n][i];
                         l_temp = (di * train_v[n][i]) >> 24;
                         mv_orig = model_vec_stripped[feature] + l_temp;
                         l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
