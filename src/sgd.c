@@ -189,6 +189,14 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 cilk_spawn get_partial_gradient(n, tid, sample);
             }
             cilk_sync;
+
+            //for (long n = 0; n < node_count; n++) {
+            //    for (long i = train_s[n][sample]; i < train_s[n][sample + 1]; i++) {
+            //        feature = train_f[n][i];
+            //        gradients[tid] += (train_v[n][i] * model_vec_stripped[feature]) >> 24;
+            //    }
+            //}
+
             gradients[tid] *= class;
 /*
             if (gradients[tid] < 16777216) {
@@ -246,7 +254,8 @@ void get_partial_gradient(long n, long tid, long sample){
     long* local_train_v = train_v[n];
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
-        REMOTE_ADD(&gradients[tid], (local_train_v[i] * model_vec_stripped[feature]) >> 24);
+        //REMOTE_ADD(&gradients[tid], (local_train_v[i] * model_vec_stripped[feature]) >> 24);
+        ATOMIC_ADDM(&gradients[tid], ((train_v[n][i] * model_vec_stripped[feature]) >> 24);
     }
 }
 
