@@ -255,7 +255,7 @@ void get_partial_gradient(long n, long tid, long sample){
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
         //REMOTE_ADD(&gradients[tid], (local_train_v[i] * model_vec_stripped[feature]) >> 24);
-        ATOMIC_ADDM(&gradients[tid], ((train_v[n][i] * model_vec_stripped[feature]) >> 24);
+        ATOMIC_ADDM(&gradients[tid], ((train_v[n][i] * model_vec_stripped[feature]) >> 24));
     }
 }
 
