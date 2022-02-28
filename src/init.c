@@ -746,8 +746,8 @@ void populateTraining_featurepartitioned() {
             if (sample != current_sample) {
                 sample_count++;
 
-                printf("%ld\n", sample);
-                fflush(stdout);
+                //printf("%ld\n", sample);
+                //fflush(stdout);
 
                 current_sample = sample;
                 for (n = 0; n < node_count; n++) {
