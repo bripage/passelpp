@@ -602,6 +602,7 @@ void populateTrainingData() {
 }
 
 void populateTraining_featurepartitioned() {
+    long non_zeros_per_node = ceil(1.25 * ((double) total_train_points / (double) node_count));
     long i,
      sample = -1,
      feature,
@@ -875,7 +876,7 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
-        long non_zeros_per_node = ceil(1.25 * ((double) total_train_points / (double) node_count));
+        long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
         printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
