@@ -55,7 +55,7 @@ void parse_args(int argc, char * argv[]) {
             test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(test_feature_path, argv[i + 1]);
         } else if (!strcmp(argv[i], "-f")) {
-            num_arg = atoi(argv[i + 1]) + 1;
+            num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&featureSetSize, num_arg);
             i++;
         } else if (!strcmp(argv[i], "--train-samples")) {
@@ -241,7 +241,7 @@ void node_load_from_n0(long t) {
 
             for (i = 0; i < chunk_points; i += 4) {
                 sample = data_buffer[i];
-                feature = data_buffer[i + 1];
+                feature = data_buffer[i + 1] -1;
                 fixed_value = data_buffer[i + 2];
                 class = data_buffer[i + 3];
 
@@ -266,10 +266,10 @@ void node_load_from_n0(long t) {
                     current_sample = sample;
                     train_s[t][sample_count] = j;
                     train_c[t][sample_count] = class;
-                    train_f[t][j] = 0;
-                    train_v[t][j] = 1;
-                    feat_deg_recip[0][0]++;
-                    j++;
+                    //train_f[t][j] = 0;
+                    //train_v[t][j] = 1;
+                    //feat_deg_recip[0][0]++;
+                    //j++;
                     if (j >= non_zeros_per_cluster){
                         printf("node%ld: nnz %ld >= $ld\n", t, j, non_zeros_per_cluster);
                         fflush(stdout);
@@ -297,7 +297,7 @@ void node_load_from_n0(long t) {
 
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
-            feature = data_buffer[i + 1];
+            feature = data_buffer[i + 1] - 1;
             fixed_value = data_buffer[i + 2];
             class = data_buffer[i + 3];
 
@@ -318,10 +318,10 @@ void node_load_from_n0(long t) {
                 current_sample = sample;
                 train_s[t][sample_count] = j;
                 train_c[t][sample_count] = class;
-                train_f[t][j] = 0;
-                train_v[t][j] = 1;
-                feat_deg_recip[0][0]++;
-                j++;
+                //train_f[t][j] = 0;
+                //train_v[t][j] = 1;
+                //feat_deg_recip[0][0]++;
+                //j++;
                 train_f[t][j] = feature;
                 train_v[t][j] = fixed_value;
                 feat_deg_recip[0][feature]++;
@@ -381,7 +381,7 @@ void populateTrainingData() {
     printf("1\n");
     fflush(stdout);
 
-    non_zeros = total_train_points - train_sample_count;
+    non_zeros = total_train_points;
     points = non_zeros * 4;
     train_data = fopen(train_data_path, "rb");
     if (train_data == NULL) {
@@ -420,7 +420,7 @@ void populateTrainingData() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1];
+                feature = binBuffer[i + 1] - 1;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
 
@@ -455,10 +455,10 @@ void populateTrainingData() {
 
                     train_s[n][sample_placement[n]] = data_placement[n];
                     train_c[n][sample_placement[n]] = class;
-                    train_f[n][data_placement[n]] = 0;
-                    train_v[n][data_placement[n]] = 1;
-                    feat_deg_recip[0][0]++;
-                    data_placement[n]++;
+                    //train_f[n][data_placement[n]] = 0;
+                    //train_v[n][data_placement[n]] = 1;
+                    //feat_deg_recip[0][0]++;
+                    //data_placement[n]++;
                     train_f[n][data_placement[n]] = feature;
                     train_v[n][data_placement[n]] = fixed_value;
                     feat_deg_recip[0][feature]++;
@@ -521,7 +521,7 @@ void populateTrainingData() {
         fflush(stdout);
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1];
+            feature = binBuffer[i + 1] - 1;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
 
@@ -556,10 +556,10 @@ void populateTrainingData() {
 
                 train_s[n][sample_placement[n]] = data_placement[n];
                 train_c[n][sample_placement[n]] = class;
-                train_f[n][data_placement[n]] = 0;
-                train_v[n][data_placement[n]] = 1;
-                feat_deg_recip[0][0]++;
-                data_placement[n]++;
+                //train_f[n][data_placement[n]] = 0;
+                //train_v[n][data_placement[n]] = 1;
+                //feat_deg_recip[0][0]++;
+                //data_placement[n]++;
                 train_f[n][data_placement[n]] = feature;
                 train_v[n][data_placement[n]] = fixed_value;
                 feat_deg_recip[0][feature]++;
@@ -610,7 +610,7 @@ void populateTraining_featurepartitioned() {
         exit(1);
     }
 
-    long non_zeros = total_train_points - train_sample_count;
+    long non_zeros = total_train_points;
     long points;
     long *binBuffer;
     long bytesRead;
@@ -635,7 +635,7 @@ void populateTraining_featurepartitioned() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1];
+                feature = binBuffer[i + 1] - 1;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
                 assigned_node = feature % node_count;
@@ -658,10 +658,10 @@ void populateTraining_featurepartitioned() {
                     for (n = 0; n < node_count; n++) {
                         train_s[n][sample_count] = data_placement[n];
                         train_c[n][sample_count] = class;
-                        train_f[n][data_placement[n]] = 0;
-                        train_v[n][data_placement[n]] = 16777216;
-                        feat_deg_recip[0][0]++;
-                        data_placement[n]++;
+                        //train_f[n][data_placement[n]] = 0;
+                        //train_v[n][data_placement[n]] = 16777216;
+                        //feat_deg_recip[0][0]++;
+                        //data_placement[n]++;
                     }
                     train_f[assigned_node][data_placement[assigned_node]] = feature;
                     train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
@@ -713,7 +713,7 @@ void populateTraining_featurepartitioned() {
         }
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1];
+            feature = binBuffer[i + 1] - 1;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
             assigned_node = feature % node_count;
@@ -740,10 +740,10 @@ void populateTraining_featurepartitioned() {
                 for (n = 0; n < node_count; n++) {
                     train_s[n][sample_count] = data_placement[n];
                     train_c[n][sample_count] = class;
-                    train_f[n][data_placement[n]] = 0;
-                    train_v[n][data_placement[n]] = 16777216;
-                    feat_deg_recip[0][0]++;
-                    data_placement[n]++;
+                    //train_f[n][data_placement[n]] = 0;
+                    //train_v[n][data_placement[n]] = 16777216;
+                    //feat_deg_recip[0][0]++;
+                    //data_placement[n]++;
                 }
                 train_f[assigned_node][data_placement[assigned_node]] = feature;
                 train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
