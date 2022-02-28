@@ -190,7 +190,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             }
             cilk_sync;
             gradients[tid] *= class;
-
+/*
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
@@ -203,6 +203,33 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                     cilk_spawn child_train_pos(n, sample, eta_gamma);
                 }
             }
+*/
+            long feature, l_temp, mv_orig, mv_new;
+            if (gradients[tid] < 16777216) {
+                di = eta_gamma * class;
+                for (long n = 0; n < node_count; n++) {
+                    long feature, l_temp, mv_orig, mv_new;
+                    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+                        feature = local_train_f[n]train_f[i];
+                        l_temp = (di * train_v[n][i]) >> 24;
+                        mv_orig = model_vec_stripped[feature] + l_temp;
+                        l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
+                        mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
+                        REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
+                    }
+                }
+            } else {
+                for (long n = 0; n < node_count; n++) {
+                    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+                        feature = train_f[n][i];
+                        mv_orig = model_vec_stripped[feature];
+                        l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
+                        mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
+                        REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
+                    }
+                }
+            }
+
             gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
