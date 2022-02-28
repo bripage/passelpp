@@ -991,13 +991,11 @@ void init() {
         d_temp /= (double) feat_deg_recip[0][i];
         d_temp *= 16777216;
         l_temp = (long) d_temp;
-        feat_deg_recip[0][i] = l_temp;
+        for (int n = 0; n < cluster_count; n++) {
+            feat_deg_recip[n][i] = l_temp;
+        }
+
     }
-    for (int n = 1; n < cluster_count; n++) {
-        cilk_migrate_hint(&data_read_buffer[0]);
-        cilk_spawn fdeg_copy2nodes(n);
-    }
-    cilk_sync;
     printf("F degree dis Done\n");
     fflush(stdout);
 

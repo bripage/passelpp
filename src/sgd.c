@@ -183,16 +183,16 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             sample *= UINT64_C(0x2545F4914F6CDD1D);
             sample %= train_sample_count;
 
+            class = local_train_c[sample];
             for (long n = 0; n < node_count; n++) {
                 cilk_migrate_hint(&train_v[n]);
                 cilk_spawn get_partial_gradient(n, tid, sample);
             }
-            class = local_train_c[sample];
-            di = eta_gamma * class;
             cilk_sync;
             gradients[tid] *= class;
 
             if (gradients[tid] < 16777216) {
+                di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
                     cilk_migrate_hint(&train_v[n]);
                     cilk_spawn child_train_neg(n, sample, eta_gamma, di);
