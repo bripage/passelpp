@@ -602,13 +602,13 @@ void populateTrainingData() {
 }
 
 void populateTraining_featurepartitioned() {
-    long i, j = 0,
-            sample = -1,
-            feature,
-            fixed_value,
-            class,
-            n,
-            assigned_node;
+    long i,
+     sample = -1,
+     feature,
+     fixed_value,
+     class,
+     n,
+     assigned_node;
     long sample_count = -1;
     long current_sample = -1;
     long* data_placement = (long *) malloc(node_count * sizeof(long));
@@ -941,7 +941,7 @@ void init() {
 
     if (using_clusters){
         for (long n = 0; n < cluster_count; n++) {
-            cilk_migrate_hint(&model_vec[n]);
+            cilk_migrate_hint(&train_s[n]);
             cilk_spawn init_cluster(n);
         }
         cilk_sync;
@@ -969,14 +969,14 @@ void init() {
             //fflush(stdout);
 
         } else {
-            MIGRATE(&model_vec[0]);
+            MIGRATE(&train_s[0]);
             populateTrainingData();
         }
         volatile uint64_t total_load_time = CLOCK() - start_load_time;
         printf("Training Data Load Time: %lf\n", (double) total_load_time / 225000000);
         fflush(stdout);
     } else {
-        MIGRATE(&model_vec_stripped[0]);
+        MIGRATE(&train_s[0]);
         populateTraining_featurepartitioned();
 
     }
@@ -996,10 +996,13 @@ void init() {
         cilk_migrate_hint(&data_read_buffer[0]);
         cilk_spawn fdeg_copy2nodes(n);
     }
+    cilk_sync;
     printf("F degree dis Done\n");
     fflush(stdout);
 
-    MIGRATE(&model_vec[0]);
+    MIGRATE(&train_s[0]);
+    printf("Migrated to Node 0\n");
+    fflush(stdout);
     populateTestDataStripped();
 
     printf("--- Initialization Complete ---\n");
