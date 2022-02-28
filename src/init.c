@@ -745,6 +745,10 @@ void populateTraining_featurepartitioned() {
 
             if (sample != current_sample) {
                 sample_count++;
+
+                printf("%ld\n", sample);
+                fflush(stdout);
+
                 current_sample = sample;
                 for (n = 0; n < node_count; n++) {
                     train_s[n][sample_count] = data_placement[n];
@@ -771,19 +775,6 @@ void populateTraining_featurepartitioned() {
     }
     fclose(train_data);
     free(binBuffer);
-
-    double d_temp;
-    long l_temp;
-    for (long i = 0; i <= featureSetSize; i++) {
-        d_temp = 1.0;
-        d_temp /= (double) feat_deg_recip[0][i];
-        d_temp *= 16777216;
-        l_temp = (long) d_temp;
-        for (n = 0; n < cluster_count; n++) {
-            feat_deg_recip[n][i] = l_temp;
-        }
-    }
-
 
     printf("populate_data() done\n");
     fflush(stdout);
@@ -957,7 +948,7 @@ void init() {
     } else {
         for (long i = 0; i < featureSetSize; i++){
             model_vec_stripped[i] = 0;
-            feat_deg_recip[i] = 0;
+            //feat_deg_recip[i] = 0;
         }
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
@@ -974,34 +965,40 @@ void init() {
                 cilk_spawn node_load_from_n0(n);
             }
             cilk_sync;
-            printf("Training Data Load Done\n");
-            fflush(stdout);
-            double d_temp;
-            long l_temp;
-            for (long i = 0; i <= featureSetSize; i++) {
-                d_temp = 1.0;
-                d_temp /= (double) feat_deg_recip[0][i];
-                d_temp *= 16777216;
-                l_temp = (long) d_temp;
-                feat_deg_recip[0][i] = l_temp;
-            }
-            for (int n = 1; n < cluster_count; n++) {
-                cilk_migrate_hint(&data_read_buffer[0]);
-                cilk_spawn fdeg_copy2nodes(n);
-            }
-            printf("F degree dis Done\n");
-            fflush(stdout);
+            //printf("Training Data Load Done\n");
+            //fflush(stdout);
+
         } else {
             MIGRATE(&model_vec[0]);
             populateTrainingData();
         }
         volatile uint64_t total_load_time = CLOCK() - start_load_time;
-        printf("Training Data Load Time: %lf\n", (double) total_load_time / 215000000);
+        printf("Training Data Load Time: %lf\n", (double) total_load_time / 225000000);
         fflush(stdout);
     } else {
         MIGRATE(&model_vec_stripped[0]);
         populateTraining_featurepartitioned();
+
     }
+    printf("Training Data Load Done\n");
+    fflush(stdout);
+
+    double d_temp;
+    long l_temp;
+    for (long i = 0; i <= featureSetSize; i++) {
+        d_temp = 1.0;
+        d_temp /= (double) feat_deg_recip[0][i];
+        d_temp *= 16777216;
+        l_temp = (long) d_temp;
+        feat_deg_recip[0][i] = l_temp;
+    }
+    for (int n = 1; n < cluster_count; n++) {
+        cilk_migrate_hint(&data_read_buffer[0]);
+        cilk_spawn fdeg_copy2nodes(n);
+    }
+    printf("F degree dis Done\n");
+    fflush(stdout);
+
     MIGRATE(&model_vec[0]);
     populateTestDataStripped();
 
