@@ -585,20 +585,6 @@ void populateTrainingData() {
     fclose(train_data);
     free(binBuffer);
 
-    double d_temp;
-    long l_temp;
-    for (long i = 0; i <= featureSetSize; i++) {
-        d_temp = 1.0;
-        d_temp /= (double) feat_deg_recip[0][i];
-        d_temp *= 16777216;
-        l_temp = (long) d_temp;
-        for (n = 0; n < cluster_count; n++) {
-            feat_deg_recip[n][i] = l_temp;
-        }
-    }
-    printf("7\n", points);
-    fflush(stdout);
-
 }
 
 void populateTraining_featurepartitioned() {
@@ -673,7 +659,7 @@ void populateTraining_featurepartitioned() {
                         train_s[n][sample_count] = data_placement[n];
                         train_c[n][sample_count] = class;
                         train_f[n][data_placement[n]] = 0;
-                        train_v[n][data_placement[n]] = 1;
+                        train_v[n][data_placement[n]] = 16777216;
                         feat_deg_recip[0][0]++;
                         data_placement[n]++;
                     }
@@ -755,7 +741,7 @@ void populateTraining_featurepartitioned() {
                     train_s[n][sample_count] = data_placement[n];
                     train_c[n][sample_count] = class;
                     train_f[n][data_placement[n]] = 0;
-                    train_v[n][data_placement[n]] = 1;
+                    train_v[n][data_placement[n]] = 16777216;
                     feat_deg_recip[0][0]++;
                     data_placement[n]++;
                 }
