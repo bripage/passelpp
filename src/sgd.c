@@ -172,6 +172,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
     long thread_id = tid;
+    long feature, l_temp, wv_temp;
 
     for (long e = 0; e < epochs; e++) {
         while (thread_id < train_sample_count) {
@@ -192,8 +193,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
 
             for (long n = 0; n < node_count; n++) {
                 for (long i = train_s[n][sample]; i < train_s[n][sample + 1]; i++) {
-                    feature = train_f[n][i];
-                    gradients[tid] += (train_v[n][i] * model_vec_stripped[feature]) >> 24;
+                    gradients[tid] += (train_v[n][i] * model_vec_stripped[train_f[n][i]]) >> 24;
                 }
             }
 
@@ -229,7 +229,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 for (long n = 0; n < node_count; n++) {
                     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
                         feature = train_f[n][i];
-                        wv_temp = l_working_vec[feature];
+                        wv_temp = model_vec_stripped[feature];
                         l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
                         model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
