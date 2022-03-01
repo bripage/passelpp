@@ -184,18 +184,18 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             sample %= train_sample_count;
 
             class = local_train_c[sample];
-            for (long n = 0; n < node_count; n++) {
-                cilk_migrate_hint(&train_v[n]);
-                cilk_spawn get_partial_gradient(n, tid, sample);
-            }
+            //for (long n = 0; n < node_count; n++) {
+            //    cilk_migrate_hint(&train_v[n]);
+            //    cilk_spawn get_partial_gradient(n, tid, sample);
+            //}
             cilk_sync;
 
-            //for (long n = 0; n < node_count; n++) {
-            //    for (long i = train_s[n][sample]; i < train_s[n][sample + 1]; i++) {
-            //        feature = train_f[n][i];
-            //        gradients[tid] += (train_v[n][i] * model_vec_stripped[feature]) >> 24;
-            //    }
-            //}
+            for (long n = 0; n < node_count; n++) {
+                for (long i = train_s[n][sample]; i < train_s[n][sample + 1]; i++) {
+                    feature = train_f[n][i];
+                    gradients[tid] += (train_v[n][i] * model_vec_stripped[feature]) >> 24;
+                }
+            }
 
             gradients[tid] *= class;
 /*
@@ -220,22 +220,18 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
                         feature = train_f[n][i];
                         l_temp = (di * train_v[n][i]) >> 24;
-                        mv_orig = model_vec_stripped[feature] + l_temp;
+                        wv_temp = model_vec_stripped[feature] + l_temp;
                         l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
-                        mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
-                        //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
-                        ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
+                        model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
                 }
             } else {
                 for (long n = 0; n < node_count; n++) {
                     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
                         feature = train_f[n][i];
-                        mv_orig = model_vec_stripped[feature];
+                        wv_temp = l_working_vec[feature];
                         l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
-                        mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
-                        //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
-                        ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
+                        model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
                 }
             }
