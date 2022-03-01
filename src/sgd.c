@@ -211,7 +211,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                 }
             }
 */
-            long feature, l_temp, mv_orig, mv_new;
+
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {

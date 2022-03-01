@@ -591,7 +591,6 @@ void populateTraining_featurepartitioned() {
     printf("Starting feture partioned data load\n");
     fflush(stdout);
 
-    long non_zeros_per_node = ceil(1.25 * ((double) total_train_points / (double) node_count));
     long i,
      sample = -1,
      feature,
