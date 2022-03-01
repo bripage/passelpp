@@ -588,6 +588,9 @@ void populateTrainingData() {
 }
 
 void populateTraining_featurepartitioned() {
+    printf("Starting feture partioned data load\n");
+    fflush(stdout);
+
     long non_zeros_per_node = ceil(1.25 * ((double) total_train_points / (double) node_count));
     long i,
      sample = -1,
@@ -658,20 +661,12 @@ void populateTraining_featurepartitioned() {
                     for (n = 0; n < node_count; n++) {
                         train_s[n][sample_count] = data_placement[n];
                         train_c[n][sample_count] = class;
-                        //train_f[n][data_placement[n]] = 0;
-                        //train_v[n][data_placement[n]] = 16777216;
-                        //feat_deg_recip[0][0]++;
-                        //data_placement[n]++;
                     }
-                    train_f[assigned_node][data_placement[assigned_node]] = feature;
-                    train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
-                } else {
-                    train_f[assigned_node][data_placement[assigned_node]] = feature;
-                    train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
-                    data_placement[assigned_node]++;
                 }
+                train_f[assigned_node][data_placement[assigned_node]] = feature;
+                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                feat_deg_recip[0][feature]++;
+                data_placement[assigned_node]++;
             }
 
             if (chunk_count > 1 && c != chunk_count - 1) {
@@ -732,28 +727,16 @@ void populateTraining_featurepartitioned() {
 
             if (sample != current_sample) {
                 sample_count++;
-
-                //printf("%ld\n", sample);
-                //fflush(stdout);
-
                 current_sample = sample;
                 for (n = 0; n < node_count; n++) {
                     train_s[n][sample_count] = data_placement[n];
                     train_c[n][sample_count] = class;
-                    //train_f[n][data_placement[n]] = 0;
-                    //train_v[n][data_placement[n]] = 16777216;
-                    //feat_deg_recip[0][0]++;
-                    //data_placement[n]++;
                 }
-                train_f[assigned_node][data_placement[assigned_node]] = feature;
-                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
-                feat_deg_recip[0][feature]++;
-            } else {
-                train_f[assigned_node][data_placement[assigned_node]] = feature;
-                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
-                feat_deg_recip[0][feature]++;
-                data_placement[assigned_node]++;
             }
+            train_f[assigned_node][data_placement[assigned_node]] = feature;
+            train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+            feat_deg_recip[0][feature]++;
+            data_placement[assigned_node]++;
         }
         for (n = 0; n < node_count; n++) {
             train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
