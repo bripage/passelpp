@@ -184,17 +184,17 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             sample %= train_sample_count;
 
             class = local_train_c[sample];
-            //for (long n = 0; n < node_count; n++) {
-            //    cilk_migrate_hint(&train_v[n]);
-            //    cilk_spawn get_partial_gradient(n, tid, sample);
-            //}
+            for (long n = 0; n < node_count; n++) {
+                cilk_migrate_hint(&train_v[n]);
+                cilk_spawn get_partial_gradient(n, tid, sample);
+            }
             cilk_sync;
 
-            for (long n = 0; n < node_count; n++) {
-                for (long i = train_s[n][sample]; i < train_s[n][sample + 1]; i++) {
-                    gradients[tid] += (train_v[n][i] * model_vec_stripped[train_f[n][i]]) >> 24;
-                }
-            }
+            //for (long n = 0; n < node_count; n++) {
+            //    for (long i = train_s[n][sample]; i < train_s[n][sample + 1]; i++) {
+            //        gradients[tid] += (train_v[n][i] * model_vec_stripped[train_f[n][i]]) >> 24;
+            //    }
+            //}
 
             gradients[tid] *= class;
 /*
