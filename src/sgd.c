@@ -197,7 +197,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             //}
 
             gradients[tid] *= class;
-/*
+
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
@@ -210,8 +210,8 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                     cilk_spawn child_train_pos(n, sample, eta_gamma);
                 }
             }
-*/
 
+/*
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
@@ -235,7 +235,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                     }
                 }
             }
-
+*/
             gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
