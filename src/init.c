@@ -438,7 +438,6 @@ void populateTrainingData() {
 
                 if (sample != current_sample) {
                     sample_count++;
-
                     //
                     //  Bin pack by assigning next row to the cluster with the least amount of currently assigned nnz
                     //
@@ -449,57 +448,34 @@ void populateTrainingData() {
                             n = m;
                         }
                     }
-
                     sample_placement[n]++;
                     cluster_samples[n]++;
-
                     train_s[n][sample_placement[n]] = data_placement[n];
                     train_c[n][sample_placement[n]] = class;
-                    //train_f[n][data_placement[n]] = 0;
-                    //train_v[n][data_placement[n]] = 1;
-                    //feat_deg_recip[0][0]++;
-                    //data_placement[n]++;
-                    train_f[n][data_placement[n]] = feature;
-                    train_v[n][data_placement[n]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
                     current_sample = sample;
-                } else {
-                    train_f[n][data_placement[n]] = feature;
-                    train_v[n][data_placement[n]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
                 }
+                train_f[n][data_placement[n]] = feature;
+                train_v[n][data_placement[n]] = fixed_value;
+                feat_deg_recip[0][feature]++;
                 data_placement[n]++;
             }
 
             if (chunk_count > 1 && c != chunk_count - 1) {
                 if (c + 1 == chunk_count - 1) {
-                    //printf("about to free buffer\n");
-                    //fflush(stdout);
                     free(binBuffer);
-                    printf("allocating buffer for final chunk\n");
-                    fflush(stdout);
                     binBuffer = (long *) malloc(final_chunk_points * sizeof(long));
-
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
                     if (bytesRead != final_chunk_points) {
-                        //printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points, final_chunk_points*sizeof(long),bytesRead);
-                        //fflush(stdout);
                         printf("Error in reading final file chunk\n");
                         exit(1);
                     }
-                    printf("final file chunk copied into buffer\n");
-                    fflush(stdout);
                     chunk_points = final_chunk_points;
                 } else {
-                    //printf("reading in next chunk\n");
-                    //fflush(stdout);
                     bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
                     if (bytesRead != chunk_points) {
                         printf("Error in reading file chunk %ld\n", c + 1);
                         exit(1);
                     }
-                    printf("file chunk %ld of %ld copied into buffer\n", c + 1, chunk_count);
-                    fflush(stdout);
                 }
             }
         }
@@ -553,21 +529,12 @@ void populateTrainingData() {
                 }
                 sample_placement[n]++;
                 cluster_samples[n]++;
-
                 train_s[n][sample_placement[n]] = data_placement[n];
                 train_c[n][sample_placement[n]] = class;
-                //train_f[n][data_placement[n]] = 0;
-                //train_v[n][data_placement[n]] = 1;
-                //feat_deg_recip[0][0]++;
-                //data_placement[n]++;
-                train_f[n][data_placement[n]] = feature;
-                train_v[n][data_placement[n]] = fixed_value;
-                feat_deg_recip[0][feature]++;
-            } else {
-                train_f[n][data_placement[n]] = feature;
-                train_v[n][data_placement[n]] = fixed_value;
-                feat_deg_recip[0][feature]++;
             }
+            train_f[n][data_placement[n]] = feature;
+            train_v[n][data_placement[n]] = fixed_value;
+            feat_deg_recip[0][feature]++;
             data_placement[n]++;
         }
         printf("5\n");

@@ -252,7 +252,7 @@ void get_partial_gradient(long n, long tid, long sample){
     long* local_train_v = train_v[n];
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
-        //REMOTE_ADD(&gradients[tid], (local_train_v[i] * model_vec_stripped[feature]) >> 24);
+        //REMOTE_ADD(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
         ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
     }
 }
@@ -268,7 +268,8 @@ void child_train_pos(long n, long sample, long eta_gamma) {
         l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
         //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
-        ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
+        //ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
+        model_vec_stripped[feature] += mv_new - mv_orig;
     }
     /*
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
@@ -293,7 +294,8 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
         l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
         //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
-        ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
+        //ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
+        model_vec_stripped[feature] += mv_new - mv_orig;
     }
     /*
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
