@@ -210,7 +210,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                     cilk_spawn child_train_pos(n, sample, eta_gamma);
                 }
             }
-
+            cilk_sync;
 /*
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
