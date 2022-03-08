@@ -456,7 +456,7 @@ void populateTrainingData() {
                     train_s[n][sample_placement[n]] = data_placement[n];
                     train_c[n][sample_placement[n]] = class;
                     train_f[n][data_placement[n]] = 0;
-                    train_v[n][data_placement[n]] = 16777216;
+                    train_v[n][data_placement[n]] = 1;
                     feat_deg_recip[0][0]++;
                     data_placement[n]++;
                     train_f[n][data_placement[n]] = feature;
@@ -557,7 +557,7 @@ void populateTrainingData() {
                 train_s[n][sample_placement[n]] = data_placement[n];
                 train_c[n][sample_placement[n]] = class;
                 train_f[n][data_placement[n]] = 0;
-                train_v[n][data_placement[n]] = 16777216;
+                train_v[n][data_placement[n]] = 1;
                 feat_deg_recip[0][0]++;
                 data_placement[n]++;
                 train_f[n][data_placement[n]] = feature;
@@ -679,7 +679,7 @@ void populateTrainingDataStripped() {
                     train_s_stripped[sample_count] = j;
                     train_c_stripped[sample_count] = class;
                     train_f_stripped[j] = 0;
-                    train_v_stripped[j] = 16777216;
+                    train_v_stripped[j] = 1;
                     feat_deg_recip_stripped[0]++;
                     j++;
                     train_f_stripped[j] = feature;
@@ -760,7 +760,7 @@ void populateTrainingDataStripped() {
                 train_s_stripped[sample_count] = j;
                 train_c_stripped[sample_count] = class;
                 train_f_stripped[j] = 0;
-                train_v_stripped[j] = 16777216;
+                train_v_stripped[j] = 1;
                 feat_deg_recip_stripped[0]++;
                 j++;
                 train_f_stripped[j] = feature;
