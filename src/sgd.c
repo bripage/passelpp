@@ -203,7 +203,8 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                     cilk_spawn child_train_pos(n, sample, eta_gamma);
                 }
             }
-
+            FENCE();
+            
             gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
