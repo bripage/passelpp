@@ -229,7 +229,7 @@ void child_train_pos(long n, long sample, long eta_gamma) {
     long feature, l_temp, wv_temp, mv_orig, mv_new;
     long* local_train_f = train_f[n];
     long* local_feat_deg = feat_deg_recip[n];
-
+/*
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
         mv_orig = model_vec_stripped[feature];
@@ -239,14 +239,14 @@ void child_train_pos(long n, long sample, long eta_gamma) {
         ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
         //model_vec_stripped[feature] += mv_new - mv_orig;
     }
-    /*
+  */
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
         wv_temp = model_vec_stripped[feature];
         l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
     }
-    */
+
 }
 
 void child_train_neg(long n, long sample, long eta_gamma, long di) {
@@ -254,7 +254,7 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
     long* local_feat_deg = feat_deg_recip[n];
-
+/*
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
         l_temp = (di * local_train_v[i]) >> 24;
@@ -265,7 +265,7 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
         ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
         //model_vec_stripped[feature] += mv_new - mv_orig;
     }
-    /*
+    */
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
         l_temp = (di * local_train_v[i]) >> 24;
@@ -273,5 +273,5 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
         l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
     }
-    */
+
 }
