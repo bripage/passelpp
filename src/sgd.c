@@ -224,7 +224,7 @@ void get_partial_gradient(long n, long tid, long sample){
 }
 
 void child_train_pos(long n, long sample, long eta_gamma) {
-    long feature, l_temp, wv_temp, mv_orig, mv_new;
+    long feature, l_temp, mv_orig, mv_new;
     long* local_train_f = train_f[n];
     long* local_feat_deg = feat_deg_recip[n];
 
@@ -238,7 +238,7 @@ void child_train_pos(long n, long sample, long eta_gamma) {
 }
 
 void child_train_neg(long n, long sample, long eta_gamma, long di) {
-    long feature, l_temp, wv_temp, mv_orig, mv_new;
+    long feature, l_temp, mv_orig, mv_new;
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
     long* local_feat_deg = feat_deg_recip[n];
