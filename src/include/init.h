@@ -37,6 +37,7 @@ replicated long update_period;
 extern replicated long using_clusters;
 replicated long node_count;
 replicated long multi_file_load;
+extern replicated long clock_rate;
 
 /// Temporary variables and execution behavior flags
 double initial_step_size;                // becomes eta

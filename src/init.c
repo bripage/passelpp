@@ -46,6 +46,7 @@ void parse_args(int argc, char * argv[]) {
     samples_per_cluster = 1;
     long clusters = 0;
     long multi_load = 0;
+    long rate = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -117,8 +118,17 @@ void parse_args(int argc, char * argv[]) {
             clusters = 1;
         } else if (!strcmp(argv[i], "--multi-load")) {
             multi_load = 1;
+        } else if (!strcmp(argv[i], "-r")) {
+            mw_replicated_init(&clock_rate, num_arg);
+            i++;
+            rate = 1;
         }
 
+    }
+    if (rate != 0){
+        printf("[ERROR]: Clock Rate NOT Set!\n");
+        fflush(stdout);
+        exit(-1);
     }
     mw_replicated_init(&node_count, NUM_NODES());
     mw_replicated_init(&using_clusters, clusters);

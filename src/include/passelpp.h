@@ -20,6 +20,7 @@ replicated long eta;                        // initial step size
 replicated long beta;
 replicated long gamma;
 replicated long using_clusters;
+replicated long clock_rate;
 
 /// Data allocation
 extern replicated long** model_vec;
