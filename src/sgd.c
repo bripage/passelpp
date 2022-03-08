@@ -235,7 +235,7 @@ void child_train_pos(long n, long sample, long eta_gamma) {
         l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
         //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
-        model_vec_stripped[feature] += mv_new - mv_orig
+        model_vec_stripped[feature] += mv_new - mv_orig;
     }
 }
 
@@ -252,6 +252,6 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
         l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
         //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
-        model_vec_stripped[feature] += mv_new - mv_orig
+        model_vec_stripped[feature] += mv_new - mv_orig;
     }
 }
