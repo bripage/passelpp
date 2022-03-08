@@ -215,7 +215,8 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                         mv_orig = model_vec_stripped[feature] + l_temp;
                         l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
                         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
-                        REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
+                        //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
+                        ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
                     }
                 }
             } else {
@@ -225,7 +226,8 @@ void stripped_train_no_epochs_spawn_children(long tid) {
                         mv_orig = model_vec_stripped[feature];
                         l_temp = (eta_gamma * feat_deg_recip[n][feature]) >> 24;
                         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
-                        REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
+                        //REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
+                        ATOMIC_ADDM(&model_vec_stripped[feature], mv_new - mv_orig);
                     }
                 }
             }
