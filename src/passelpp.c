@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
         //fflush(stdout);
         start_time = CLOCK();
         for (long epoch = 1; epoch <= epochs; epoch++) {
-            printf("Epoch %ld\n", epoch);
-            fflush(stdout);
+            //printf("Epoch %ld\n", epoch);
+            //fflush(stdout);
             if (epoch > 1) {
                 beta_gamma *= gamma;
                 beta_gamma >>= 24;
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
         get_stripped_accuracy();
         MIGRATE(&model_vec_stripped[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / 225000000, current_accuracy);
+        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / clock_rate, current_accuracy);
         fflush(stdout);
     }
 
