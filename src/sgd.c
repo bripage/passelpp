@@ -62,8 +62,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
     long i;
     long l_temp;
     long wv_temp;
-    long wv_orig;
-    long wv_new;
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 

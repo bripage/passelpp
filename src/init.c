@@ -75,7 +75,7 @@ void parse_args(int argc, char * argv[]) {
             mw_replicated_init(&epochs, num_arg);
             i++;
         } else if (!strcmp(argv[i], "--train-points")) {
-            num_arg = atoi(argv[i + 1]) + train_sample_count;
+            num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&total_train_points, num_arg);
             i++;
         } else if (!strcmp(argv[i], "--test-samples")) {
@@ -390,7 +390,7 @@ void populateTrainingData() {
         sample_placement[n] = 0;
     }
 
-    non_zeros = total_train_points - train_sample_count;
+    non_zeros = total_train_points;
     points = non_zeros * 4;
     train_data = fopen(train_data_path, "rb");
     if (train_data == NULL) {
