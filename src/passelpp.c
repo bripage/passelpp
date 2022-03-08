@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
         //fflush(stdout);
         start_time = CLOCK();
         for (long epoch = 1; epoch <= epochs; epoch++) {
-            //printf("Epoch %ld\n", epoch);
-            //fflush(stdout);
+            printf("Epoch %ld\n", epoch);
+            fflush(stdout);
             if (epoch > 1) {
                 beta_gamma *= gamma;
                 beta_gamma >>= 24;
