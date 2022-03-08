@@ -32,8 +32,8 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 }
 
 void train_spawn(long n, long eta_gamma, long beta_gamma){
-    printf("%ld, %ld, %ld, %ld, %ld\n", n, token[n], total_evaluated_sample_count[n], samples_since_token[n], cluster_samples[n] );
-    fflush(stdout);
+    //printf("%ld, %ld, %ld, %ld, %ld\n", n, token[n], total_evaluated_sample_count[n], samples_since_token[n], cluster_samples[n] );
+    //fflush(stdout);
     for (long i = 0; i < threads_per_cluster; i++) {
         cilk_migrate_hint(&model_vec[n]);
         cilk_spawn train(i, n, eta_gamma, beta_gamma);
@@ -103,6 +103,11 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
         }
     } else {
         while (ATOMIC_ADDM(&total_evaluated_sample_count[n], 1) < cluster_samples[n]) {
+            if (n == 0) {
+                printf("%ld, %ld, %ld, %ld, %ld\n", thread_id, total_evaluated_sample_count[n], cluster_samples[n],
+                       token[n], samples_since_token[n]);
+                fflush(stdout);
+            }
             if (token[n] == 1){
                 if (ATOMIC_ADDM(&samples_since_token[n], 1) == update_period){
                     ATOMIC_SWAP(&token[n], 0);
