@@ -108,9 +108,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
     } else {
         while (ATOMIC_ADDM(&total_evaluated_sample_count[n], 1) < cluster_samples[n]) {
             if (n == 0) {
-                //printf("%ld, %ld, %ld, %ld, %ld\n", thread_id, total_evaluated_sample_count[n], cluster_samples[n],
-                //       token[n], samples_since_token[n]);
-                //fflush(stdout);
             }
             if (token[n] == 1){
                 if (ATOMIC_ADDM(&samples_since_token[n], 1) == update_period){
@@ -124,8 +121,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
                         cilk_spawn downstream_update(i, upstream[n], n);
                     }
                     cilk_sync;
-                    //printf("%ld updated %ld\n", n, upstream[n]);
-                    //fflush(stdout);
                     ATOMIC_SWAP(&token[upstream[n]], 1);   // pass token to upstream cluster
                     ATOMIC_SWAP(&samples_since_token[n], 0);
                 }
@@ -151,56 +146,33 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 
             if (distance < 16777216) {
                 di = eta_gamma * class;
-                /*for (i = start; i < stop; i++) {
+                for (i = start; i < stop; i++) {
                     feature = l_train_f[i];
                     l_temp = (di * l_train_v[i]) >> 24;
                     wv_temp = l_working_vec[feature] + l_temp;
                     l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
                     l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
-                }*/
-                for (long i = start; i < stop; i++) {
-                    feature = l_train_f[i];
-                    l_temp = (di * l_train_v[i]) >> 24;
-                    wv_orig = l_working_vec[feature] + l_temp;
-                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                    wv_new = (wv_orig * (16777216 - l_temp)) >> 24;
-                    REMOTE_ADD(&l_working_vec[feature], wv_new - wv_orig);
                 }
             } else {
-                /*for (i = start; i < stop; i++) {
+                for (i = start; i < stop; i++) {
                     feature = l_train_f[i];
                     wv_temp = l_working_vec[feature];
                     l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
                     l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
-                }*/
-                for (long i = start; i < stop; i++) {
-                    feature = l_train_f[i];
-                    wv_orig = l_working_vec[feature];
-                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
-                    wv_new = (wv_orig * (16777216 - l_temp)) >> 24;
-                    REMOTE_ADD(&l_working_vec[feature], wv_new - wv_orig);
                 }
             }
         }
     }
-    //printf("%ld/%ld Done\n", n, thread_id);
-    //fflush(stdout);
 }
 
-void stripped_train_no_epochs_spawn_children(long tid) {
+void featured_partitioned_train(long tid) {
+    long* local_train_c = train_c[NODE_ID()];
     long eta_gamma = eta;
-    long start;
-    long stop;
     long class;
-    long feature;
-    long distance;
     long di;
-    long i;
     unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
     long thread_id = tid;
-    //long l_temp;
-    //long mv_temp;
 
     for (long e = 0; e < epochs; e++) {
         while (thread_id < train_sample_count) {
@@ -212,28 +184,28 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             sample *= UINT64_C(0x2545F4914F6CDD1D);
             sample %= train_sample_count;
 
-            distance = 0;
-            start = train_s_stripped[sample];
-            stop = train_s_stripped[sample + 1];
-            class = train_c_stripped[sample];
-            di = eta_gamma * class;
-
+            class = local_train_c[sample];
             for (long n = 0; n < node_count; n++) {
-                for (i = start + n; i < stop; i += node_count) {
-                    feature = train_f_stripped[i];
-                    distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
+                cilk_migrate_hint(&train_v[n]);
+                cilk_spawn get_partial_gradient(n, tid, sample);
+            }
+            cilk_sync;
+            gradients[tid] *= class;
+
+            if (gradients[tid] < 16777216) {
+                di = eta_gamma * class;
+                for (long n = 0; n < node_count; n++) {
+                    cilk_migrate_hint(&train_v[n]);
+                    cilk_spawn child_train_neg(n, sample, eta_gamma, di);
+                }
+            } else {
+                for (long n = 0; n < node_count; n++) {
+                    cilk_migrate_hint(&train_v[n]);
+                    cilk_spawn child_train_pos(n, sample, eta_gamma);
                 }
             }
-            distance *= class;
 
-            if (distance < 16777216) {
-                cilk_migrate_hint(&train_v_stripped[start]);
-                cilk_spawn  child_train_neg_2d(start, stop, eta_gamma, di);
-            } else {
-                cilk_migrate_hint(&train_v_stripped[start]);
-                cilk_spawn child_train_pos_2d(start, stop, eta_gamma);
-            }
-
+            gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
 
@@ -243,24 +215,41 @@ void stripped_train_no_epochs_spawn_children(long tid) {
     }
 }
 
-void child_train_pos_2d(long start, long stop, long eta_gamma) {
-    long feature, l_temp, mv_orig, mv_new;
-    for (long i = start; i < stop; i++) {
-        feature = train_f_stripped[i];
+void get_partial_gradient(long n, long tid, long sample){
+    long feature;
+    long* local_train_f = train_f[n];
+    long* local_train_v = train_v[n];
+    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+        feature = local_train_f[i];
+        ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
+    }
+}
+
+void child_train_pos(long n, long sample, long eta_gamma) {
+    long feature, l_temp, wv_temp, mv_orig, mv_new;
+    long* local_train_f = train_f[n];
+    long* local_feat_deg = feat_deg_recip[n];
+
+    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+        feature = local_train_f[i];
         mv_orig = model_vec_stripped[feature];
-        l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+        l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
         REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
     }
 }
 
-void child_train_neg_2d(long start, long stop, long eta_gamma, long di) {
-    long feature, l_temp, mv_orig, mv_new;
-    for (long i = start; i < stop; i++) {
-        feature = train_f_stripped[i];
-        l_temp = (di * train_v_stripped[i]) >> 24;
+void child_train_neg(long n, long sample, long eta_gamma, long di) {
+    long feature, l_temp, wv_temp, mv_orig, mv_new;
+    long* local_train_f = train_f[n];
+    long* local_train_v = train_v[n];
+    long* local_feat_deg = feat_deg_recip[n];
+
+    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+        feature = local_train_f[i];
+        l_temp = (di * local_train_v[i]) >> 24;
         mv_orig = model_vec_stripped[feature] + l_temp;
-        l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
+        l_temp = (eta_gamma * local_feat_deg[feature]) >> 24;
         mv_new = (mv_orig * (16777216 - l_temp)) >> 24;
         REMOTE_ADD(&model_vec_stripped[feature], mv_new - mv_orig);
     }

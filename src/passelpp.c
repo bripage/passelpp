@@ -59,8 +59,8 @@ int main(int argc, char **argv) {
         //fflush(stdout);
         start_time = CLOCK();
         for (long t = 0; t < threads_per_cluster; t++) {
-            cilk_migrate_hint(&model_vec_stripped[t]);
-            cilk_spawn stripped_train_no_epochs_spawn_children(t);
+            cilk_migrate_hint(&gradients[t]);
+            cilk_spawn featured_partitioned_train(t);
         }
         cilk_sync;
         total_time = CLOCK() - start_time;

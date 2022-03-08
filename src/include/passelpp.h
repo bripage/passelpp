@@ -23,6 +23,7 @@ replicated long using_clusters;
 replicated long clock_rate;
 
 /// Data allocation
+extern replicated long* gradients;
 extern replicated long** model_vec;
 extern replicated long** accuracies;
 

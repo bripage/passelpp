@@ -32,10 +32,6 @@ extern replicated long** train_v;
 extern replicated long** train_c;
 extern replicated long** model_vec;        // working vector for each node
 
-extern replicated long* train_s_stripped;
-extern replicated long* train_f_stripped;
-extern replicated long* train_v_stripped;
-extern replicated long* train_c_stripped;
 extern replicated long* test_s_stripped;
 extern replicated long* test_f_stripped;
 extern replicated long* test_v_stripped;

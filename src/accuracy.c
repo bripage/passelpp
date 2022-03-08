@@ -48,7 +48,7 @@ void populateTestDataStripped() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1];
+                feature = binBuffer[i + 1] - 1;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
 
@@ -65,18 +65,12 @@ void populateTestDataStripped() {
                 }
 
                 if (sample != current_sample) {
-                    test_f_stripped[j] = 0;
-                    test_v_stripped[j] = 1;
-                    j++;
                     test_s_stripped[sample] = j;
-                    test_f_stripped[j] = feature;
-                    test_v_stripped[j] = fixed_value;
                     test_c_stripped[sample] = class;
                     current_sample = sample;
-                } else {
-                    test_f_stripped[j] = feature;
-                    test_v_stripped[j] = fixed_value;
                 }
+                test_f_stripped[j] = feature;
+                test_v_stripped[j] = fixed_value;
                 j++;
             }
 
@@ -112,7 +106,7 @@ void populateTestDataStripped() {
 
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1];
+            feature = binBuffer[i + 1] - 1;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
 
@@ -129,18 +123,12 @@ void populateTestDataStripped() {
             }
 
             if (sample != current_sample) {
-                test_f_stripped[j] = 0;
-                test_v_stripped[j] = 1;
-                j++;
                 test_s_stripped[sample] = j;
-                test_f_stripped[j] = feature;
-                test_v_stripped[j] = fixed_value;
                 test_c_stripped[sample] = class;
                 current_sample = sample;
-            } else {
-                test_f_stripped[j] = feature;
-                test_v_stripped[j] = fixed_value;
             }
+            test_f_stripped[j] = feature;
+            test_v_stripped[j] = fixed_value;
             j++;
         }
     }

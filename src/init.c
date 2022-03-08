@@ -366,9 +366,6 @@ void node_load_from_n0(long t) {
 }
 
 void populateTrainingData() {
-    //printf("inside populate_data()\n");
-    //fflush(stdout);
-
     long i;
     long sample = -1;
     long feature;
@@ -392,8 +389,6 @@ void populateTrainingData() {
         data_placement[n] = 0;
         sample_placement[n] = 0;
     }
-    printf("1\n");
-    fflush(stdout);
 
     non_zeros = total_train_points - train_sample_count;
     points = non_zeros * 4;
@@ -402,8 +397,7 @@ void populateTrainingData() {
         printf("Failed to open training feature file.\n");
         exit(1);
     }
-    printf("2\n");
-    fflush(stdout);
+
     if (non_zeros > 30000000) {
         long chunk_points = 30000000 * 4;
         long chunk_count = 0, final_chunk_points = 0;
@@ -434,7 +428,7 @@ void populateTrainingData() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1];
+                feature = binBuffer[i + 1] - 1;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
 
@@ -466,22 +460,13 @@ void populateTrainingData() {
 
                     sample_placement[n]++;
                     cluster_samples[n]++;
-
                     train_s[n][sample_placement[n]] = data_placement[n];
                     train_c[n][sample_placement[n]] = class;
-                    train_f[n][data_placement[n]] = 0;
-                    train_v[n][data_placement[n]] = 1;
-                    feat_deg_recip[0][0]++;
-                    data_placement[n]++;
-                    train_f[n][data_placement[n]] = feature;
-                    train_v[n][data_placement[n]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
                     current_sample = sample;
-                } else {
-                    train_f[n][data_placement[n]] = feature;
-                    train_v[n][data_placement[n]] = fixed_value;
-                    feat_deg_recip[0][feature]++;
                 }
+                train_f[n][data_placement[n]] = feature;
+                train_v[n][data_placement[n]] = fixed_value;
+                feat_deg_recip[0][feature]++;
                 data_placement[n]++;
             }
 
@@ -525,17 +510,13 @@ void populateTrainingData() {
         points = non_zeros * 4;
         binBuffer = (long *) malloc(points * sizeof(long));
         bytesRead = fread(binBuffer, sizeof(long), points, train_data);
-        printf("3\n");
-        fflush(stdout);
         if (bytesRead != (points)) {
             printf("*** Feature File Read Failure ***\n");
             exit(1);
         }
-        printf("4\n");
-        fflush(stdout);
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1];
+            feature = binBuffer[i + 1] - 1;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
 
@@ -570,22 +551,12 @@ void populateTrainingData() {
 
                 train_s[n][sample_placement[n]] = data_placement[n];
                 train_c[n][sample_placement[n]] = class;
-                train_f[n][data_placement[n]] = 0;
-                train_v[n][data_placement[n]] = 1;
-                feat_deg_recip[0][0]++;
-                data_placement[n]++;
-                train_f[n][data_placement[n]] = feature;
-                train_v[n][data_placement[n]] = fixed_value;
-                feat_deg_recip[0][feature]++;
-            } else {
-                train_f[n][data_placement[n]] = feature;
-                train_v[n][data_placement[n]] = fixed_value;
-                feat_deg_recip[0][feature]++;
             }
+            train_f[n][data_placement[n]] = feature;
+            train_v[n][data_placement[n]] = fixed_value;
+            feat_deg_recip[0][feature]++;
             data_placement[n]++;
         }
-        printf("5\n");
-        fflush(stdout);
 
         for (n = 0; n < cluster_count; n++) {
             train_s[n][sample_placement[n] + 1] = data_placement[n]; // add sample id end ptr
@@ -593,39 +564,28 @@ void populateTrainingData() {
         }
     }
 
-    printf("6\n");
-    fflush(stdout);
-
     fclose(train_data);
     free(binBuffer);
-
-    double d_temp;
-    long l_temp;
-    for (long i = 0; i <= featureSetSize; i++) {
-        d_temp = 1.0;
-        d_temp /= (double) feat_deg_recip[0][i];
-        d_temp *= 16777216;
-        l_temp = (long) d_temp;
-        for (n = 0; n < cluster_count; n++) {
-            feat_deg_recip[n][i] = l_temp;
-        }
-    }
-    printf("7\n", points);
-    fflush(stdout);
-
 }
 
-void populateTrainingDataStripped() {
-    printf("inside populate_stripped_data()\n");
+void populateTraining_featurepartitioned() {
+    printf("Starting feture partioned data load\n");
     fflush(stdout);
 
-    long i, j = 0,
+    long i,
             sample = -1,
             feature,
             fixed_value,
-            class;
+            class,
+            n,
+            assigned_node;
     long sample_count = -1;
     long current_sample = -1;
+    long* data_placement = (long *) malloc(node_count * sizeof(long));
+    for (n = 0; n < node_count; n++) {
+        data_placement[n] = 0;
+    }
+
     train_data = NULL;
     train_data = fopen(train_data_path, "rb");
     if (train_data == NULL) {
@@ -633,48 +593,35 @@ void populateTrainingDataStripped() {
         exit(1);
     }
 
-    long non_zeros = total_train_points - train_sample_count;
+    long non_zeros = total_train_points;
     long points;
     long *binBuffer;
     long bytesRead;
     points = non_zeros * 4;
-    printf("points = %ld\n", points);
-    fflush(stdout);
-
 
     if (non_zeros > 30000000) {
         long chunk_points = 30000000 * 4;
         long chunk_count = 0, final_chunk_points = 0;
-
-        //printf("chunk_points = %ld\n", chunk_points);
-        //fflush(stdout);
         chunk_count = (non_zeros) / 30000000;
         final_chunk_points = points - (chunk_count * chunk_points);
-        //printf("final_chunk_points = %ld\n", final_chunk_points);
-        //fflush(stdout);
         if (final_chunk_points != 0) {
             chunk_count++;
         }
-        //printf("chunk_count = %ld\n", chunk_count);
-        //fflush(stdout);
 
         binBuffer = (long *) malloc(chunk_points * sizeof(long));
-        //printf("Done allocating initial buffer chunk\n");
-        //fflush(stdout);
         if (binBuffer == NULL) {
             printf("Failed to allocate initial buffer chunk.\n");
             exit(1);
         }
         bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
-        //printf("bytesRead = %ld\n", bytesRead);
-        //fflush(stdout);
 
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1];
+                feature = binBuffer[i + 1] - 1;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
+                assigned_node = feature % node_count;
 
                 if (non_standard_classes) {
                     if (class == class1) {
@@ -690,27 +637,20 @@ void populateTrainingDataStripped() {
 
                 if (sample != current_sample) {
                     sample_count++;
-                    train_s_stripped[sample_count] = j;
-                    train_c_stripped[sample_count] = class;
-                    train_f_stripped[j] = 0;
-                    train_v_stripped[j] = 1;
-                    feat_deg_recip_stripped[0]++;
-                    j++;
-                    train_f_stripped[j] = feature;
-                    train_v_stripped[j] = fixed_value;
                     current_sample = sample;
-                } else {
-                    train_f_stripped[j] = feature;
-                    train_v_stripped[j] = fixed_value;
+                    for (n = 0; n < node_count; n++) {
+                        train_s[n][sample_count] = data_placement[n];
+                        train_c[n][sample_count] = class;
+                    }
                 }
-                feat_deg_recip_stripped[feature]++;
-                j++;
+                train_f[assigned_node][data_placement[assigned_node]] = feature;
+                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                feat_deg_recip[0][feature]++;
+                data_placement[assigned_node]++;
             }
 
             if (chunk_count > 1 && c != chunk_count - 1) {
                 if (c + 1 == chunk_count - 1) {
-                    //printf("about to free buffer\n");
-                    //fflush(stdout);
                     free(binBuffer);
                     printf("allocating buffer for final chunk\n");
                     fflush(stdout);
@@ -718,18 +658,11 @@ void populateTrainingDataStripped() {
 
                     bytesRead = fread(binBuffer, sizeof(long), final_chunk_points, train_data);
                     if (bytesRead != final_chunk_points) {
-                        //printf("final_chunk_points = %ld, %ld, bytesRead = %ld\n", final_chunk_points,
-                        //       final_chunk_points * sizeof(long), bytesRead);
-                        //fflush(stdout);
                         printf("Error in reading final file chunk\n");
                         exit(1);
                     }
-                    //printf("final file chunk copied into buffer\n");
-                    //fflush(stdout);
                     chunk_points = final_chunk_points;
                 } else {
-                    //printf("reading in next chunk\n");
-                    //fflush(stdout);
                     bytesRead = fread(binBuffer, sizeof(long), chunk_points, train_data);
                     if (bytesRead != chunk_points) {
                         printf("Error in reading file chunk %ld\n", c+1);
@@ -740,7 +673,10 @@ void populateTrainingDataStripped() {
                 }
             }
         }
-        train_s_stripped[sample_count + 1] = j; // add sample id end ptr
+        for (n = 0; n < node_count; n++) {
+            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
+            train_s[n][0] = 0;
+        }
     } else {
         points = non_zeros * 4;
         binBuffer = (long *) malloc(points * sizeof(long));
@@ -752,9 +688,10 @@ void populateTrainingDataStripped() {
         }
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1];
+            feature = binBuffer[i + 1] - 1;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
+            assigned_node = feature % node_count;
 
             if (non_standard_classes) {
                 if (class == class1) {
@@ -771,40 +708,23 @@ void populateTrainingDataStripped() {
             if (sample != current_sample) {
                 sample_count++;
                 current_sample = sample;
-                train_s_stripped[sample_count] = j;
-                train_c_stripped[sample_count] = class;
-                train_f_stripped[j] = 0;
-                train_v_stripped[j] = 1;
-                feat_deg_recip_stripped[0]++;
-                j++;
-                train_f_stripped[j] = feature;
-                train_v_stripped[j] = fixed_value;
-            } else {
-                train_f_stripped[j] = feature;
-                train_v_stripped[j] = fixed_value;
+                for (n = 0; n < node_count; n++) {
+                    train_s[n][sample_count] = data_placement[n];
+                    train_c[n][sample_count] = class;
+                }
             }
-            feat_deg_recip_stripped[feature]++;
-            j++;
+            train_f[assigned_node][data_placement[assigned_node]] = feature;
+            train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+            feat_deg_recip[0][feature]++;
+            data_placement[assigned_node]++;
         }
-
-        train_s_stripped[sample_count + 1] = j; // add sample id end ptr
-        train_s_stripped[0] = 0;
+        for (n = 0; n < node_count; n++) {
+            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
+            train_s[n][0] = 0;
+        }
     }
     fclose(train_data);
     free(binBuffer);
-
-    printf("SAMPLE COUNT: %ld\n", sample_count);
-    fflush(stdout);
-
-    double d_temp;
-    long l_temp;
-    for (long i = 0; i <= featureSetSize; i++) {
-        d_temp = 1.0;
-        d_temp /= (double) feat_deg_recip_stripped[i];
-        d_temp *= 16777216;
-        l_temp = (long) d_temp;
-        feat_deg_recip_stripped[i] = l_temp;
-    }
 
     printf("populate_data() done\n");
     fflush(stdout);
@@ -850,8 +770,8 @@ void init() {
     }
 
     if (using_clusters) {
-        long non_zeros_per_cluster = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
-        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_cluster);
+        long non_zeros_per_node = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
+        printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
@@ -863,12 +783,6 @@ void init() {
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&working_vec, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
             *ptr = l2d_ptr;
         }
 
@@ -884,13 +798,13 @@ void init() {
             *ptr = l2d_ptr;
         }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
             *ptr = l2d_ptr;
         }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_cluster * sizeof(long));
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
             *ptr = l2d_ptr;
@@ -911,23 +825,45 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
-        l1d_ptr = (long *) mw_malloc1dlong((train_sample_count + 1));
-        mw_replicated_init((long *) &train_s_stripped, (long) l1d_ptr);
+        long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
+        printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
+        fflush(stdout);
 
-        l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
-        mw_replicated_init((long *) &train_f_stripped, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (train_sample_count + 1) * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
+            *ptr = l2d_ptr;
+        }
 
-        l1d_ptr = (long *) mw_malloc1dlong(total_train_points);
-        mw_replicated_init((long *) &train_v_stripped, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), train_sample_count * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_c, nlet);
+            *ptr = l2d_ptr;
+        }
 
-        l1d_ptr = (long *) mw_malloc1dlong(train_sample_count);
-        mw_replicated_init((long *) &train_c_stripped, (long) l1d_ptr);
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
+        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+            long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
+            *ptr = l2d_ptr;
+        }
+
+        l1d_ptr = (long *) mw_malloc1dlong(threads_per_cluster);
+        mw_replicated_init((long *) &gradients, (long) l1d_ptr);
 
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &model_vec_stripped, (long) l1d_ptr);
+    }
 
-        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
-        mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
+        *ptr = l2d_ptr;
     }
 
     l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
@@ -968,46 +904,42 @@ void init() {
 
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
+    MIGRATE(&test_s_stripped[0]);
+    volatile uint64_t start_load_time = CLOCK();
     if (using_clusters) {
-        volatile uint64_t start_load_time = CLOCK();
         if (multi_file_load){
             for (int n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn node_load_from_n0(n);
             }
             cilk_sync;
-            printf("Training Data Load Done\n");
-            fflush(stdout);
-            double d_temp;
-            long l_temp;
-            for (long i = 0; i <= featureSetSize; i++) {
-                d_temp = 1.0;
-                d_temp /= (double) feat_deg_recip[0][i];
-                d_temp *= 16777216;
-                l_temp = (long) d_temp;
-                feat_deg_recip[0][i] = l_temp;
-            }
-            for (int n = 1; n < cluster_count; n++) {
-                cilk_migrate_hint(&data_read_buffer[0]);
-                cilk_spawn fdeg_copy2nodes(n);
-            }
-            printf("F degree dis Done\n");
-            fflush(stdout);
         } else {
-            MIGRATE(&model_vec[0]);
             populateTrainingData();
         }
-        MIGRATE(&model_vec[0]);
-        volatile uint64_t total_load_time = CLOCK() - start_load_time;
-        printf("Training Data Load Time: %lf\n", (double) total_load_time / 215000000);
-        fflush(stdout);
     } else {
-        MIGRATE(&model_vec_stripped[0]);
-        populateTrainingDataStripped();
-        printf("Load 1 Done\n");
-        fflush(stdout);
-        MIGRATE(&model_vec_stripped[0]);
+        populateTraining_featurepartitioned();
     }
+    volatile uint64_t total_load_time = CLOCK() - start_load_time;
+    printf("Training Data Load Time: %lf\n", (double) total_load_time / 215000000);
+    fflush(stdout);
+    MIGRATE(&test_s_stripped[0]);
+
+    double d_temp;
+    long l_temp;
+    for (long i = 0; i <= featureSetSize; i++) {
+        d_temp = 1.0;
+        d_temp /= (double) feat_deg_recip[0][i];
+        d_temp *= 16777216;
+        l_temp = (long) d_temp;
+        for (int n = 0; n < cluster_count; n++) {
+            feat_deg_recip[n][i] = l_temp;
+        }
+
+    }
+    printf("F degree dis Done\n");
+    fflush(stdout);
+
+    MIGRATE(&test_s_stripped[0]);
     populateTestDataStripped();
 
     printf("--- Initialization Complete ---\n");
