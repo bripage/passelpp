@@ -23,6 +23,8 @@ int main(int argc, char **argv) {
         //fflush(stdout);
         start_time = CLOCK();
         for (long epoch = 1; epoch <= epochs; epoch++) {
+            printf("Epoch %ld\n", epoch);
+            fflush(stdout);
             if (epoch > 1) {
                 beta_gamma *= gamma;
                 beta_gamma >>= 24;
@@ -31,7 +33,7 @@ int main(int argc, char **argv) {
             }
             for (long n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&model_vec[n]);
-                cilk_spawn train_spawn(n, epoch, eta_gamma, beta_gamma);
+                cilk_spawn train_spawn(n, eta_gamma, beta_gamma);
             }
             cilk_sync;
         }

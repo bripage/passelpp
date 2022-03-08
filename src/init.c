@@ -152,6 +152,8 @@ void parse_args(int argc, char * argv[]) {
 
     //printf("--- Parsing Arguments Complete ---\n");
     //fflush(stdout);
+    printf("Update Period: %ld\n", update_period);
+    fflush(stdout)
 }
 
 void node_load_from_n0(long t) {

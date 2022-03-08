@@ -31,18 +31,14 @@ void upstream_update(long i, long n, long u, long beta_gamma){
     }
 }
 
-void train_spawn(long n, long epoch, long eta_gamma, long beta_gamma){
-    long end_sample_count = cluster_samples[n] * epoch;
-    printf("%ld, %ld, cluster_samples[%ld]: %ld, end_sample_count = %ld\n", n, epoch, n, cluster_samples[n], end_sample_count);
-    fflush(stdout);
-
+void train_spawn(long n, long eta_gamma, long beta_gamma){
     for (long i = 0; i < threads_per_cluster; i++) {
         cilk_migrate_hint(&model_vec[n]);
-        cilk_spawn train(i, n, eta_gamma, beta_gamma, end_sample_count);
+        cilk_spawn train(i, n, eta_gamma, beta_gamma,);
     }
 }
 
-void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sample_count) {
+void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
     //printf("%ld/%ld Starting on %ld\n", n, thread_id, NODE_ID());
     //fflush(stdout);
     long* l_working_vec = working_vec[n];
@@ -66,7 +62,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
     unsigned long sample;
 
     if (cluster_count == 1){
-        while (ATOMIC_ADDMS(&total_evaluated_sample_count[n],1) < end_sample_count) {
+        while (ATOMIC_ADDM(&total_evaluated_sample_count[n], 1) < cluster_samples[n]) {
             sample = rand_state;
             sample ^= sample >> 12; // a
             sample ^= sample << 25; // b
@@ -104,7 +100,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             }
         }
     } else {
-        while (ATOMIC_ADDMS(&total_evaluated_sample_count[n], 1) < end_sample_count) {
+        while (ATOMIC_ADDM(&total_evaluated_sample_count[n], 1) < cluster_samples[n]) {
             if (token[n] == 1){
                 if (ATOMIC_ADDM(&samples_since_token[n], 1) == update_period){
                     ATOMIC_SWAP(&token[n], 0);
@@ -119,7 +115,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                     cilk_sync;
                     printf("%ld updated %ld\n", n, upstream[n]);
                     fflush(stdout);
-                    token[upstream[n]] = 1;   // pass token to upstream cluster
+                    ATOMIC_SWAP(&token[upstream[n]], 1);   // pass token to upstream cluster
                     ATOMIC_SWAP(&samples_since_token[n], 0);
                 }
             }
@@ -161,7 +157,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
             }
         }
     }
-
+    ATOMIC_SWAP(&total_evaluated_sample_count[n], 0);
     //printf("%ld/%ld Done\n", n, thread_id);
     //fflush(stdout);
 }
