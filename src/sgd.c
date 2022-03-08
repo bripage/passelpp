@@ -117,6 +117,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma, long end_sam
                         cilk_spawn downstream_update(i, upstream[n], n);
                     }
                     cilk_sync;
+                    printf("%ld updated %ld\n", n, upstream[n]);
+                    fflush(stdout);
                     token[upstream[n]] = 1;   // pass token to upstream cluster
                     ATOMIC_SWAP(&samples_since_token[n], 0);
                 }
