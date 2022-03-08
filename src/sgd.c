@@ -62,6 +62,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
     long i;
     long l_temp;
     long wv_temp;
+    long wv_orig;
+    long wv_new;
     unsigned long rand_state = 1337 + (1337 * thread_id);
     unsigned long sample;
 
@@ -149,19 +151,34 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 
             if (distance < 16777216) {
                 di = eta_gamma * class;
-                for (i = start; i < stop; i++) {
+                /*for (i = start; i < stop; i++) {
                     feature = l_train_f[i];
                     l_temp = (di * l_train_v[i]) >> 24;
                     wv_temp = l_working_vec[feature] + l_temp;
                     l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
                     l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }*/
+                for (long i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    l_temp = (di * l_train_v[i]) >> 24;
+                    wv_orig = l_working_vec[feature] + l_temp;
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    wv_new = (wv_orig * (16777216 - l_temp)) >> 24;
+                    REMOTE_ADD(&l_working_vec[feature], wv_new - wv_orig);
                 }
             } else {
-                for (i = start; i < stop; i++) {
+                /*for (i = start; i < stop; i++) {
                     feature = l_train_f[i];
                     wv_temp = l_working_vec[feature];
                     l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
                     l_working_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                }*/
+                for (long i = start; i < stop; i++) {
+                    feature = l_train_f[i];
+                    wv_orig = l_working_vec[feature];
+                    l_temp = (eta_gamma * l_feat_deg_recip[feature]) >> 24;
+                    wv_new = (wv_orig * (16777216 - l_temp)) >> 24;
+                    REMOTE_ADD(&l_working_vec[feature], wv_new - wv_orig);
                 }
             }
         }
