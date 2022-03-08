@@ -602,8 +602,8 @@ void populateTrainingData() {
 }
 
 void populateTrainingDataStripped() {
-    //printf("inside populate_stripped_data()\n");
-    //fflush(stdout);
+    printf("inside populate_stripped_data()\n");
+    fflush(stdout);
 
     long i, j = 0,
             sample = -1,
@@ -624,8 +624,8 @@ void populateTrainingDataStripped() {
     long *binBuffer;
     long bytesRead;
     points = non_zeros * 4;
-    //printf("points = %ld\n", points);
-    //fflush(stdout);
+    printf("points = %ld\n", points);
+    fflush(stdout);
 
 
     if (non_zeros > 30000000) {
@@ -684,13 +684,12 @@ void populateTrainingDataStripped() {
                     j++;
                     train_f_stripped[j] = feature;
                     train_v_stripped[j] = fixed_value;
-                    feat_deg_recip_stripped[feature]++;
                     current_sample = sample;
                 } else {
                     train_f_stripped[j] = feature;
                     train_v_stripped[j] = fixed_value;
-                    feat_deg_recip_stripped[feature]++;
                 }
+                feat_deg_recip_stripped[feature]++;
                 j++;
             }
 
@@ -766,12 +765,11 @@ void populateTrainingDataStripped() {
                 j++;
                 train_f_stripped[j] = feature;
                 train_v_stripped[j] = fixed_value;
-                feat_deg_recip_stripped[feature]++;
             } else {
                 train_f_stripped[j] = feature;
                 train_v_stripped[j] = fixed_value;
-                feat_deg_recip_stripped[feature]++;
             }
+            feat_deg_recip_stripped[feature]++;
             j++;
         }
 
@@ -781,8 +779,8 @@ void populateTrainingDataStripped() {
     fclose(train_data);
     free(binBuffer);
 
-    //("SAMPLE COUNT: %ld\n", sample_count);
-    //fflush(stdout);
+    printf("SAMPLE COUNT: %ld\n", sample_count);
+    fflush(stdout);
 
     double d_temp;
     long l_temp;
@@ -794,8 +792,8 @@ void populateTrainingDataStripped() {
         feat_deg_recip_stripped[i] = l_temp;
     }
 
-    //printf("populate_data() done\n");
-    //fflush(stdout);
+    printf("populate_data() done\n");
+    fflush(stdout);
 }
 
 void init_cluster(long n) {
@@ -985,14 +983,17 @@ void init() {
             MIGRATE(&model_vec[0]);
             populateTrainingData();
         }
+        MIGRATE(&model_vec[0]);
         volatile uint64_t total_load_time = CLOCK() - start_load_time;
         printf("Training Data Load Time: %lf\n", (double) total_load_time / 215000000);
         fflush(stdout);
     } else {
         MIGRATE(&model_vec_stripped[0]);
         populateTrainingDataStripped();
+        printf("Load 1 Done\n");
+        fflush(stdout);
+        MIGRATE(&model_vec_stripped[0]);
     }
-    MIGRATE(&model_vec[0]);
     populateTestDataStripped();
 
     printf("--- Initialization Complete ---\n");

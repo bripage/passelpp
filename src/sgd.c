@@ -194,25 +194,7 @@ void stripped_train_no_epochs_spawn_children(long tid) {
             stop = train_s_stripped[sample + 1];
             class = train_c_stripped[sample];
             di = eta_gamma * class;
-            /*
-            for (i = start; i < stop; i++) {
-                feature = train_f_stripped[i];
-                distance += (train_v_stripped[i] * model_vec_stripped[feature]) >> 24;
-            }
-                         distance *= class;
 
-            if (distance < 16777216){
-                for (i = start; i < stop; i++) {
-                    cilk_migrate_hint(&train_v_stripped[i]);
-                    cilk_spawn child_train_neg_gradient(i, eta_gamma, di);
-                }
-            } else {
-                for (i = start; i < stop; i++) {
-                    cilk_migrate_hint(&train_v_stripped[i]);
-                    cilk_spawn child_train_pos_gradient(i, eta_gamma);
-                }
-            }
-            */
             for (long n = 0; n < node_count; n++) {
                 for (i = start + n; i < stop; i += node_count) {
                     feature = train_f_stripped[i];
@@ -236,22 +218,6 @@ void stripped_train_no_epochs_spawn_children(long tid) {
         eta_gamma >>= 24;
         thread_id = tid;
     }
-}
-
-void child_train_pos_gradient(long i, long eta_gamma) {
-    long feature = train_f_stripped[i];
-    long mv_temp = model_vec_stripped[feature];
-    long l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
-}
-
-
-void child_train_neg_gradient(long i, long eta_gamma, long di) {
-    long feature = train_f_stripped[i];
-    long l_temp = (di * train_v_stripped[i]) >> 24;
-    long mv_temp = model_vec_stripped[feature] + l_temp;
-    l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-    model_vec_stripped[feature] = (mv_temp * (16777216 - l_temp)) >> 24;
 }
 
 void child_train_pos_2d(long start, long stop, long eta_gamma) {
