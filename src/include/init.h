@@ -59,12 +59,16 @@ replicated long** feat_deg_recip;
 replicated long** accuracies;
 replicated long** points_to_read;
 
-replicated long* gradients;
+replicated long* train_s_stripped;
+replicated long* train_f_stripped;
+replicated long* train_v_stripped;
+replicated long* train_c_stripped;
 replicated long* test_s_stripped;
 replicated long* test_f_stripped;
 replicated long* test_v_stripped;
 replicated long* test_c_stripped;
 replicated long* model_vec_stripped;
+replicated long* feat_deg_recip_stripped;
 replicated long* total_evaluated_sample_count;
 replicated long* cluster_samples;
 replicated long* upstream;
