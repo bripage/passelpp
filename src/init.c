@@ -125,7 +125,7 @@ void parse_args(int argc, char * argv[]) {
         }
 
     }
-    if (rate != 0){
+    if (rate == 0){
         printf("[ERROR]: Clock Rate NOT Set!\n");
         fflush(stdout);
         exit(-1);
