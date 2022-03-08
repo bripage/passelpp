@@ -119,6 +119,7 @@ void parse_args(int argc, char * argv[]) {
         } else if (!strcmp(argv[i], "--multi-load")) {
             multi_load = 1;
         } else if (!strcmp(argv[i], "-r")) {
+            num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&clock_rate, num_arg);
             i++;
             rate = 1;
