@@ -105,7 +105,6 @@ std::cout << 1 << std::endl;
     std::cout << 4 << std::endl;
     fclose(data);
     free(binBuffer);
-    fclose(data);
 
     char *fname = (char*)malloc(strlen(splitPath) + 10);
     for (int64_t s = 0; s < splitCount; s++) {
