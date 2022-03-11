@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         std::vector <int64_t> tmpvec;
         split_contents.push_back(tmpvec);
     }
-
+std::cout << 1 << std::endl;
     int64_t i;
     long n;
     long assigned_node;
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
         printf("Failed to open training feature file.\n");
         exit(1);
     }
-
+    std::cout << 2 << std::endl;
     int64_t file_points;
     int64_t *binBuffer;
     int64_t bytesRead;
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
         printf("*** Feature File Read Failure ***\n");
         exit(1);
     }
-
+    std::cout << 3 << std::endl;
     int64_t class_val;
     int64_t feature;
     int64_t value;
@@ -103,14 +103,14 @@ int main(int argc, char **argv) {
         split_contents[assigned_node].push_back(value);
         split_contents[assigned_node].push_back(class_val);
     }
-
+    std::cout << 4 << std::endl;
     fclose(data);
     free(binBuffer);
     fclose(data);
 
     char *fname = (char*)malloc(strlen(splitPath) + 10);
     for (int64_t s = 0; s < splitCount; s++) {
-        sprintf(fname, "%sp%ld.bin", splitPath, i);
+        sprintf(fname, "%sp%ld.bin", splitPath, s);
         FILE* split_file = fopen(fname, "ab");
 
         for (i = 0; i < split_contents[assigned_node].size(); i++) {
