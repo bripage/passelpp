@@ -1,0 +1,128 @@
+/*
+ * CSV2BIN: This utility program will read in a 3 column csv file and output its contents to binary.
+ *          Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit integer
+ *          (int64_t) datatype.
+ *
+ * Author: Brian Page
+ */
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <unistd.h>
+#include "stdint.h"
+
+int main(int argc, char **argv) {
+    std::string argTemp;
+    std::string fileName;
+    std::string splitPath;
+    int splitType;
+    int splitCount;
+
+    for (int i = 1; i < argc; i = i + 2) {
+        argTemp = argv[i];
+        if (argTemp == "-i") {
+            // load data file.
+            fileName = argv[i + 1];
+        } else if (argTemp == "-o") {
+            // save split files to path
+            splitPath = argv[i + 1];
+        } else if (argTemp == "-s") {
+            // split count
+            splitPath = argv[i + 1];
+        } else if (argTemp == "-t") {
+            // split type
+            splitPath = argv[i + 1];
+        } else if (argTemp == "--help") {
+            printf("CSV2BIN: This utility program will read in a 3 column csv file and output its contents to"
+                   "binary. Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit"
+                   "integer (int64_t) datatype.\n\n");
+            printf("Usage: ./csv2bin [OPTION] <argument> ...\n");
+            printf("Options:\n");
+            printf("-i <file> \tInput filename (assumes csv structure is: sample_id,feature_id,feature_value)\n");
+            printf("-o <file path> \tOutput file path\n");
+            printf("-s <Num splits> \tSplit Count\n");
+            printf("-t <0|1> \tSplit Type: 0 = Contiguous row (bin packed), 1 = Feature Partitioned\n");
+            exit(0);
+        } else {
+            printf("%s Is not a valid parameter. Try --help for more information.\n EXITING!\n", argv[i]);
+            exit(0);
+        }
+    }
+
+    std::vector <std::vector<int64_t>> split_contents;
+    for (int i = 0; i < splitCount; i++) {
+        std::vector <int64_t> tmpvec;
+        split_contents.push_back(tmpvec);
+    }
+
+    std::vector<FILE*> split_file_ptrs;
+    for (int i = 0; i < splitCount; i++){
+        std::string fname = "p" + i +".bin"
+        split_file_ptrs.push_back(fopen(fname.c_str(), "ab"));
+    }
+
+    std::cout << "feature file opened" << std::endl;
+    int64_t i;
+    long n;
+    long assigned_node;
+    FILE *data = fopen(fileName.c_str(), "rb");
+    if (data == NULL) {
+        printf("Failed to open training feature file.\n");
+        exit(1);
+    }
+
+    int64_t file_points;
+    int64_t *binBuffer;
+    int64_t bytesRead;
+    fseek(file_ptr, 0, SEEK_END);
+    int64_t num_bytes = ftell(file_ptr);
+    file_points = num_bytes / 8;
+    fseek(file_ptr, 0, SEEK_SET);
+    printf("node%ld non-zeros = %ld\n", t, file_points / 4);
+    fflush(stdout);
+    binBuffer = (int64_t *) malloc(file_points * sizeof(int64_t));
+    bytesRead = fread(binBuffer, sizeof(int64_t), file_points, data);
+    if (bytesRead != (file_points)) {
+        printf("*** Feature File Read Failure ***\n");
+        exit(1);
+    }
+
+    int64_t class_val;
+    int64_t feature;
+    int64_t value;
+    int64_t sample = -1;
+    int64_t sample_count = -1;
+    int64_t current_sample = -1;
+
+    for (i = 0; i < file_points; i += 4) {
+        sample = binBuffer[i];
+        feature = binBuffer[i + 1] - 1;
+        fixed_value = binBuffer[i + 2];
+        class_val = binBuffer[i + 3];
+        assigned_node = feature % node_count;
+
+        split_contents[assigned_node].push_back(sample);
+        split_contents[assigned_node].push_back(feature);
+        split_contents[assigned_node].push_back(fixed_value);
+        split_contents[assigned_node].push_back(class_val);
+    }
+
+    fclose(data);
+    free(binBuffer);
+	infile.close();
+
+    for (int64_t s = 0; s < splitCount; s++) {
+        std::string fname = splitPath + "p" + i +".bin"
+        FILE* split_file = fopen(fname.c_str(), "ab");
+
+        for (i = 0; i < split_contents[assigned_node].size(); i++) {
+            fwrite(&buffer[i], sizeof(int64_t), 1, fout);
+        }
+        fclose(split_file);
+    }
+
+	std::cout << "Done!" << std::endl;
+	return 0;
+}
