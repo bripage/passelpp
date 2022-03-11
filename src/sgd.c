@@ -224,12 +224,12 @@ void get_partial_gradient(long n, long tid, long sample){
             printf("nnz %ld/%ld\n", i, train_sample_count);
             fflush(stdout);
         }
-        feature = local_train_f[i];
+        //feature = local_train_f[i];
         if (feature >= featureSetSize){
             printf("feature %ld/%ld\n", feature, featureSetSize);
             fflush(stdout);
         }
-        ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
+        //ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
     }
 }
 

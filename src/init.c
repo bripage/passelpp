@@ -367,8 +367,8 @@ void featpart_node_load_from_n0(long t) {
         printf("Failed to open training feature file.\n");
         exit(1);
     }
-    printf("1\n");
-    fflush(stdout);
+    //printf("1\n");
+    //fflush(stdout);
     fseek(file_ptr, 0, SEEK_END);
     num_bytes = ftell(file_ptr);
     file_points = num_bytes / 8;
