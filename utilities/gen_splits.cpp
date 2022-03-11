@@ -72,11 +72,10 @@ std::cout << 1 << std::endl;
     int64_t file_points;
     int64_t *binBuffer;
     int64_t bytesRead;
-    FILE *file_ptr;
-    fseek(file_ptr, 0, SEEK_END);
-    int64_t num_bytes = ftell(file_ptr);
+    fseek(data, 0, SEEK_END);
+    int64_t num_bytes = ftell(data);
     file_points = num_bytes / 8;
-    fseek(file_ptr, 0, SEEK_SET);
+    fseek(data, 0, SEEK_SET);
     binBuffer = (int64_t *) malloc(file_points * sizeof(int64_t));
     bytesRead = fread(binBuffer, sizeof(int64_t), file_points, data);
     if (bytesRead != (file_points)) {
