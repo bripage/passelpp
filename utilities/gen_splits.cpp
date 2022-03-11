@@ -25,18 +25,18 @@ int main(int argc, char **argv) {
         argTemp = argv[i];
         if (argTemp == "-i") {
             // load data file.
-            test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
+            fileName = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(fileName, argv[i + 1]);
         } else if (argTemp == "-o") {
             // save split files to path
-            test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
+            splitPath = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(splitPath, argv[i + 1]);
         } else if (argTemp == "-s") {
             // split count
-            splitPath = argv[i + 1];
+            splitCount = argv[i + 1];
         } else if (argTemp == "-t") {
             // split type
-            splitPath = argv[i + 1];
+            splitType = argv[i + 1];
         } else if (argTemp == "--help") {
             printf("CSV2BIN: This utility program will read in a 3 column csv file and output its contents to"
                    "binary. Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit"
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     int64_t i;
     long n;
     long assigned_node;
-    FILE *data = fopen(fileName.c_str(), "rb");
+    FILE *data = fopen(fileName, "rb");
     if (data == NULL) {
         printf("Failed to open training feature file.\n");
         exit(1);
