@@ -33,10 +33,10 @@ int main(int argc, char **argv) {
             strcpy(splitPath, argv[i + 1]);
         } else if (argTemp == "-s") {
             // split count
-            splitCount = argv[i + 1];
+            splitCount = atoi(argv[i + 1]);
         } else if (argTemp == "-t") {
             // split type
-            splitType = argv[i + 1];
+            splitType = atoi(argv[i + 1]);
         } else if (argTemp == "--help") {
             printf("CSV2BIN: This utility program will read in a 3 column csv file and output its contents to"
                    "binary. Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit"
