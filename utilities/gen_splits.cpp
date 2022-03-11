@@ -16,8 +16,8 @@
 
 int main(int argc, char **argv) {
     std::string argTemp;
-    std::string fileName;
-    std::string splitPath;
+    char* fileName;
+    char* splitPath;
     int splitType;
     int splitCount;
 
@@ -25,10 +25,12 @@ int main(int argc, char **argv) {
         argTemp = argv[i];
         if (argTemp == "-i") {
             // load data file.
-            fileName = argv[i + 1];
+            test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
+            strcpy(fileName, argv[i + 1]);
         } else if (argTemp == "-o") {
             // save split files to path
-            splitPath = argv[i + 1];
+            test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
+            strcpy(splitPath, argv[i + 1]);
         } else if (argTemp == "-s") {
             // split count
             splitPath = argv[i + 1];
@@ -75,8 +77,6 @@ int main(int argc, char **argv) {
     int64_t num_bytes = ftell(file_ptr);
     file_points = num_bytes / 8;
     fseek(file_ptr, 0, SEEK_SET);
-    printf("node%ld non-zeros = %ld\n", t, file_points / 4);
-    fflush(stdout);
     binBuffer = (int64_t *) malloc(file_points * sizeof(int64_t));
     bytesRead = fread(binBuffer, sizeof(int64_t), file_points, data);
     if (bytesRead != (file_points)) {
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 
     fclose(data);
     free(binBuffer);
-    data.close();
+    fclose(data);
 
     char *fname = malloc(strlen(splitPath) + 10);
     for (int64_t s = 0; s < splitCount; s++) {
