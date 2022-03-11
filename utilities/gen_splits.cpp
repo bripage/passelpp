@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
     free(binBuffer);
     fclose(data);
 
-    char *fname = malloc(strlen(splitPath) + 10);
+    char *fname = (char*)malloc(strlen(splitPath) + 10);
     for (int64_t s = 0; s < splitCount; s++) {
         sprintf(fname, "%sp%ld.bin", splitPath, i);
         FILE* split_file = fopen(fname, "ab");
