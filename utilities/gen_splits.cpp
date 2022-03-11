@@ -57,13 +57,6 @@ int main(int argc, char **argv) {
         split_contents.push_back(tmpvec);
     }
 
-    std::vector<FILE*> split_file_ptrs;
-    for (int i = 0; i < splitCount; i++){
-        std::string fname = "p" + i +".bin"
-        split_file_ptrs.push_back(fopen(fname.c_str(), "ab"));
-    }
-
-    std::cout << "feature file opened" << std::endl;
     int64_t i;
     long n;
     long assigned_node;
@@ -114,8 +107,9 @@ int main(int argc, char **argv) {
 	infile.close();
 
     for (int64_t s = 0; s < splitCount; s++) {
-        std::string fname = splitPath + "p" + i +".bin"
-        FILE* split_file = fopen(fname.c_str(), "ab");
+        char *fname = malloc(strlen(train_data_path) + 10);
+        sprintf(fname, "%sp%ld.bin", splitPath, i)
+        FILE* split_file = fopen(fname, "ab");
 
         for (i = 0; i < split_contents[assigned_node].size(); i++) {
             fwrite(&buffer[i], sizeof(int64_t), 1, fout);
