@@ -498,6 +498,7 @@ void featpart_node_load_from_n0(long t) {
     free(data_read_buffer[0][t]);
     //printf("8\n");
     //fflush(stdout);
+    node_nnzs[t] = j-1;
 }
 
 void populateTrainingData() {
@@ -983,6 +984,9 @@ void init() {
 
         l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
         mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
+
+        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
+        mw_replicated_init((long *) &node_nnzs, (long) l1d_ptr);
     }
 
     l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
@@ -1021,6 +1025,9 @@ void init() {
         }
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
+        }
+        for (long i = 0; i < node_count; i++){
+            node_nnzs[i] = 0;
         }
     }
 

@@ -48,6 +48,7 @@ extern replicated long* cluster_samples;
 extern replicated long* upstream;
 extern replicated long* token;
 extern replicated long* samples_since_token;
+extern replicated long* node_nnzs;
 
 void train_spawn(long n, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma);
