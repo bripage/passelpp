@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 #include <fstream>
 #include <unistd.h>
 #include "stdint.h"
@@ -69,6 +70,7 @@ int main(int argc, char **argv) {
     int64_t file_points;
     int64_t *binBuffer;
     int64_t bytesRead;
+    FILE *file_ptr;
     fseek(file_ptr, 0, SEEK_END);
     int64_t num_bytes = ftell(file_ptr);
     file_points = num_bytes / 8;
@@ -92,27 +94,27 @@ int main(int argc, char **argv) {
     for (i = 0; i < file_points; i += 4) {
         sample = binBuffer[i];
         feature = binBuffer[i + 1] - 1;
-        fixed_value = binBuffer[i + 2];
+        value = binBuffer[i + 2];
         class_val = binBuffer[i + 3];
-        assigned_node = feature % node_count;
+        assigned_node = feature % splitCount;
 
         split_contents[assigned_node].push_back(sample);
         split_contents[assigned_node].push_back(feature);
-        split_contents[assigned_node].push_back(fixed_value);
+        split_contents[assigned_node].push_back(value);
         split_contents[assigned_node].push_back(class_val);
     }
 
     fclose(data);
     free(binBuffer);
-	infile.close();
+    data.close();
 
+    char *fname = malloc(strlen(splitPath) + 10);
     for (int64_t s = 0; s < splitCount; s++) {
-        char *fname = malloc(strlen(train_data_path) + 10);
-        sprintf(fname, "%sp%ld.bin", splitPath, i)
+        sprintf(fname, "%sp%ld.bin", splitPath, i);
         FILE* split_file = fopen(fname, "ab");
 
         for (i = 0; i < split_contents[assigned_node].size(); i++) {
-            fwrite(&buffer[i], sizeof(int64_t), 1, fout);
+            fwrite(&split_contents[assigned_node][i], sizeof(int64_t), 1, split_file);
         }
         fclose(split_file);
     }
