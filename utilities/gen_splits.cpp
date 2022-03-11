@@ -96,7 +96,8 @@ int main(int argc, char **argv) {
         assigned_node = feature % splitCount;
 
         if (sample != current_sample){
-            current_sample++;
+            sample_count++;
+            current_sample = sample;
             split_contents[assigned_node].push_back(sample);
             split_contents[assigned_node].push_back(0);
             split_contents[assigned_node].push_back(0);
