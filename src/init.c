@@ -454,8 +454,8 @@ void featpart_node_load_from_n0(long t) {
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
         //printf("4\n");
         //fflush(stdout);
-        printf("file_points = %ld\n", file_points);
-        fflush(stdout);
+        //printf("file_points = %ld\n", file_points);
+        //fflush(stdout);
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
             class = data_buffer[i + 3];
@@ -885,7 +885,7 @@ void init() {
 
     if (using_clusters) {
         //long non_zeros_per_node = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
-        mw_replicated_init((long) &non_zeros_per_node, (long) ceil(1.10 * ((double) total_train_points / (double) cluster_count));
+        mw_replicated_init((long) &non_zeros_per_node, (long) ceil(1.10 * ((double) total_train_points / (double) cluster_count)));
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
@@ -947,7 +947,7 @@ void init() {
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
         //long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
-        mw_replicated_init((long) &non_zeros_per_node, (long) ceil(2 * ((double) total_train_points / (double) node_count));
+        mw_replicated_init((long) &non_zeros_per_node, (long) ceil(2 * ((double) total_train_points / (double) node_count)));
         printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
