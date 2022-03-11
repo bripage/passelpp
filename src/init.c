@@ -338,6 +338,8 @@ void node_load_from_n0(long t) {
 }
 
 void featpart_node_load_from_n0(long t) {
+    printf("thread %ld\n", t);
+    fflush(stdout);
     long i;
     long j = 0;
     long sample = -1;
