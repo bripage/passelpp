@@ -13,7 +13,7 @@ csv2bin:
 	$(CC) -O3 -o csv2bin csv2bin.cpp
 
 splitgen:
-	$(CC) -O3 -o splitgen gen_splts.cpp
+	$(CC) -O3 -o splitgen gen_splits.cpp
 
 clean:
 	rm -f shuffle
