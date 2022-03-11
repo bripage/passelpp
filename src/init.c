@@ -359,9 +359,6 @@ void featpart_node_load_from_n0(long t) {
     long* data_buffer = data_read_buffer[0][t];
     char *fname = malloc(strlen(train_data_path) + 10);
     sprintf(fname, "%sp%ld.bin", train_data_path, t);
-    printf("node%ld filename = %s\n", t, fname);
-    fflush(stdout);
-
     file_ptr = fopen(fname, "rb");
     if (file_ptr == NULL) {
         printf("Failed to open training feature file.\n");
@@ -372,8 +369,6 @@ void featpart_node_load_from_n0(long t) {
     num_bytes = ftell(file_ptr);
     file_points = num_bytes / 8;
     fseek(file_ptr, 0, SEEK_SET);
-    printf("node%ld non-zeros = %ld\n", t, file_points / 4);
-    fflush(stdout);
     if (file_points / 4 >= non_zeros_per_cluster){
         printf("node%ld: file larger than allocated space %ld >= $ld\n", t, file_points / 4, non_zeros_per_cluster);
         fflush(stdout);
@@ -388,9 +383,6 @@ void featpart_node_load_from_n0(long t) {
             chunk_count++;
         }
     }
-
-    printf("Done opening files\n");
-    fflush(stdout);
 
     if (using_chunk_loading) {
         for (long c = 0; c < chunk_count; c++) {
@@ -453,8 +445,6 @@ void featpart_node_load_from_n0(long t) {
             }
         }
     } else {
-        printf("Chunk Loading: FALSE\n");
-        fflush(stdout);
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
 
         for (i = 0; i < file_points; i += 4) {
@@ -489,13 +479,9 @@ void featpart_node_load_from_n0(long t) {
     }
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
-    printf("Done reading in data\n");
-    fflush(stdout);
 
     fclose(file_ptr);
     free(data_read_buffer[0][t]);
-    printf("Done freeing temp arrays\n");
-    fflush(stdout);
 }
 
 void populateTrainingData() {
