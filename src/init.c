@@ -454,7 +454,7 @@ void featpart_node_load_from_n0(long t) {
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
         printf("4\n");
         fflush(stdout);
-        printf("file_points = %ld\n");
+        printf("file_points = %ld\n", file_points);
         fflush(stdout);
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
