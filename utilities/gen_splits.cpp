@@ -116,8 +116,8 @@ int main(int argc, char **argv) {
         sprintf(fname, "%sp%ld.bin", splitPath, s);
         FILE* split_file = fopen(fname, "ab");
 
-        for (i = 0; i < split_contents[assigned_node].size(); i++) {
-            fwrite(&split_contents[assigned_node][i], sizeof(int64_t), 1, split_file);
+        for (i = 0; i < split_contents[s].size(); i++) {
+            fwrite(&split_contents[s][i], sizeof(int64_t), 1, split_file);
         }
         fclose(split_file);
     }
