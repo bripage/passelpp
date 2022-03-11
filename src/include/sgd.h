@@ -41,6 +41,7 @@ extern replicated long** train_c;           // training sample classes (single v
 
 extern replicated long* gradients;
 extern replicated long* model_vec_stripped;
+extern replicated long* feat_deg_recip_stripped;
 extern replicated long* total_evaluated_sample_count;
 extern replicated long* cluster_samples;
 extern replicated long* upstream;

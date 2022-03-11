@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         std::vector <int64_t> tmpvec;
         split_contents.push_back(tmpvec);
     }
-std::cout << 1 << std::endl;
+
     int64_t i;
     long n;
     long assigned_node;
@@ -68,7 +68,6 @@ std::cout << 1 << std::endl;
         printf("Failed to open training feature file.\n");
         exit(1);
     }
-    std::cout << 2 << std::endl;
     int64_t file_points;
     int64_t *binBuffer;
     int64_t bytesRead;
@@ -82,11 +81,10 @@ std::cout << 1 << std::endl;
         printf("*** Feature File Read Failure ***\n");
         exit(1);
     }
-    std::cout << 3 << std::endl;
     int64_t class_val;
     int64_t feature;
     int64_t value;
-    int64_t sample = -1;
+    int64_t sample;
     int64_t sample_count = -1;
     int64_t current_sample = -1;
 
@@ -97,12 +95,19 @@ std::cout << 1 << std::endl;
         class_val = binBuffer[i + 3];
         assigned_node = feature % splitCount;
 
+        if (sample != current_sample){
+            current_sample++;
+            split_contents[assigned_node].push_back(sample);
+            split_contents[assigned_node].push_back(0);
+            split_contents[assigned_node].push_back(0);
+            split_contents[assigned_node].push_back(class_val);
+        }
+
         split_contents[assigned_node].push_back(sample);
         split_contents[assigned_node].push_back(feature);
         split_contents[assigned_node].push_back(value);
         split_contents[assigned_node].push_back(class_val);
     }
-    std::cout << 4 << std::endl;
     fclose(data);
     free(binBuffer);
 
