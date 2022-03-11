@@ -29,6 +29,7 @@ extern replicated long total_train_points;
 extern replicated long update_period;
 extern replicated long train_sample_count;
 extern replicated long node_count;
+extern replicated long non_zeros_per_node;
 
 /** Data allocation and misc globals */
 extern replicated long** model_vec;         // model vector for each node

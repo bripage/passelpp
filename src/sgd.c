@@ -164,6 +164,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 }
 
 void featured_partitioned_train(long tid) {
+
     long* local_train_c = train_c[NODE_ID()];
     long eta_gamma = eta;
     long class;
@@ -219,7 +220,15 @@ void get_partial_gradient(long n, long tid, long sample){
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+        if (i > non_zeros_per_node) {
+            printf("nnz %ld/%ld\n", i, train_sample_count);
+            fflush(stdout);
+        }
         feature = local_train_f[i];
+        if (feature >= featureSetSize){
+            printf("feature %ld/%ld\n", feature, featureSetSize);
+            fflush(stdout);
+        }
         ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
     }
 }

@@ -56,7 +56,7 @@ void parse_args(int argc, char * argv[]) {
             test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(test_feature_path, argv[i + 1]);
         } else if (!strcmp(argv[i], "-f")) {
-            num_arg = atoi(argv[i + 1]) + 1;
+            num_arg = atoi(argv[i + 1]);
             mw_replicated_init(&featureSetSize, num_arg);
             i++;
         } else if (!strcmp(argv[i], "--train-samples")) {
@@ -338,8 +338,8 @@ void node_load_from_n0(long t) {
 }
 
 void featpart_node_load_from_n0(long t) {
-    printf("thread %ld\n", t);
-    fflush(stdout);
+    //printf("thread %ld\n", t);
+    //fflush(stdout);
     long i;
     long j = 0;
     long sample = -1;
@@ -356,8 +356,8 @@ void featpart_node_load_from_n0(long t) {
     long file_points;
     long chunk_count;
     //long non_zeros_per_cluster = ceil(2.0 * ((double) total_train_points / (double) cluster_count));
-    printf("0\n");
-    fflush(stdout);
+    //printf("0\n");
+    //fflush(stdout);
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
     char *fname = malloc(strlen(train_data_path) + 10);
@@ -377,8 +377,8 @@ void featpart_node_load_from_n0(long t) {
     //    printf("node%ld: file larger than allocated space %ld >= $ld\n", t, file_points / 4, non_zeros_per_cluster);
     //    fflush(stdout);
     //}
-    printf("2\n");
-    fflush(stdout);
+    //printf("2\n");
+    //fflush(stdout);
     if (file_points > 16777216) {
         using_chunk_loading = 1;
         chunk_points = 16777216;
@@ -388,8 +388,8 @@ void featpart_node_load_from_n0(long t) {
             chunk_count++;
         }
     }
-    printf("3\n");
-    fflush(stdout);
+    //printf("3\n");
+    //fflush(stdout);
     if (using_chunk_loading) {
         for (long c = 0; c < chunk_count; c++) {
             printf("node%ld loading %ld/%ld\n", t, c, chunk_count);
@@ -452,8 +452,8 @@ void featpart_node_load_from_n0(long t) {
         }
     } else {
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
-        printf("4\n");
-        fflush(stdout);
+        //printf("4\n");
+        //fflush(stdout);
         printf("file_points = %ld\n", file_points);
         fflush(stdout);
         for (i = 0; i < file_points; i += 4) {
@@ -486,18 +486,18 @@ void featpart_node_load_from_n0(long t) {
             }
         }
     }
-    printf("5\n");
-    fflush(stdout);
+    //printf("5\n");
+    //fflush(stdout);
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
-    printf("6\n");
-    fflush(stdout);
+    //printf("6\n");
+    //fflush(stdout);
     fclose(file_ptr);
-    printf("7\n");
-    fflush(stdout);
+    //printf("7\n");
+    //fflush(stdout);
     free(data_read_buffer[0][t]);
-    printf("8\n");
-    fflush(stdout);
+    //printf("8\n");
+    //fflush(stdout);
 }
 
 void populateTrainingData() {
@@ -884,7 +884,8 @@ void init() {
     }
 
     if (using_clusters) {
-        long non_zeros_per_node = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
+        //long non_zeros_per_node = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
+        mw_replicated_init((long) &non_zeros_per_node, (long) ceil(1.10 * ((double) total_train_points / (double) cluster_count));
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
@@ -945,7 +946,8 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
-        long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
+        //long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
+        mw_replicated_init((long) &non_zeros_per_node, (long) ceil(2 * ((double) total_train_points / (double) node_count));
         printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
