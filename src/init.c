@@ -1062,7 +1062,7 @@ void init() {
                 feat_deg_recip[n][i] = l_temp;
             }
         } else {
-            d_temp /= (double) feat_deg_recip[i];
+            d_temp /= (double) feat_deg_recip_stripped[i];
             d_temp *= 16777216;
             l_temp = (long) d_temp;
             feat_deg_recip_stripped[i] = l_temp;
