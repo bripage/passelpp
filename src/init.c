@@ -428,10 +428,8 @@ void featpart_node_load_from_n0(long t) {
                 if (sample != current_sample) {
                     sample_count++;
                     current_sample = sample;
-                    for (n = 0; n < node_count; n++) {
-                        train_s[t][sample_count] = data_placement[n];
-                        train_c[t][sample_count] = class;
-                    }
+                    train_s[t][sample_count] = j;
+                    train_c[t][sample_count] = class;
                 } else {
                     feature = data_buffer[i + 1] - 1;
                     fixed_value = data_buffer[i + 2];
@@ -459,16 +457,14 @@ void featpart_node_load_from_n0(long t) {
         fflush(stdout);
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
 
-        for (i = 0; i < points; i += 4) {
+        for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
             class = data_buffer[i + 3];
             if (sample != current_sample) {
                 sample_count++;
                 current_sample = sample;
-                for (n = 0; n < node_count; n++) {
-                    train_s[t][sample_count] = data_placement[n];
-                    train_c[t][sample_count] = class;
-                }
+                train_s[t][sample_count] = j;
+                train_c[t][sample_count] = class;
             } else {
                 feature = data_buffer[i + 1] - 1;
                 fixed_value = data_buffer[i + 2];
@@ -1069,7 +1065,7 @@ void init() {
             d_temp /= (double) feat_deg_recip[i];
             d_temp *= 16777216;
             l_temp = (long) d_temp;
-            feat_deg_recip[i] = l_temp;
+            feat_deg_recip_stripped[i] = l_temp;
         }
     }
     printf("F degree dis Done\n");
