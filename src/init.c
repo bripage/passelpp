@@ -423,20 +423,55 @@ void featpart_node_load_from_n0(long t) {
             }
 
             for (i = 0; i < chunk_points; i += 4) {
-                sample = binBuffer[i];
+                sample = data_buffer[i];
+                class = data_buffer[i + 3];
                 if (sample != current_sample) {
                     sample_count++;
                     current_sample = sample;
                     for (n = 0; n < node_count; n++) {
-                        train_s[n][sample_count] = data_placement[n];
-                        train_c[n][sample_count] = class;
+                        train_s[t][sample_count] = data_placement[n];
+                        train_c[t][sample_count] = class;
                     }
-                }
+                } else {
+                    feature = data_buffer[i + 1] - 1;
+                    fixed_value = data_buffer[i + 2];
 
-                feature = binBuffer[i + 1] - 1;
-                fixed_value = binBuffer[i + 2];
-                class = binBuffer[i + 3];
-                assigned_node = feature % node_count;
+                    if (non_standard_classes) {
+                        if (class == class1) {
+                            class = -1;
+                        } else if (class == class2) {
+                            class = 1;
+                        } else {
+                            printf("ERROR: Training Data classes do not match class range\n");
+                            fflush(stdout);
+                            exit(2);
+                        }
+                    }
+                    train_f[t][j] = feature;
+                    train_v[t][j] = fixed_value;
+                    feat_deg_recip_stripped[feature]++;
+                    j++;
+                }
+            }
+        }
+    } else {
+        printf("Chunk Loading: FALSE\n");
+        fflush(stdout);
+        bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
+
+        for (i = 0; i < points; i += 4) {
+            sample = data_buffer[i];
+            class = data_buffer[i + 3];
+            if (sample != current_sample) {
+                sample_count++;
+                current_sample = sample;
+                for (n = 0; n < node_count; n++) {
+                    train_s[t][sample_count] = data_placement[n];
+                    train_c[t][sample_count] = class;
+                }
+            } else {
+                feature = data_buffer[i + 1] - 1;
+                fixed_value = data_buffer[i + 2];
 
                 if (non_standard_classes) {
                     if (class == class1) {
@@ -449,65 +484,16 @@ void featpart_node_load_from_n0(long t) {
                         exit(2);
                     }
                 }
-                train_f[assigned_node][data_placement[assigned_node]] = feature;
-                train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
+                train_f[t][j] = feature;
+                train_v[t][j] = fixed_value;
                 feat_deg_recip_stripped[feature]++;
-                data_placement[assigned_node]++;
+                j++;
             }
         }
-    } else {
-        printf("Chunk Loading: FALSE\n");
-        fflush(stdout);
-        bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
-
-        for (i = 0; i < points; i += 4) {
-            sample = binBuffer[i];
-            if (sample != current_sample) {
-                sample_count++;
-                current_sample = sample;
-                for (n = 0; n < node_count; n++) {
-                    train_s[n][sample_count] = data_placement[n];
-                    train_c[n][sample_count] = class;
-                }
-            }
-
-            feature = binBuffer[i + 1] - 1;
-            fixed_value = binBuffer[i + 2];
-            class = binBuffer[i + 3];
-            assigned_node = feature % node_count;
-
-            if (non_standard_classes) {
-                if (class == class1) {
-                    class = -1;
-                } else if (class == class2) {
-                    class = 1;
-                } else {
-                    printf("ERROR: Training Data classes do not match class range\n");
-                    fflush(stdout);
-                    exit(2);
-                }
-            }
-
-            train_f[assigned_node][data_placement[assigned_node]] = feature;
-            train_v[assigned_node][data_placement[assigned_node]] = fixed_value;
-            feat_deg_recip_stripped[feature]++;
-            data_placement[assigned_node]++;
-        }
-        for (n = 0; n < node_count; n++) {
-            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
-            train_s[n][0] = 0;
-        }
-    }
-    printf("Done reading in data\n");
-    fflush(stdout);
-    if (sample_count+1 >= samples_per_cluster){
-        printf("node%ld: sample %ld >= $ld\n", t, sample_count+1, samples_per_cluster);
-        fflush(stdout);
     }
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
-    cluster_samples[t] = sample_count + 1;
-    printf("Done Finalizing Sample Pointers\n");
+    printf("Done reading in data\n");
     fflush(stdout);
 
     fclose(file_ptr);
