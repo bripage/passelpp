@@ -85,9 +85,8 @@ int main(int argc, char **argv) {
     int64_t feature;
     int64_t value;
     int64_t sample;
-    int64_t sample_count = -1;
+    int64_t sample_count = 0;
     int64_t current_sample = -1;
-
 
     for (i = 0; i < file_points; i += 4) {
         sample = binBuffer[i];
@@ -99,10 +98,12 @@ int main(int argc, char **argv) {
         if (sample != current_sample){
             sample_count++;
             current_sample = sample;
-            split_contents[assigned_node].push_back(sample);
-            split_contents[assigned_node].push_back(0);
-            split_contents[assigned_node].push_back(0);
-            split_contents[assigned_node].push_back(class_val);
+            for (int64_t s = 0; s < splitCount; s++) {
+                split_contents[assigned_node].push_back(sample);
+                split_contents[assigned_node].push_back(0);
+                split_contents[assigned_node].push_back(0);
+                split_contents[assigned_node].push_back(class_val);
+            }
         }
 
         split_contents[assigned_node].push_back(sample);
@@ -112,6 +113,8 @@ int main(int argc, char **argv) {
     }
     fclose(data);
     free(binBuffer);
+    printf("Sample Count: %ld\n", sample_count);
+    fflush(stdout);
 
     char *fname = (char*)malloc(strlen(splitPath) + 10);
     for (int64_t s = 0; s < splitCount; s++) {
