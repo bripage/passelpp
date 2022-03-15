@@ -184,10 +184,10 @@ void featured_partitioned_train(long tid) {
             sample %= train_sample_count;
 
             class = local_train_c[sample];
-            for (long n = 0; n < node_count; n++) {
-                cilk_migrate_hint(&train_v[n]);
-                cilk_spawn get_partial_gradient(n, tid, sample);
-            }
+            //for (long n = 0; n < node_count; n++) {
+            //    cilk_migrate_hint(&train_v[n]);
+                cilk_spawn get_partial_gradient(0, 0, sample);
+            //}
             cilk_sync;
             gradients[tid] *= class;
 /*

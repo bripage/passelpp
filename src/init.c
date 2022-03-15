@@ -1052,11 +1052,11 @@ void init() {
         }
     } else {
         if (multi_file_load){
-            for (int n = 0; n < cluster_count; n++) {
-                cilk_migrate_hint(&data_read_buffer[0]);
-                cilk_spawn featpart_node_load_from_n0(n);
-            }
-            cilk_sync;
+            //for (int n = 0; n < cluster_count; n++) {
+            //    cilk_migrate_hint(&data_read_buffer[0]);
+                cilk_spawn featpart_node_load_from_n0(0);
+            //}
+            //cilk_sync;
         } else {
             populateTraining_featurepartitioned();
         }
