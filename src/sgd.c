@@ -224,7 +224,7 @@ void get_partial_gradient(long n, long tid, long sample){
             printf("trais_s[%ld] = %ld >= %ld\n", sample, train_s[n][sample], node_nnzs[n]);
             fflush(stdout);
         }
-        feature = local_train_f[i];
+        //feature = local_train_f[i];
         //if (feature >= featureSetSize){
         //    printf("feature %ld/%ld\n", feature, featureSetSize);
         //    fflush(stdout);
