@@ -849,6 +849,8 @@ void populateTraining_featurepartitioned() {
 
     printf("populate_data() done\n");
     fflush(stdout);
+    printf("%ld samples read\n", sample_count);
+    fflush(stdout);
 }
 
 void init_cluster(long n) {
