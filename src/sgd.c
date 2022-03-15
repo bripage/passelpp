@@ -219,18 +219,18 @@ void get_partial_gradient(long n, long tid, long sample){
     long feature;
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
-    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
-        if (i >= node_nnzs[n]) {
-            printf("nnz %ld >= %ld\n", i, node_nnzs[n]);
+    //for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+        if (train_s[n][sample] >= node_nnzs[n]) {
+            printf("trais_s[%ld] = %ld >= %ld\n", sample, train_s[n][sample], node_nnzs[n]);
             fflush(stdout);
         }
-        feature = local_train_f[i];
+        //feature = local_train_f[i];
         //if (feature >= featureSetSize){
         //    printf("feature %ld/%ld\n", feature, featureSetSize);
         //    fflush(stdout);
         //}
         //ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
-    }
+    //}
 }
 
 void child_train_pos(long n, long sample, long eta_gamma) {
