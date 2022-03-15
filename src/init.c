@@ -379,6 +379,7 @@ void featpart_node_load_from_n0(long t) {
     //}
     //printf("2\n");
     //fflush(stdout);
+    /*
     if (file_points > 16777216) {
         using_chunk_loading = 1;
         chunk_points = 16777216;
@@ -451,6 +452,7 @@ void featpart_node_load_from_n0(long t) {
             }
         }
     } else {
+     */
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
         //printf("4\n");
         //fflush(stdout);
@@ -489,9 +491,9 @@ void featpart_node_load_from_n0(long t) {
                 j++;
             }
         }
-    }
-    //printf("5\n");
-    //fflush(stdout);
+    //}
+    printf("%ld samples read\n", sample_count);
+    fflush(stdout);
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
     //printf("6\n");
