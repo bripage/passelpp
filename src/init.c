@@ -463,6 +463,10 @@ void featpart_node_load_from_n0(long t) {
                 sample_count++;
                 current_sample = sample;
                 train_s[t][sample_count] = j;
+                if (train_s[t][sample_count] > 300000){
+                    printf("ERROR: train_s[%ld][%ld]: %ld\n", t, sample_count, train_s[t][sample_count]);
+                    fflush(stdout);
+                }
                 train_c[t][sample_count] = class;
             } else {
                 feature = data_buffer[i + 1] - 1;
