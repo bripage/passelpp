@@ -190,7 +190,7 @@ void featured_partitioned_train(long tid) {
             }
             cilk_sync;
             gradients[tid] *= class;
-/*
+
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
@@ -204,7 +204,7 @@ void featured_partitioned_train(long tid) {
                 }
             }
             cilk_sync;
-*/
+
             gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
