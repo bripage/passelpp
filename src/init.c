@@ -465,17 +465,8 @@ long sample_markers = 0;
             if (sample != current_sample) {
                 sample_count++;
                 current_sample = sample;
-    
-    
-if ((data_buffer[i+1] - 1) == 0 && (data_buffer[i+2] == 0)){
-        sample_markers++;
-}
 
-		train_s[t][sample_count] = j;
-                if (train_s[t][sample_count] > 300000){
-                    printf("ERROR: train_s[%ld][%ld]: %ld\n", t, sample_count, train_s[t][sample_count]);
-                    fflush(stdout);
-                }
+		        train_s[t][sample_count] = j;
                 train_c[t][sample_count] = class;
             } else {
                 feature = data_buffer[i + 1] - 1;
@@ -498,10 +489,6 @@ if ((data_buffer[i+1] - 1) == 0 && (data_buffer[i+2] == 0)){
             }
         }
     //}
-    printf("%ld samples read\n", sample_count);
-    fflush(stdout);
-    printf("Sample markers found: %ld\n", sample_markers);
-    fflush(stdout);
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
     //printf("6\n");
@@ -1064,11 +1051,12 @@ void init() {
         }
     } else {
         if (multi_file_load){
-            //for (int n = 0; n < cluster_count; n++) {
-            //    cilk_migrate_hint(&data_read_buffer[0]);
-                cilk_spawn featpart_node_load_from_n0(0);
-            //}
-            //cilk_sync;
+            for (int n = 0; n < cluster_count; n++) {
+                cilk_migrate_hint(&data_read_buffer[0]);
+                cilk_spawn
+                featpart_node_load_from_n0(n);
+            }
+            cilk_sync;
         } else {
             populateTraining_featurepartitioned();
         }

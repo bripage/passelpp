@@ -184,10 +184,10 @@ void featured_partitioned_train(long tid) {
             sample %= train_sample_count;
 
             class = local_train_c[sample];
-            //for (long n = 0; n < node_count; n++) {
-            //    cilk_migrate_hint(&train_v[n]);
-                cilk_spawn get_partial_gradient(0, 0, sample);
-            //}
+            for (long n = 0; n < node_count; n++) {
+                cilk_migrate_hint(&train_v[n]);
+                cilk_spawn get_partial_gradient(n, tid, sample);
+            }
             cilk_sync;
             gradients[tid] *= class;
 /*
@@ -219,18 +219,10 @@ void get_partial_gradient(long n, long tid, long sample){
     long feature;
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
-    //for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
-        if (train_s[n][sample] >= node_nnzs[n]) {
-            printf("trais_s[%ld] = %ld >= %ld\n", sample, train_s[n][sample], node_nnzs[n]);
-            fflush(stdout);
-        }
-        //feature = local_train_f[i];
-        //if (feature >= featureSetSize){
-        //    printf("feature %ld/%ld\n", feature, featureSetSize);
-        //    fflush(stdout);
-        //}
-        //ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
-    //}
+    for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
+        feature = local_train_f[i];
+        ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
+    }
 }
 
 void child_train_pos(long n, long sample, long eta_gamma) {
