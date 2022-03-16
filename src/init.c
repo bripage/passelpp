@@ -454,7 +454,8 @@ void featpart_node_load_from_n0(long t) {
     } else {
      */
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
-        //printf("4\n");
+long sample_markers = 0; 
+     //printf("4\n");
         //fflush(stdout);
         //printf("file_points = %ld\n", file_points);
         //fflush(stdout);
@@ -464,7 +465,13 @@ void featpart_node_load_from_n0(long t) {
             if (sample != current_sample) {
                 sample_count++;
                 current_sample = sample;
-                train_s[t][sample_count] = j;
+    
+    
+if ((data_buffer[i+1] - 1) == 0 && (data_buffer[i+2] == 0)){
+        sample_markers++;
+}
+
+		train_s[t][sample_count] = j;
                 if (train_s[t][sample_count] > 300000){
                     printf("ERROR: train_s[%ld][%ld]: %ld\n", t, sample_count, train_s[t][sample_count]);
                     fflush(stdout);
@@ -473,7 +480,6 @@ void featpart_node_load_from_n0(long t) {
             } else {
                 feature = data_buffer[i + 1] - 1;
                 fixed_value = data_buffer[i + 2];
-
                 if (non_standard_classes) {
                     if (class == class1) {
                         class = -1;
@@ -493,6 +499,8 @@ void featpart_node_load_from_n0(long t) {
         }
     //}
     printf("%ld samples read\n", sample_count);
+    fflush(stdout);
+    printf("Sample markers found: %ld\n", sample_markers);
     fflush(stdout);
     train_s[t][sample_count + 1] = j; // add sample id end ptr
     train_s[t][0] = 0;
