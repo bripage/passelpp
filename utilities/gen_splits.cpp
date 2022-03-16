@@ -99,10 +99,10 @@ int main(int argc, char **argv) {
             sample_count++;
             current_sample = sample;
             for (int64_t s = 0; s < splitCount; s++) {
-                split_contents[assigned_node].push_back(sample);
-                split_contents[assigned_node].push_back(0);
-                split_contents[assigned_node].push_back(0);
-                split_contents[assigned_node].push_back(class_val);
+                split_contents[s].push_back(sample);
+                split_contents[s].push_back(0);
+                split_contents[s].push_back(0);
+                split_contents[s].push_back(class_val);
             }
         }
 
