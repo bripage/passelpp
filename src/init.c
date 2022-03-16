@@ -469,7 +469,7 @@ long sample_markers = 0;
 		        train_s[t][sample_count] = j;
                 train_c[t][sample_count] = class;
             } else {
-                feature = data_buffer[i + 1] - 1;
+                feature = data_buffer[i + 1];
                 fixed_value = data_buffer[i + 2];
                 if (non_standard_classes) {
                     if (class == class1) {
