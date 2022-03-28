@@ -378,7 +378,7 @@ void featpart_node_load_from_n0(long t) {
             chunk_count++;
         }
     }
-    
+
     if (using_chunk_loading) {
         for (long c = 0; c < chunk_count; c++) {
             printf("node%ld loading %ld/%ld\n", t, c, chunk_count);
@@ -763,10 +763,6 @@ void populateTraining_featurepartitioned() {
                 }
             }
         }
-        for (n = 0; n < node_count; n++) {
-            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
-            train_s[n][0] = 0;
-        }
     } else {
         points = non_zeros * 4;
         binBuffer = (long *) malloc(points * sizeof(long));
@@ -808,10 +804,10 @@ void populateTraining_featurepartitioned() {
             feat_deg_recip_stripped[feature]++;
             data_placement[assigned_node]++;
         }
-        for (n = 0; n < node_count; n++) {
-            train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
-            train_s[n][0] = 0;
-        }
+    }
+    for (n = 0; n < node_count; n++) {
+        train_s[n][sample_count + 1] = data_placement[n]; // add sample id end ptr
+        train_s[n][0] = 0;
     }
     fclose(train_data);
     free(binBuffer);
