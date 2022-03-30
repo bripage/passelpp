@@ -413,10 +413,18 @@ void featpart_node_load_from_n0(long t) {
                 sample = data_buffer[i];
                 class = data_buffer[i + 3];
                 if (sample != current_sample) {
-                    sample_count++;
+                    if (current_sample - sample > 1) {
+                        for (long s = 0; s < current_sample - sample; s++) {
+                            sample_count++;
+                            train_s[t][sample_count] = j;
+                            train_c[t][sample_count] = 1;
+                        }
+                    } else {
+                        sample_count++;
+                        train_s[t][sample_count] = j;
+                        train_c[t][sample_count] = class;
+                    }
                     current_sample = sample;
-                    train_s[t][sample_count] = j;
-                    train_c[t][sample_count] = class;
                 } else {
                     feature = data_buffer[i + 1];
                     fixed_value = data_buffer[i + 2];
@@ -444,11 +452,18 @@ void featpart_node_load_from_n0(long t) {
             sample = data_buffer[i];
             class = data_buffer[i + 3];
             if (sample != current_sample) {
-                sample_count++;
+                if (current_sample - sample > 1) {
+                    for (long s = 0; s < current_sample - sample; s++) {
+                        sample_count++;
+                        train_s[t][sample_count] = j;
+                        train_c[t][sample_count] = 1;
+                    }
+                } else {
+                    sample_count++;
+                    train_s[t][sample_count] = j;
+                    train_c[t][sample_count] = class;
+                }
                 current_sample = sample;
-
-		        train_s[t][sample_count] = j;
-                train_c[t][sample_count] = class;
             } else {
                 feature = data_buffer[i + 1];
                 fixed_value = data_buffer[i + 2];
