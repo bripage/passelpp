@@ -413,8 +413,8 @@ void featpart_node_load_from_n0(long t) {
                 sample = data_buffer[i];
                 class = data_buffer[i + 3];
                 if (sample != current_sample) {
-                    if (current_sample - sample > 1) {
-                        for (long s = 0; s < current_sample - sample; s++) {
+                    if (abs(current_sample - sample) > 1) {
+                        for (long s = 0; s < abs(current_sample - sample); s++) {
                             sample_count++;
                             train_s[t][sample_count] = j;
                             train_c[t][sample_count] = 1;
@@ -452,8 +452,8 @@ void featpart_node_load_from_n0(long t) {
             sample = data_buffer[i];
             class = data_buffer[i + 3];
             if (sample != current_sample) {
-                if (current_sample - sample > 1) {
-                    for (long s = 0; s < current_sample - sample; s++) {
+                if (abs(current_sample - sample) > 1) {
+                    for (long s = 0; s < abs(current_sample - sample); s++) {
                         sample_count++;
                         train_s[t][sample_count] = j;
                         train_c[t][sample_count] = 1;
