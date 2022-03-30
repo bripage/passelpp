@@ -936,7 +936,7 @@ void init() {
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
         //long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
-        mw_replicated_init(&non_zeros_per_node, (long) ceil(2 * ((double) total_train_points / (double) node_count)));
+        mw_replicated_init(&non_zeros_per_node, (long) ceil(5 * ((double) total_train_points / (double) node_count)));
         printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
         fflush(stdout);
 
