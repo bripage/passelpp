@@ -179,8 +179,16 @@ void get_stripped_accuracy(){
         dotProduct = 0;
         start = test_s_stripped[i];
         stop = test_s_stripped[i+1];
+        if (start < 0 || start >= total_test_points || stop < 0 || stop >= total_test_points){
+            printf("ERROR: Test Data Out Of Bounds! sample = %ld, start = %ld, stop %ld\n", i, start, stop);
+            fflush(stdout);
+        }
         for (j = start; j < stop; j++) {
             feature = test_f_stripped[j];
+            if (feature < 0 || feature >= featureSetSize){
+                printf("ERROR: Test Data Out Of Bounds! sample = %ld, feature = %ld\n", i, feature);
+                fflush(stdout);
+            }
             dotProduct += (test_v_stripped[j] * model_vec_stripped[feature]) >> 24;
         }
 

@@ -24,6 +24,7 @@ extern long node_count_start;
 extern long non_standard_classes;
 extern long class1;
 extern long class2;
+extern replicated long featureSetSize;
 
 extern replicated long** accuracies;
 extern replicated long** train_s;

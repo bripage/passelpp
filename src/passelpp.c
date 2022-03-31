@@ -64,7 +64,8 @@ int main(int argc, char **argv) {
         }
         cilk_sync;
         total_time = CLOCK() - start_time;
-
+        printf("--- Done ---\n");
+        fflush(stdout);
         get_stripped_accuracy();
         MIGRATE(&model_vec_stripped[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
