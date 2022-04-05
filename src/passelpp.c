@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
         total_time = CLOCK() - start_time;
         printf("--- Done ---\n");
         fflush(stdout);
-        get_stripped_accuracy();
+        //get_stripped_accuracy();
         MIGRATE(&model_vec_stripped[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
         printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / clock_rate, current_accuracy);

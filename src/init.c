@@ -1072,7 +1072,7 @@ void init() {
     fflush(stdout);
 
     MIGRATE(&test_s_stripped[0]);
-    populateTestDataStripped();
+    //populateTestDataStripped();
 
     printf("--- Initialization Complete ---\n");
     fflush(stdout);
