@@ -190,7 +190,7 @@ void featured_partitioned_train(long tid) {
             }
             cilk_sync;
             gradients[tid] *= class;
-
+/*
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
@@ -204,7 +204,7 @@ void featured_partitioned_train(long tid) {
                 }
             }
             cilk_sync;
-
+*/
             gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
@@ -221,6 +221,10 @@ void get_partial_gradient(long n, long tid, long sample){
     long* local_train_v = train_v[n];
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
+        if (feature < 0 || feature >= featureSetSize) {
+            printf("ERROR: Feature %ld out of bounds\n", feature);
+            fflush(stdout);
+        }
         ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
     }
 }
