@@ -221,7 +221,7 @@ void get_partial_gradient(long n, long tid, long sample){
     long* local_train_v = train_v[n];
     long partial_gradient = 0;
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
-        if (i > 0 || i >= node_assignments[n]){
+        if (i < 0 || i >= node_assignments[n]){
             printf("ERROR: Sample %ld nnz %ld > %ld\n", sample, i, node_assignments[n]);
             fflush(stdout);
         }
