@@ -411,17 +411,10 @@ void featpart_node_load_from_n0(long t) {
 
             for (i = 0; i < chunk_points; i += 4) {
                 sample = data_buffer[i];
-                class = data_buffer[i + 3];
-                if (sample != current_sample) {
-                    for (long s = 0; s < abs(current_sample - sample); s++) {
-                        sample_count++;
-                        train_s[t][sample_count] = j;
-                        train_c[t][sample_count] = class;
-                    }
-                    current_sample = sample;
-                }
                 feature = data_buffer[i + 1];
                 fixed_value = data_buffer[i + 2];
+                class = data_buffer[i + 3];
+
                 if (non_standard_classes) {
                     if (class == class1) {
                         class = -1;
@@ -433,6 +426,15 @@ void featpart_node_load_from_n0(long t) {
                         exit(2);
                     }
                 }
+                if (sample != current_sample) {
+                    for (long s = 0; s < abs(current_sample - sample); s++) {
+                        sample_count++;
+                        train_s[t][sample_count] = j;
+                        train_c[t][sample_count] = class;
+                    }
+                    current_sample = sample;
+                }
+
                 train_f[t][j] = feature;
                 train_v[t][j] = fixed_value;
                 feat_deg_recip_stripped[feature]++;
@@ -443,39 +445,34 @@ void featpart_node_load_from_n0(long t) {
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
+            feature = data_buffer[i + 1];
+            fixed_value = data_buffer[i + 2];
             class = data_buffer[i + 3];
-            if (sample != current_sample) {
-                if (abs(current_sample - sample) > 1) {
-                    for (long s = 0; s < abs(current_sample - sample); s++) {
-                        sample_count++;
-                        train_s[t][sample_count] = j;
-                        train_c[t][sample_count] = 1;
-                    }
+
+            if (non_standard_classes) {
+                if (class == class1) {
+                    class = -1;
+                } else if (class == class2) {
+                    class = 1;
                 } else {
+                    printf("ERROR: Training Data classes do not match class range\n");
+                    fflush(stdout);
+                    exit(2);
+                }
+            }
+            if (sample != current_sample) {
+                for (long s = 0; s < abs(current_sample - sample); s++) {
                     sample_count++;
                     train_s[t][sample_count] = j;
                     train_c[t][sample_count] = class;
                 }
                 current_sample = sample;
-            } else {
-                feature = data_buffer[i + 1];
-                fixed_value = data_buffer[i + 2];
-                if (non_standard_classes) {
-                    if (class == class1) {
-                        class = -1;
-                    } else if (class == class2) {
-                        class = 1;
-                    } else {
-                        printf("ERROR: Training Data classes do not match class range\n");
-                        fflush(stdout);
-                        exit(2);
-                    }
-                }
-                train_f[t][j] = feature;
-                train_v[t][j] = fixed_value;
-                feat_deg_recip_stripped[feature]++;
-                j++;
             }
+
+            train_f[t][j] = feature;
+            train_v[t][j] = fixed_value;
+            feat_deg_recip_stripped[feature]++;
+            j++;
         }
     }
     train_s[t][sample_count + 1] = j; // add sample id end ptr
@@ -483,6 +480,9 @@ void featpart_node_load_from_n0(long t) {
     fclose(file_ptr);
     free(data_read_buffer[0][t]);
     node_assignments[t] = j;
+
+    printf("node%ld loading Done Loading\n", t);
+    fflush(stdout);
 }
 
 void populateTrainingData() {
