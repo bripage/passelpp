@@ -219,14 +219,20 @@ void get_partial_gradient(long n, long tid, long sample){
     long feature;
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
+    long partial_gradient = 0;
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
-        feature = local_train_f[i];
-        if (feature < 0 || feature >= featureSetSize) {
-            printf("ERROR: Feature %ld out of bounds\n", feature);
+        if (i > 0 || i >= node_assignments[n]){
+            printf("ERROR: Sample %ld nnz %ld > %ld\n", sample, i, node_assignments[n]);
             fflush(stdout);
         }
-        ATOMIC_ADDM(&gradients[tid], ((local_train_v[i] * model_vec_stripped[feature]) >> 24));
+        feature = local_train_f[i];
+        if (feature < 0 || feature >= featureSetSize) {
+            printf("ERROR: Sample %ld Feature %ld out of bounds\n", sample, feature);
+            fflush(stdout);
+        }
+        partial_gradient += (local_train_v[i] * model_vec_stripped[feature]) >> 24;
     }
+    ATOMIC_ADDM(&gradients[tid], partial_gradient);
 }
 
 void child_train_pos(long n, long sample, long eta_gamma) {

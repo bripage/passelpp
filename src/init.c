@@ -413,37 +413,30 @@ void featpart_node_load_from_n0(long t) {
                 sample = data_buffer[i];
                 class = data_buffer[i + 3];
                 if (sample != current_sample) {
-                    if (abs(current_sample - sample) > 1) {
-                        for (long s = 0; s < abs(current_sample - sample); s++) {
-                            sample_count++;
-                            train_s[t][sample_count] = j;
-                            train_c[t][sample_count] = 1;
-                        }
-                    } else {
+                    for (long s = 0; s < abs(current_sample - sample); s++) {
                         sample_count++;
                         train_s[t][sample_count] = j;
                         train_c[t][sample_count] = class;
                     }
                     current_sample = sample;
-                } else {
-                    feature = data_buffer[i + 1];
-                    fixed_value = data_buffer[i + 2];
-                    if (non_standard_classes) {
-                        if (class == class1) {
-                            class = -1;
-                        } else if (class == class2) {
-                            class = 1;
-                        } else {
-                            printf("ERROR: Training Data classes do not match class range\n");
-                            fflush(stdout);
-                            exit(2);
-                        }
-                    }
-                    train_f[t][j] = feature;
-                    train_v[t][j] = fixed_value;
-                    feat_deg_recip_stripped[feature]++;
-                    j++;
                 }
+                feature = data_buffer[i + 1];
+                fixed_value = data_buffer[i + 2];
+                if (non_standard_classes) {
+                    if (class == class1) {
+                        class = -1;
+                    } else if (class == class2) {
+                        class = 1;
+                    } else {
+                        printf("ERROR: Training Data classes do not match class range\n");
+                        fflush(stdout);
+                        exit(2);
+                    }
+                }
+                train_f[t][j] = feature;
+                train_v[t][j] = fixed_value;
+                feat_deg_recip_stripped[feature]++;
+                j++;
             }
         }
     } else {
@@ -489,6 +482,7 @@ void featpart_node_load_from_n0(long t) {
     train_s[t][0] = 0;
     fclose(file_ptr);
     free(data_read_buffer[0][t]);
+    node_assignments[t] = j;
 }
 
 void populateTrainingData() {
@@ -840,6 +834,7 @@ void init_cluster(long n) {
     cluster_samples[n] = 0;
     total_evaluated_sample_count[n] = 0;
     samples_since_token[n] = 0;
+    node_assignments[n] = 0;
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
@@ -988,6 +983,9 @@ void init() {
 
     l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
+
+    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &node_assignments, (long) l1d_ptr);
 
     if (multi_file_load){
         long*** l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long*));
