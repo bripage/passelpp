@@ -475,7 +475,10 @@ void featpart_node_load_from_n0(long t) {
             j++;
         }
     }
-    train_s[t][sample_count + 1] = j; // add sample id end ptr
+
+    for (i = sample_count+1; i <= train_sample_count; i++ ) {
+        train_s[t][i] = j; // add sample id end ptr
+    }
     train_s[t][0] = 0;
     fclose(file_ptr);
     free(data_read_buffer[0][t]);
