@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
     int64_t feature;
     int64_t value;
     int64_t sample;
-    int64_t sample_count = 0;
+    int64_t sample_count = -1;
     int64_t current_sample = -1;
     std::pair <int64_t,int64_t> tpair;
     for (int64_t i = 0; i < file_points; i += 4) {
@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
     }
     fclose(data);
     free(binBuffer);
-    printf("Sample Count: %ld\n", sample_count);
+    printf("Sample Count: %ld\n", sample_count+1);
     fflush(stdout);
     std::cout << "Stage 1 COMPLETE" << std::endl;
 
