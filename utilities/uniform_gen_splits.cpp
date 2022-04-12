@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
     int64_t sample;
     int64_t sample_count = 0;
     int64_t current_sample = -1;
-
+    std::pair <int64_t,int64_t> tpair;
     for (int64_t i = 0; i < file_points; i += 4) {
         std::cout << "1" << std::endl;
         sample = binBuffer[i];
@@ -121,11 +121,13 @@ int main(int argc, char **argv) {
             std::cout << "sample " << A.size() << std::endl;
         }
         std::cout << "7" << std::endl;
-        std::pair tp(feature,value);
-        A[sample_count].push_back(tp));
+        tpair.first = feature;
+        tpair.second = value;
         std::cout << "8" << std::endl;
-        fcounts[feature].second += 1;
+        A[sample_count].push_back(tpair));
         std::cout << "9" << std::endl;
+        fcounts[feature].second += 1;
+        std::cout << "10" << std::endl;
     }
     fclose(data);
     free(binBuffer);
