@@ -12,6 +12,7 @@
 #include <cstring>
 #include <fstream>
 #include <unistd.h>
+#include <algorithm>
 #include "stdint.h"
 
 int main(int argc, char **argv) {
@@ -170,7 +171,7 @@ int main(int argc, char **argv) {
         sprintf(fname, "%sp%ld.bin", splitPath, s);
         FILE* split_file = fopen(fname, "ab");
 
-        for (i = 0; i < split_contents[s].size(); i++) {
+        for (int64_t i = 0; i < split_contents[s].size(); i++) {
             fwrite(&split_contents[s][i], sizeof(int64_t), 1, split_file);
         }
         fclose(split_file);
