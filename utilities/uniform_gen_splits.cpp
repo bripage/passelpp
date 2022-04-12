@@ -102,15 +102,10 @@ int main(int argc, char **argv) {
     int64_t current_sample = -1;
     std::pair <int64_t,int64_t> tpair;
     for (int64_t i = 0; i < file_points; i += 4) {
-        std::cout << "1" << std::endl;
         sample = binBuffer[i];
-        std::cout << "2" << std::endl;
         feature = binBuffer[i + 1] - 1;
-        std::cout << "3" << std::endl;
         value = binBuffer[i + 2];
-        std::cout << "4" << std::endl;
         class_val = binBuffer[i + 3];
-        std::cout << "5" << std::endl;
 
         if (sample != current_sample){
             sample_count++;
@@ -118,21 +113,14 @@ int main(int argc, char **argv) {
             classes.push_back(class_val);
             std::vector <std::pair<int64_t,int64_t> > row;
             A.push_back(row);
-            std::cout << "sample " << A.size() << std::endl;
         }
-        std::cout << "7" << std::endl;
         tpair.first = feature;
         tpair.second = value;
-        std::cout << "pushing (" << tpair.first << "," << tpair.second << ") t A[" << sample_count << "]" << std::endl;
         A[sample_count].push_back(tpair);
-        std::cout << "9" << std::endl;
         fcounts[feature].second += 1;
-        std::cout << "10" << std::endl;
     }
     fclose(data);
     free(binBuffer);
-    printf("Sample Count: %ld\n", sample_count+1);
-    fflush(stdout);
     std::cout << "Stage 1 COMPLETE" << std::endl;
 
     ///////////////////////////////////////////
