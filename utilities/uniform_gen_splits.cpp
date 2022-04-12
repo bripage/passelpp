@@ -102,10 +102,15 @@ int main(int argc, char **argv) {
     int64_t current_sample = -1;
 
     for (int64_t i = 0; i < file_points; i += 4) {
+        std::cout << "1" << std::endl;
         sample = binBuffer[i];
+        std::cout << "2" << std::endl;
         feature = binBuffer[i + 1] - 1;
+        std::cout << "3" << std::endl;
         value = binBuffer[i + 2];
+        std::cout << "4" << std::endl;
         class_val = binBuffer[i + 3];
+        std::cout << "5" << std::endl;
 
         if (sample != current_sample){
             sample_count++;
@@ -115,9 +120,11 @@ int main(int argc, char **argv) {
             A.push_back(row);
             std::cout << "sample " << A.size() << std::endl;
         }
-
+        std::cout << "5" << std::endl;
         A[sample_count].emplace_back(std::make_pair(feature,value));
+        std::cout << "6" << std::endl;
         fcounts[feature].second += 1;
+        std::cout << "7" << std::endl;
     }
     fclose(data);
     free(binBuffer);
