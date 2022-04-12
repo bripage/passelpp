@@ -1,7 +1,7 @@
 CC=g++
 UTILS_PATH=utils/
 
-all: shuffle lib2csv csv2bin splitgen
+all: shuffle lib2csv csv2bin splitgen unisplitgen
 
 shuffle:
 	$(CC) -O3 -o shuffle shuffle.cpp
@@ -15,8 +15,12 @@ csv2bin:
 splitgen:
 	$(CC) -O3 -o splitgen gen_splits.cpp
 
+unisplitgen:
+	$(CC) -O3 -o splitgen gen_splits.cpp
+
 clean:
 	rm -f shuffle
 	rm -f lib2csv
 	rm -f csv2bin
 	rm -f splitgen
+	rm -f unisplitgen
