@@ -16,7 +16,7 @@ splitgen:
 	$(CC) -O3 -o splitgen gen_splits.cpp
 
 unisplitgen:
-	$(CC) -O3 -o splitgen gen_splits.cpp
+	$(CC) -O3 -o unisplitgen uniform_gen_splits.cpp
 
 clean:
 	rm -f shuffle
