@@ -113,6 +113,7 @@ int main(int argc, char **argv) {
             classes.push_back(class_val);
             std::vector <std::pair<int64_t,int64_t> > row;
             A.push_back(row);
+            std::cout << "sample " << A.size() << std::endl;
         }
 
         A[sample_count].emplace_back(std::make_pair(feature,value));
