@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
         std::cout << "7" << std::endl;
         tpair.first = feature;
         tpair.second = value;
-        std::cout << "8" << std::endl;
+        std::cout << "pushing (" << tpair.first, tpair.second << ") t A[" << sample_count << "]" << std::endl;
         A[sample_count].push_back(tpair);
         std::cout << "9" << std::endl;
         fcounts[feature].second += 1;
