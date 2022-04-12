@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
         tpair.first = feature;
         tpair.second = value;
         std::cout << "8" << std::endl;
-        A[sample_count].push_back(tpair));
+        A[sample_count].push_back(tpair);
         std::cout << "9" << std::endl;
         fcounts[feature].second += 1;
         std::cout << "10" << std::endl;
