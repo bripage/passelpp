@@ -122,6 +122,7 @@ int main(int argc, char **argv) {
     free(binBuffer);
     printf("Sample Count: %ld\n", sample_count);
     fflush(stdout);
+    std::cout << "Stage 1 COMPLETE" << std::endl;
 
     ///////////////////////////////////////////
     ///       Sort features by degree       ///
@@ -130,6 +131,7 @@ int main(int argc, char **argv) {
               [&](const auto& a, const auto& b) {
                   return a.second > b.second;
               });
+    std::cout << "Stage 2 COMPLETE" << std::endl;
 
     ///////////////////////////////////////////
     ///      Greedy bin pack features       ///
@@ -149,6 +151,7 @@ int main(int argc, char **argv) {
         packing[minsplit] += fcounts[i].second;
         f_assign[fcounts[i].first] = minsplit;
     }
+    std::cout << "Stage 3 COMPLETE" << std::endl;
 
     ///////////////////////////////////////////
     ///      Populate split partitions      ///
@@ -162,6 +165,7 @@ int main(int argc, char **argv) {
         }
         A[i].clear();
     }
+    std::cout << "Stage 4 COMPLETE" << std::endl;
 
     ///////////////////////////////////////////
     ///         Write splits to file        ///
