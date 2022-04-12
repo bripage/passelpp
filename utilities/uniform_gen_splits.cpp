@@ -120,11 +120,12 @@ int main(int argc, char **argv) {
             A.push_back(row);
             std::cout << "sample " << A.size() << std::endl;
         }
-        std::cout << "5" << std::endl;
-        A[sample_count].emplace_back(std::make_pair(feature,value));
-        std::cout << "6" << std::endl;
-        fcounts[feature].second += 1;
         std::cout << "7" << std::endl;
+        std::pair tp(feature,value);
+        A[sample_count].push_back(tp));
+        std::cout << "8" << std::endl;
+        fcounts[feature].second += 1;
+        std::cout << "9" << std::endl;
     }
     fclose(data);
     free(binBuffer);
