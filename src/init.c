@@ -973,7 +973,7 @@ void init() {
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
         }
-        for (long n = 0; n < cluster_count; n++) {
+        for (long n = 0; n < node_count; n++) {
             cilk_migrate_hint(&train_s[n]);
             cilk_spawn init_cluster(n);
         }
