@@ -437,7 +437,7 @@ void featpart_node_load_from_n0(long t) {
 
                 train_f[t][j] = feature;
                 train_v[t][j] = fixed_value;
-                feat_deg_recip_stripped[feature]++;
+                REMOTE_ADD(&feat_deg_recip[t][feature], 1);
                 j++;
             }
         }
@@ -471,12 +471,12 @@ void featpart_node_load_from_n0(long t) {
 
             train_f[t][j] = feature;
             train_v[t][j] = fixed_value;
-            feat_deg_recip_stripped[feature]++;
+            REMOTE_ADD(&feat_deg_recip[t][feature], 1);
             j++;
         }
     }
 
-    for (i = sample_count+1; i <= train_sample_count; i++ ) {
+    for (i = sample_count; i < train_sample_count; i++ ) {
         train_s[t][i] = j; // add sample id end ptr
     }
     train_s[t][0] = 0;
@@ -888,47 +888,47 @@ void init() {
         fflush(stdout);
     }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&model_vec, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&model_vec, nlet);
+        *ptr = l2d_ptr;
+    }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&working_vec, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&working_vec, nlet);
+        *ptr = l2d_ptr;
+    }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (samples_per_cluster + 1) * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
+        *ptr = l2d_ptr;
+    }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_c, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), samples_per_cluster * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&train_c, nlet);
+        *ptr = l2d_ptr;
+    }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
+        *ptr = l2d_ptr;
+    }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
+        *ptr = l2d_ptr;
+    }
 
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
-            *ptr = l2d_ptr;
-        }
+    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
+    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
+        long ***ptr = (long ***) mw_get_nth(&feat_deg_recip, nlet);
+        *ptr = l2d_ptr;
+    }
 
     if (using_clusters){
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
@@ -993,7 +993,7 @@ void init() {
 
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
-    MIGRATE(&test_s_stripped[0]);
+    MIGRATE(&model_vec[0]);
     volatile uint64_t total_load_time;
     volatile uint64_t start_load_time = CLOCK();
     if (using_clusters) {
