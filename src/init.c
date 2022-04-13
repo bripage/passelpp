@@ -1019,7 +1019,7 @@ void init() {
         d_temp *= 16777216;
         l_temp = (long) d_temp;
         for (int n = 0; n < cluster_count; n++) {
-            REMOTE_ADD(feat_deg_recip[n][i], l_temp);
+            REMOTE_ADD(&feat_deg_recip[n][i], l_temp);
         }
     }
     printf("F degree dis Done\n");
