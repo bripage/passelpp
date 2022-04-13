@@ -834,24 +834,27 @@ void init_cluster(long n) {
     for (long i = 0; i < cluster_count; i++){
         accuracies[n][i] = 0;
     }
-    cluster_samples[n] = 0;
-    total_evaluated_sample_count[n] = 0;
-    samples_since_token[n] = 0;
-    node_assignments[n] = 0;
+    cluster_samples[n] = 0; // still used?
+    node_assignments[n] = 0; // still used?
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
-    if (n != cluster_count-1) {
-        upstream[n] = n+1;
-    } else {
-        upstream[n] = 0;
-    }
-    if (n == 0){
-        token[n] = 1;
-    } else {
-        token[n] = 0;
+
+    if (using_clusters){
+        total_evaluated_sample_count[n] = 0;
+        samples_since_token[n] = 0;
+        if (n != cluster_count-1) {
+            upstream[n] = n+1;
+        } else {
+            upstream[n] = 0;
+        }
+        if (n == 0){
+            token[n] = 1;
+        } else {
+            token[n] = 0;
+        }
     }
 }
 
