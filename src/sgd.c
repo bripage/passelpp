@@ -222,15 +222,7 @@ void get_partial_gradient(long n, long tid, long sample){
     long partial_gradient = 0;
 
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
-        if (i < 0 || i >= node_assignments[n]){
-            printf("ERROR: Sample %ld NNZ ou of bounds (%ld > %ld)\n", sample, i, node_assignments[n]);
-            fflush(stdout);
-        }
         feature = local_train_f[i];
-        if (feature < 0 || feature >= featureSetSize) {
-            printf("ERROR: Sample %ld Feature %ld out of bounds\n", sample, feature);
-            fflush(stdout);
-        }
         partial_gradient += (local_train_v[i] * mvec[feature]) >> 24;
     }
     //ATOMIC_ADDM(&gradients[tid], partial_gradient);

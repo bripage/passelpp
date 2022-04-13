@@ -482,7 +482,6 @@ void featpart_node_load_from_n0(long t) {
     train_s[t][0] = 0;
     fclose(file_ptr);
     free(data_read_buffer[0][t]);
-    node_assignments[t] = j;
 
     printf("node%ld loading Done Loading\n", t);
     fflush(stdout);
@@ -831,11 +830,7 @@ void populateTraining_featurepartitioned() {
 }
 
 void init_cluster(long n) {
-    for (long i = 0; i < cluster_count; i++){
-        accuracies[n][i] = 0;
-    }
-    cluster_samples[n] = 0; // still used?
-    node_assignments[n] = 0; // still used?
+
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
@@ -843,6 +838,11 @@ void init_cluster(long n) {
     }
 
     if (using_clusters){
+        for (long i = 0; i < cluster_count; i++){
+            accuracies[n][i] = 0;
+        }
+
+        cluster_samples[n] = 0;
         total_evaluated_sample_count[n] = 0;
         samples_since_token[n] = 0;
         if (n != cluster_count-1) {
@@ -854,6 +854,10 @@ void init_cluster(long n) {
             token[n] = 1;
         } else {
             token[n] = 0;
+        }
+    } else {
+        for (long i = 0; i < node_count; i++){
+            accuracies[n][i] = 0;
         }
     }
 }
@@ -957,9 +961,6 @@ void init() {
 
     l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
-
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &node_assignments, (long) l1d_ptr);
 
     if (multi_file_load){
         long*** l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long*));

@@ -75,7 +75,6 @@ replicated long* token;
 replicated long* samples_since_token;
 replicated long* run_flag;
 replicated long* node_nnzs;
-replicated long* node_assignments;
 
 void parse_args(int argc, char * argv[]);
 void init();
