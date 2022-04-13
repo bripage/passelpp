@@ -969,11 +969,6 @@ void init() {
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
 
-    for (long n = 0; n < cluster_count; n++) {
-        cilk_migrate_hint(&train_s[n]);
-        cilk_spawn init_cluster(n);
-    }
-    cilk_sync;
     if (!using_clusters){
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
