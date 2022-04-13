@@ -43,5 +43,6 @@ void populateTestData();
 void populateTestDataStripped();
 void get_accuracy(long n);
 void get_stripped_accuracy();
+void reduce_models(long n);
 
 #endif //EMUSGD_ACCURACY_H

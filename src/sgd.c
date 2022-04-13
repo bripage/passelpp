@@ -164,7 +164,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 }
 
 void featured_partitioned_train(long tid) {
-
     long* local_train_c = train_c[NODE_ID()];
     long eta_gamma = eta;
     long class;
@@ -190,7 +189,7 @@ void featured_partitioned_train(long tid) {
             }
             cilk_sync;
             gradients[tid] *= class;
-/*
+
             if (gradients[tid] < 16777216) {
                 di = eta_gamma * class;
                 for (long n = 0; n < node_count; n++) {
@@ -204,7 +203,7 @@ void featured_partitioned_train(long tid) {
                 }
             }
             cilk_sync;
-*/
+
             gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
@@ -219,7 +218,9 @@ void get_partial_gradient(long n, long tid, long sample){
     long feature;
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
+    long* mvec = model_vec[n];
     long partial_gradient = 0;
+
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         if (i < 0 || i >= node_assignments[n]){
             printf("ERROR: Sample %ld NNZ ou of bounds (%ld > %ld)\n", sample, i, node_assignments[n]);
@@ -230,20 +231,23 @@ void get_partial_gradient(long n, long tid, long sample){
             printf("ERROR: Sample %ld Feature %ld out of bounds\n", sample, feature);
             fflush(stdout);
         }
-        partial_gradient += (local_train_v[i] * model_vec_stripped[feature]) >> 24;
+        partial_gradient += (local_train_v[i] * mvec[feature]) >> 24;
     }
-    ATOMIC_ADDM(&gradients[tid], partial_gradient);
+    //ATOMIC_ADDM(&gradients[tid], partial_gradient);
+    REMOTE_ADD(&gradients[tid], partial_gradient);
 }
 
 void child_train_pos(long n, long sample, long eta_gamma) {
     long feature, l_temp, wv_temp;
     long* local_train_f = train_f[n];
+    long* mvec = model_vec[n];
+    long* fddr = feat_deg_recip[n];
 
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
-        wv_temp = model_vec_stripped[feature];
-        l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-        model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+        wv_temp = mvec[feature];
+        l_temp = (eta_gamma * fddr[feature]) >> 24;
+        mvec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
     }
 
 }
@@ -252,13 +256,15 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
     long feature, l_temp, wv_temp;
     long* local_train_f = train_f[n];
     long* local_train_v = train_v[n];
+    long* mvec = model_vec[n];
+    long* fddr = feat_deg_recip[n];
 
     for (long i = train_s[n][sample]; i < train_s[n][sample+1]; i++) {
         feature = local_train_f[i];
         l_temp = (di * local_train_v[i]) >> 24;
-        wv_temp = model_vec_stripped[feature] + l_temp;
-        l_temp = (eta_gamma * feat_deg_recip_stripped[feature]) >> 24;
-        model_vec_stripped[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+        wv_temp = mvec[feature] + l_temp;
+        l_temp = (eta_gamma * fddr[feature]) >> 24;
+        mvec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
     }
 
 }

@@ -203,3 +203,9 @@ void get_stripped_accuracy(){
     accuracy *= 16777216;
     accuracies[0][0] = (long) accuracy;
 }
+
+void reduce_models(long n){
+    for (long i = 0; i < featureSetSize; i++){
+        REMOTE_ADD(&model_vec[0][i], model_vec[n][i]);
+    }
+}

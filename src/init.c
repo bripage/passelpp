@@ -871,10 +871,15 @@ void init() {
     }
 
     if (using_clusters) {
-        //long non_zeros_per_node = ceil(1.10 * ((double) total_train_points / (double) cluster_count));
-        mw_replicated_init(&non_zeros_per_node, (long) ceil(1.10 * ((double) total_train_points / (double) cluster_count)));
+        mw_replicated_init(&non_zeros_per_node,
+                           (long) ceil(1.10 * ((double) total_train_points / (double) cluster_count)));
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
+    } else {
+        mw_replicated_init(&non_zeros_per_node, (long) ceil(2 * ((double) total_train_points / (double) node_count)));
+        printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
+        fflush(stdout);
+    }
 
         l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), featureSetSize * sizeof(long));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
@@ -918,6 +923,7 @@ void init() {
             *ptr = l2d_ptr;
         }
 
+    if (using_clusters){
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
@@ -933,46 +939,8 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
-        //long non_zeros_per_node = ceil(2 * ((double) total_train_points / (double) node_count));
-        mw_replicated_init(&non_zeros_per_node, (long) ceil(5 * ((double) total_train_points / (double) node_count)));
-        printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
-        fflush(stdout);
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), (train_sample_count + 1) * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_s, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), train_sample_count * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_c, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_f, nlet);
-            *ptr = l2d_ptr;
-        }
-
-        l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), non_zeros_per_node * sizeof(long));
-        for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-            long ***ptr = (long ***) mw_get_nth(&train_v, nlet);
-            *ptr = l2d_ptr;
-        }
-
         l1d_ptr = (long *) mw_malloc1dlong(threads_per_cluster);
         mw_replicated_init((long *) &gradients, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
-        mw_replicated_init((long *) &model_vec_stripped, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
-        mw_replicated_init((long *) &feat_deg_recip_stripped, (long) l1d_ptr);
-
-        l1d_ptr = (long *) mw_malloc1dlong(featureSetSize);
-        mw_replicated_init((long *) &node_nnzs, (long) l1d_ptr);
     }
 
     l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
@@ -1001,22 +969,14 @@ void init() {
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
 
-    if (using_clusters){
-        for (long n = 0; n < cluster_count; n++) {
-            cilk_migrate_hint(&train_s[n]);
-            cilk_spawn init_cluster(n);
-        }
-        cilk_sync;
-    } else {
-        for (long i = 0; i < featureSetSize; i++){
-            model_vec_stripped[i] = 0;
-            feat_deg_recip_stripped [i] = 0;
-        }
+    for (long n = 0; n < cluster_count; n++) {
+        cilk_migrate_hint(&train_s[n]);
+        cilk_spawn init_cluster(n);
+    }
+    cilk_sync;
+    if (!using_clusters){
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
-        }
-        for (long i = 0; i < node_count; i++){
-            node_nnzs[i] = 0;
         }
     }
 
@@ -1055,18 +1015,11 @@ void init() {
     long l_temp;
     for (long i = 0; i <= featureSetSize; i++) {
         d_temp = 1.0;
-        if (using_clusters) {
-            d_temp /= (double) feat_deg_recip[0][i];
-            d_temp *= 16777216;
-            l_temp = (long) d_temp;
-            for (int n = 0; n < cluster_count; n++) {
-                feat_deg_recip[n][i] = l_temp;
-            }
-        } else {
-            d_temp /= (double) feat_deg_recip_stripped[i];
-            d_temp *= 16777216;
-            l_temp = (long) d_temp;
-            feat_deg_recip_stripped[i] = l_temp;
+        d_temp /= (double) feat_deg_recip[0][i];
+        d_temp *= 16777216;
+        l_temp = (long) d_temp;
+        for (int n = 0; n < cluster_count; n++) {
+            REMOTE_ADD(feat_deg_recip[n][i], l_temp);
         }
     }
     printf("F degree dis Done\n");

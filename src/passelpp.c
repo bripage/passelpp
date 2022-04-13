@@ -66,10 +66,18 @@ int main(int argc, char **argv) {
         total_time = CLOCK() - start_time;
         printf("--- Done ---\n");
         fflush(stdout);
+        printf("%ld,%ld,%lf\n", test_id, epochs, (double) total_time / clock_rate);
+        fflush(stdout);
+        MIGRATE(&model_vec_stripped[0]);
+        for (long n = 0; n < node_count; n++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn reduce_models(n);
+        }
         //get_stripped_accuracy();
+        get_accuracy(0);
         MIGRATE(&model_vec_stripped[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
-        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / clock_rate, current_accuracy);
+        printf("Accuracy: %lf\n", current_accuracy);
         fflush(stdout);
     }
 
