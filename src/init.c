@@ -836,7 +836,8 @@ void init_cluster(long n) {
         working_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
-
+    printf("node%ld 1\n", n);
+    fflush(stdout);
     if (using_clusters){
         for (long i = 0; i < cluster_count; i++){
             accuracies[n][i] = 0;
@@ -859,7 +860,11 @@ void init_cluster(long n) {
         for (long i = 0; i < node_count; i++){
             accuracies[n][i] = 0;
         }
+        printf("node%ld 2\n", n);
+        fflush(stdout);
     }
+    printf("node%ld 3\n", n);
+    fflush(stdout);
 }
 
 void fdeg_copy2nodes(long n){
@@ -977,14 +982,16 @@ void init() {
         for (long i = 0; i < threads_per_cluster; i++){
             gradients[i] = 0;
         }
+        printf("--- Gradient Array Initialized ---\n");
+        fflush(stdout);
         for (long n = 0; n < node_count; n++) {
-            cilk_migrate_hint(&train_s[n]);
+            cilk_migrate_hint(&model_vec[n]);
             cilk_spawn init_cluster(n);
         }
         cilk_sync;
     } else {
         for (long n = 0; n < cluster_count; n++) {
-            cilk_migrate_hint(&train_s[n]);
+            cilk_migrate_hint(&model_vec[n]);
             cilk_spawn init_cluster(n);
         }
         cilk_sync;
@@ -1010,8 +1017,7 @@ void init() {
         if (multi_file_load){
             for (int n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
-                cilk_spawn
-                featpart_node_load_from_n0(n);
+                cilk_spawn featpart_node_load_from_n0(n);
             }
             cilk_sync;
         } else {
