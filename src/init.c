@@ -467,6 +467,8 @@ void featpart_node_load_from_n0(long t) {
                     train_c[t][sample_count] = class;
                 }
                 current_sample = sample;
+                printf("sample %ld\n", sample_count);
+                fflush(stdout);
             }
 
             train_f[t][j] = feature;
@@ -836,8 +838,7 @@ void init_cluster(long n) {
         working_vec[n][i] = 0;
         feat_deg_recip[n][i] = 0;
     }
-    printf("node%ld 1\n", n);
-    fflush(stdout);
+
     if (using_clusters){
         for (long i = 0; i < cluster_count; i++){
             accuracies[n][i] = 0;
@@ -860,11 +861,8 @@ void init_cluster(long n) {
         for (long i = 0; i < node_count; i++){
             accuracies[n][i] = 0;
         }
-        printf("node%ld 2\n", n);
-        fflush(stdout);
+
     }
-    printf("node%ld 3\n", n);
-    fflush(stdout);
 }
 
 void fdeg_copy2nodes(long n){
