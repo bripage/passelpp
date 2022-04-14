@@ -471,6 +471,8 @@ void featpart_node_load_from_n0(long t) {
                 fflush(stdout);
             }
 
+            printf("%ld, %ld, %ld, %ld, j = %ld\n", sample, feature, fixed_value, class, j);
+            fflush(stdout);
             train_f[t][j] = feature;
             train_v[t][j] = fixed_value;
             REMOTE_ADD(&feat_deg_recip[t][feature], 1);
@@ -1013,7 +1015,7 @@ void init() {
         }
     } else {
         if (multi_file_load){
-            for (int n = 0; n < cluster_count; n++) {
+            for (int n = 0; n < 1; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn featpart_node_load_from_n0(n);
             }
