@@ -474,7 +474,7 @@ void featpart_node_load_from_n0(long t) {
             printf("%ld, %ld, %ld, %ld, j = %ld, non_zeros_per_node = %ld\n", sample, feature, fixed_value, class, j, non_zeros_per_node);
             fflush(stdout);
             train_f[t][j] = feature;
-            printf("%feature = %ld\n", feature);
+            printf("feature = %ld\n", feature);
             fflush(stdout);
             train_v[t][j] = fixed_value;
             printf("fixed_value = %ld\n", fixed_value);
@@ -495,6 +495,7 @@ void featpart_node_load_from_n0(long t) {
 
     printf("node%ld loading Done Loading\n", t);
     fflush(stdout);
+    
 }
 
 void populateTrainingData() {
