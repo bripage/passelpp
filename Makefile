@@ -2,7 +2,7 @@ CC=/tools/emu/pathfinder-sw/22.02/bin/emu-cc
 CFILES=$(wildcard src/*.c)
 
 all:
-	$(CC) -lm -lmemoryweb -fcilkplus -O3 -o passelpp.mwx -S $(CFILES)
+	$(CC) -lm -lmemoryweb -fcilkplus -O3 -o passelpp.mwx $(CFILES)
 
 clean:
 	rm -f passelpp.mwx

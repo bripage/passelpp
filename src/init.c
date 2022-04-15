@@ -479,8 +479,8 @@ void featpart_node_load_from_n0(long t) {
             train_v[t][j] = fixed_value;
             printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
             fflush(stdout);
-            REMOTE_ADD(&feat_deg_recip[t][feature], 1);
-            printf("feat_deg_recip[%ld][%ld]++\n", t, feature);
+            //REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+            //printf("feat_deg_recip[%ld][%ld]++\n", t, feature);
             fflush(stdout);
             j++;
         }
