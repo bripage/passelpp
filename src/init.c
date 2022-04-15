@@ -471,11 +471,17 @@ void featpart_node_load_from_n0(long t) {
                 fflush(stdout);
             }
 
-            printf("%ld, %ld, %ld, %ld, j = %ld\n", sample, feature, fixed_value, class, j);
+            printf("%ld, %ld, %ld, %ld, j = %ld, non_zeros_per_node = %ld\n", sample, feature, fixed_value, class, j, non_zeros_per_node);
             fflush(stdout);
             train_f[t][j] = feature;
+            printf("%feature = %ld\n", feature);
+            fflush(stdout);
             train_v[t][j] = fixed_value;
+            printf("fixed_value = %ld\n", fixed_value);
+            fflush(stdout);
             REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+            printf("feat_deg_recip[%ld][%ld]++\n", t, feature);
+            fflush(stdout);
             j++;
         }
     }
