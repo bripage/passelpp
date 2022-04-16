@@ -871,18 +871,19 @@ void local_feat_def_update(long n){
     double d_temp;
     long l_temp;
     for (long i = 0; i <= featureSetSize; i++) {
-        if (local_fdegrec[i] != 0){
-        d_temp = 1.0;
-        d_temp /= (double) local_fdegrec[i];
-        d_temp *= 16777216;
-        l_temp = (long) d_temp;
-        local_fdegrec[i] = l_temp;
+        if (local_fdegrec[i] != 0) {
+            d_temp = 1.0;
+            d_temp /= (double) local_fdegrec[i];
+            d_temp *= 16777216;
+            l_temp = (long) d_temp;
+            local_fdegrec[i] = l_temp;
+        }
     }
 }
 
 void init() {
     long *l1d_ptr;
-    long** l2d_ptr;
+    long **l2d_ptr;
     l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
     for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
         long ***ptr = (long ***) mw_get_nth(&accuracies, nlet);
@@ -942,7 +943,7 @@ void init() {
         *ptr = l2d_ptr;
     }
 
-    if (using_clusters){
+    if (using_clusters) {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &total_evaluated_sample_count, (long) l1d_ptr);
 
@@ -974,8 +975,8 @@ void init() {
     l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
     mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
 
-    if (multi_file_load){
-        long*** l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long*));
+    if (multi_file_load) {
+        long ***l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long *));
         for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
             long ****ptr = (long ****) mw_get_nth(&data_read_buffer, nlet);
             *ptr = l3d_ptr;
@@ -985,8 +986,8 @@ void init() {
     printf("--- Memmory Allocation Complete ---\n");
     fflush(stdout);
 
-    if (!using_clusters){
-        for (long i = 0; i < threads_per_cluster; i++){
+    if (!using_clusters) {
+        for (long i = 0; i < threads_per_cluster; i++) {
             gradients[i] = 0;
         }
         printf("--- Gradient Array Initialized ---\n");
@@ -1011,7 +1012,7 @@ void init() {
     volatile uint64_t total_load_time;
     volatile uint64_t start_load_time = CLOCK();
     if (using_clusters) {
-        if (multi_file_load){
+        if (multi_file_load) {
             for (int n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn node_load_from_n0(n);
@@ -1021,7 +1022,7 @@ void init() {
             populateTrainingData();
         }
     } else {
-        if (multi_file_load){
+        if (multi_file_load) {
             for (int n = 0; n < node_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn featpart_node_load_from_n0(n);
@@ -1035,7 +1036,7 @@ void init() {
     printf("Training Data Load Time: %lf\n", (double) total_load_time / clock_rate);
     fflush(stdout);
 
-    if(using_clusters) {
+    if (using_clusters) {
         double d_temp;
         long l_temp;
         for (long i = 0; i <= featureSetSize; i++) {
@@ -1049,8 +1050,10 @@ void init() {
         }
     } else {
         for (int n = 0; n < node_count; n++) {
-            local_feat_def_update(n);
+            cilk_migrate_hint(&model_vec[0]);
+            cilk_spawn local_feat_def_update(n);
         }
+        cilk_sync;
     }
     printf("F degree dis Done\n");
     fflush(stdout);
