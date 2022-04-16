@@ -139,11 +139,13 @@ void parse_args(int argc, char * argv[]) {
     printf("Multi File Load: %ld\n", multi_file_load);
     fflush(stdout);
     long ltmp = ceil(1.25 * ((double) train_sample_count / (double) cluster_count));
-    mw_replicated_init(&samples_per_cluster, ltmp);
     if (clusters) {
+	    mw_replicated_init(&samples_per_cluster, ltmp);
         printf("samples per cluster: %ld\n", samples_per_cluster);
         fflush(stdout);
-    }
+    } else {
+	mw_replicated_init(&samples_per_cluster, train_sample_count);
+}
 
     /** Solve for Beta (based on cluster count) */
     double dtmp = SolveBeta(cluster_count);
@@ -467,21 +469,21 @@ void featpart_node_load_from_n0(long t) {
                     train_c[t][sample_count] = class;
                 }
                 current_sample = sample;
-                printf("sample %ld\n", sample_count);
-                fflush(stdout);
+                //printf("sample %ld\n", sample_count);
+                //fflush(stdout);
             }
 
-            printf("%ld, %ld, %ld, %ld, j = %ld, non_zeros_per_node = %ld\n", sample, feature, fixed_value, class, j, non_zeros_per_node);
-            fflush(stdout);
+            //printf("%ld, %ld, %ld, %ld, j = %ld, non_zeros_per_node = %ld\n", sample, feature, fixed_value, class, j, non_zeros_per_node);
+            //fflush(stdout);
             train_f[t][j] = feature;
-            printf("train_f[%ld][%ld] = %ld\n", t, j, feature);
-            fflush(stdout);
+            //printf("train_f[%ld][%ld] = %ld\n", t, j, feature);
+            //fflush(stdout);
             train_v[t][j] = fixed_value;
-            printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
-            fflush(stdout);
-            //REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+            //printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
+            //fflush(stdout);
+            REMOTE_ADD(&feat_deg_recip[t][feature], 1);
             //printf("feat_deg_recip[%ld][%ld]++\n", t, feature);
-            fflush(stdout);
+            //fflush(stdout);
             j++;
         }
     }
@@ -1022,7 +1024,7 @@ void init() {
         }
     } else {
         if (multi_file_load){
-            for (int n = 0; n < 1; n++) {
+            for (int n = 0; n < node_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn featpart_node_load_from_n0(n);
             }
