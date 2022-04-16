@@ -887,7 +887,7 @@ void init() {
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
     } else {
-        mw_replicated_init(&non_zeros_per_node, (long) ceil(2 * ((double) total_train_points / (double) node_count)));
+        mw_replicated_init(&non_zeros_per_node, (long) ceil(4 * ((double) total_train_points / (double) node_count)));
         printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
         fflush(stdout);
     }
