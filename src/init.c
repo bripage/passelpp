@@ -469,21 +469,11 @@ void featpart_node_load_from_n0(long t) {
                     train_c[t][sample_count] = class;
                 }
                 current_sample = sample;
-                //printf("sample %ld\n", sample_count);
-                //fflush(stdout);
             }
 
-            //printf("%ld, %ld, %ld, %ld, j = %ld, non_zeros_per_node = %ld\n", sample, feature, fixed_value, class, j, non_zeros_per_node);
-            //fflush(stdout);
             train_f[t][j] = feature;
-            //printf("train_f[%ld][%ld] = %ld\n", t, j, feature);
-            //fflush(stdout);
             train_v[t][j] = fixed_value;
-            //printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
-            //fflush(stdout);
             REMOTE_ADD(&feat_deg_recip[t][feature], 1);
-            //printf("feat_deg_recip[%ld][%ld]++\n", t, feature);
-            //fflush(stdout);
             j++;
         }
     }

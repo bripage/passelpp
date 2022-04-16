@@ -73,9 +73,8 @@ int main(int argc, char **argv) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn reduce_models(n);
         }
-        //get_stripped_accuracy();
         get_accuracy(0);
-        MIGRATE(&model_vec_stripped[0]);
+        MIGRATE(&model_vec[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
         printf("Accuracy: %lf\n", current_accuracy);
         fflush(stdout);
