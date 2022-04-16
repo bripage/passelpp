@@ -355,11 +355,13 @@ void featpart_node_load_from_n0(long t) {
     long using_chunk_loading = 0;
     long file_points;
     long chunk_count;
+    /*
     long* l_train_s = train_s[t];
     long* l_train_c = train_c[t];
     long* l_train_f = train_f[t];
     long* l_train_v = train_v[t];
     long* l_feat_deg_recip = feat_deg_recip[t];
+    */
 
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
