@@ -163,7 +163,7 @@ void get_accuracy(long n){
 
     accuracy = 100*(correct_samples/test_sample_count);
     accuracy *= 16777216;
-    accuracies[0][n] = (long) accuracy;
+    accuracies[n] = (long) accuracy;
 }
 
 void get_stripped_accuracy(){
@@ -201,7 +201,7 @@ void get_stripped_accuracy(){
     }
     accuracy = 100*(correct_samples/test_sample_count);
     accuracy *= 16777216;
-    accuracies[0][0] = (long) accuracy;
+    accuracies[0] = (long) accuracy;
 }
 
 void reduce_models(long n){

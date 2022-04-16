@@ -44,10 +44,10 @@ int main(int argc, char **argv) {
             cilk_spawn get_accuracy(n);
         }
         cilk_sync;
-        best_model_acc = accuracies[0][0];
+        best_model_acc = accuracies[0];
         for (long n = 1; n < cluster_count; n++) {
-            if (accuracies[0][n] > best_model_acc) {
-                best_model_acc = accuracies[0][n];
+            if (accuracies[n] > best_model_acc) {
+                best_model_acc = accuracies[n];
                 best_cluster_id = n;
             }
         }
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
         fflush(stdout);
         get_accuracy(0);
         MIGRATE(&model_vec[0]);
-        current_accuracy = (double) accuracies[0][0] / (double) 16777216;
+        current_accuracy = (double) accuracies[0] / (double) 16777216;
         printf("Accuracy: %lf\n", current_accuracy);
         fflush(stdout);
     }

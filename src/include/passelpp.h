@@ -25,8 +25,8 @@ replicated long clock_rate;
 /// Data allocation
 extern replicated long* gradients;
 extern replicated long** model_vec;
-extern replicated long** accuracies;
 
+extern replicated long* accuracies;
 extern replicated long* model_vec_stripped;
 
 #endif //EMUSGD_WILDEBEEST_H

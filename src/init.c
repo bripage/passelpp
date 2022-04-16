@@ -144,8 +144,8 @@ void parse_args(int argc, char * argv[]) {
         printf("samples per cluster: %ld\n", samples_per_cluster);
         fflush(stdout);
     } else {
-	mw_replicated_init(&samples_per_cluster, train_sample_count);
-}
+	    mw_replicated_init(&samples_per_cluster, train_sample_count);
+    }
 
     /** Solve for Beta (based on cluster count) */
     double dtmp = SolveBeta(cluster_count);
@@ -355,6 +355,11 @@ void featpart_node_load_from_n0(long t) {
     long using_chunk_loading = 0;
     long file_points;
     long chunk_count;
+    long* l_train_s = train_s[t];
+    long* l_train_c = train_c[t];
+    long* l_train_f = train_f[t];
+    long* l_train_v = train_v[t];
+    long* l_feat_deg_recip = feat_deg_recip[t];
 
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
@@ -431,15 +436,15 @@ void featpart_node_load_from_n0(long t) {
                 if (sample != current_sample) {
                     for (long s = 0; s < abs(current_sample - sample); s++) {
                         sample_count++;
-                        train_s[t][sample_count] = j;
-                        train_c[t][sample_count] = class;
+                        REMOTE_ADD(&l_train_s[sample_count], j);
+                        REMOTE_ADD(&l_train_c[sample_count], class);
                     }
                     current_sample = sample;
                 }
 
-                train_f[t][j] = feature;
-                train_v[t][j] = fixed_value;
-                REMOTE_ADD(&feat_deg_recip[0][feature], 1);
+                REMOTE_ADD(&l_train_f[j], feature);
+                REMOTE_ADD(&l_train_v[j], fixed_value);
+                REMOTE_ADD(&l_feat_deg_recip[feature], 1);
                 j++;
             }
         }
@@ -465,15 +470,15 @@ void featpart_node_load_from_n0(long t) {
             if (sample != current_sample) {
                 for (long s = 0; s < abs(current_sample - sample); s++) {
                     sample_count++;
-                    train_s[t][sample_count] = j;
-                    train_c[t][sample_count] = class;
+                    REMOTE_ADD(&l_train_s[sample_count], j);
+                    REMOTE_ADD(&l_train_c[sample_count], class);
                 }
                 current_sample = sample;
             }
 
-            train_f[t][j] = feature;
-            train_v[t][j] = fixed_value;
-            REMOTE_ADD(&feat_deg_recip[0][feature], 1);
+            REMOTE_ADD(&l_train_f[j], feature);
+            REMOTE_ADD(&l_train_v[j], fixed_value);
+            REMOTE_ADD(&l_feat_deg_recip[feature], 1);
             j++;
         }
     }
@@ -833,7 +838,7 @@ void populateTraining_featurepartitioned() {
 }
 
 void init_cluster(long n) {
-
+    accuracies[n] = 0;
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
@@ -841,10 +846,6 @@ void init_cluster(long n) {
     }
 
     if (using_clusters){
-        for (long i = 0; i < cluster_count; i++){
-            accuracies[n][i] = 0;
-        }
-
         cluster_samples[n] = 0;
         total_evaluated_sample_count[n] = 0;
         samples_since_token[n] = 0;
@@ -859,23 +860,29 @@ void init_cluster(long n) {
             token[n] = 0;
         }
     } else {
-        for (long i = 0; i < node_count; i++){
-            accuracies[n][i] = 0;
+        for (long i = 0; i < samples_per_cluster; i++){
+            train_s[n][0] = 0;
+            train_c[n][0] = 0;
+        }
+        train_s[n][samples_per_cluster] = 0;
+        for (long i = 0; i < non_zeros_per_node; i++){
+            train_f[n][0] = 0;
+            train_v[n][0] = 0;
         }
     }
 }
 
 void local_feat_def_update(long n){
-    long* local_fdegrec = feat_deg_recip[n];
+    long* l_feat_deg_recip = feat_deg_recip[n];
     double d_temp;
     long l_temp;
     for (long i = 0; i <= featureSetSize; i++) {
-        if (local_fdegrec[i] != 0) {
+        if (l_feat_deg_recip[i] != 0) {
             d_temp = 1.0;
-            d_temp /= (double) local_fdegrec[i];
+            d_temp /= (double) l_feat_deg_recip[i];
             d_temp *= 16777216;
             l_temp = (long) d_temp;
-            local_fdegrec[i] = l_temp;
+            l_feat_deg_recip[i] = l_temp;
         }
     }
 }
@@ -883,11 +890,6 @@ void local_feat_def_update(long n){
 void init() {
     long *l1d_ptr;
     long **l2d_ptr;
-    l2d_ptr = (long **) mw_malloc2d(NUM_NODES(), NUM_NODES() * sizeof(long));
-    for (long nlet = 0; nlet < NUM_NODES(); ++nlet) {
-        long ***ptr = (long ***) mw_get_nth(&accuracies, nlet);
-        *ptr = l2d_ptr;
-    }
 
     if (using_clusters) {
         mw_replicated_init(&non_zeros_per_node,
@@ -895,7 +897,7 @@ void init() {
         printf("non_zeros_per_cluster = %ld\n", non_zeros_per_node);
         fflush(stdout);
     } else {
-        mw_replicated_init(&non_zeros_per_node, (long) ceil(4 * ((double) total_train_points / (double) node_count)));
+        mw_replicated_init(&non_zeros_per_node, (long) ceil(5 * ((double) total_train_points / (double) node_count)));
         printf("nonzeros_per_node = %ld\n", non_zeros_per_node);
         fflush(stdout);
     }
@@ -961,6 +963,9 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(threads_per_cluster);
         mw_replicated_init((long *) &gradients, (long) l1d_ptr);
     }
+
+    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+    mw_replicated_init((long *) &accuracies, (long) l1d_ptr);
 
     l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
     mw_replicated_init((long *) &test_s_stripped, (long) l1d_ptr);
@@ -1057,7 +1062,7 @@ void init() {
     printf("F degree dis Done\n");
     fflush(stdout);
 
-    MIGRATE(&test_s_stripped[0]);
+    MIGRATE(&model_vec[0]);
     //populateTestDataStripped();
 
     printf("--- Initialization Complete ---\n");

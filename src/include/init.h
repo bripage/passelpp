@@ -58,7 +58,6 @@ replicated long** train_f;// training data feature id's (1:1 relationship to val
 replicated long** train_v;          // training data values (non-zero values for all samples)
 replicated long** train_c; // training sample classes (single value for each sample)
 replicated long** feat_deg_recip;
-replicated long** accuracies;
 replicated long** points_to_read;
 
 replicated long* gradients;
@@ -75,6 +74,7 @@ replicated long* token;
 replicated long* samples_since_token;
 replicated long* run_flag;
 replicated long* node_nnzs;
+replicated long* accuracies;
 
 void parse_args(int argc, char * argv[]);
 void init();
