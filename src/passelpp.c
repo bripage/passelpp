@@ -73,6 +73,8 @@ int main(int argc, char **argv) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn reduce_models(n);
         }
+        printf("--- Node Models Combined ---\n");
+        fflush(stdout);
         get_accuracy(0);
         MIGRATE(&model_vec[0]);
         current_accuracy = (double) accuracies[0][0] / (double) 16777216;
