@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
         fflush(stdout);
         printf("%ld,%ld,%lf\n", test_id, epochs, (double) total_time / clock_rate);
         fflush(stdout);
-        MIGRATE(&model_vec_stripped[0]);
+        MIGRATE(&model_vec[0]);
         for (long n = 0; n < node_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn reduce_models(n);
