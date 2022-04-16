@@ -73,6 +73,7 @@ int main(int argc, char **argv) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn reduce_models(n);
         }
+        cilk_sync;
         printf("--- Node Models Combined ---\n");
         fflush(stdout);
         get_accuracy(0);
