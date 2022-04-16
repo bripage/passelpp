@@ -439,7 +439,7 @@ void featpart_node_load_from_n0(long t) {
 
                 train_f[t][j] = feature;
                 train_v[t][j] = fixed_value;
-                REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+                REMOTE_ADD(&feat_deg_recip[0][feature], 1);
                 j++;
             }
         }
@@ -473,7 +473,7 @@ void featpart_node_load_from_n0(long t) {
 
             train_f[t][j] = feature;
             train_v[t][j] = fixed_value;
-            REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+            REMOTE_ADD(&feat_deg_recip[0][feature], 1);
             j++;
         }
     }
@@ -866,9 +866,17 @@ void init_cluster(long n) {
     }
 }
 
-void fdeg_copy2nodes(long n){
+void local_feat_def_update(long n){
+    long* local_fdegrec = feat_deg_recip[n];
+    double d_temp;
+    long l_temp;
     for (long i = 0; i <= featureSetSize; i++) {
-        REMOTE_ADD(&feat_deg_recip[n][i], feat_deg_recip[0][i]);
+        if (local_fdegrec[i] != 0){
+        d_temp = 1.0;
+        d_temp /= (double) local_fdegrec[i];
+        d_temp *= 16777216;
+        l_temp = (long) d_temp;
+        local_fdegrec[i] = l_temp;
     }
 }
 
@@ -1027,15 +1035,21 @@ void init() {
     printf("Training Data Load Time: %lf\n", (double) total_load_time / clock_rate);
     fflush(stdout);
 
-    double d_temp;
-    long l_temp;
-    for (long i = 0; i <= featureSetSize; i++) {
-        d_temp = 1.0;
-        d_temp /= (double) feat_deg_recip[0][i];
-        d_temp *= 16777216;
-        l_temp = (long) d_temp;
-        for (int n = 0; n < cluster_count; n++) {
-            REMOTE_ADD(&feat_deg_recip[n][i], l_temp);
+    if(using_clusters) {
+        double d_temp;
+        long l_temp;
+        for (long i = 0; i <= featureSetSize; i++) {
+            d_temp = 1.0;
+            d_temp /= (double) feat_deg_recip[0][i];
+            d_temp *= 16777216;
+            l_temp = (long) d_temp;
+            for (int n = 0; n < cluster_count; n++) {
+                REMOTE_ADD(&feat_deg_recip[n][i], l_temp);
+            }
+        }
+    } else {
+        for (int n = 0; n < node_count; n++) {
+            local_feat_def_update(n);
         }
     }
     printf("F degree dis Done\n");
