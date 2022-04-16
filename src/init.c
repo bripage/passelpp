@@ -862,7 +862,6 @@ void init_cluster(long n) {
         for (long i = 0; i < node_count; i++){
             accuracies[n][i] = 0;
         }
-
     }
 }
 
