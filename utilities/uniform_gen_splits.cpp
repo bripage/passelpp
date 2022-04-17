@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
     int splitType;
     int splitCount;
     int64_t features;
+    int remove_feature = 0;
+    int64_t feature_to_remove;
 
     for (int i = 1; i < argc; i = i + 2) {
         argTemp = argv[i];
@@ -40,8 +42,12 @@ int main(int argc, char **argv) {
             // split type
             splitType = atoi(argv[i + 1]);
         } else if (argTemp == "-f") {
-            // split type
+            // total number of features in data set
             features = atoi(argv[i + 1]);
+        }else if (argTemp == "-r") {
+            // remove high degree feature(s)
+            remove_feature = 1;
+            feature_to_remove = atoi(argv[i + 1]);
         } else if (argTemp == "--help") {
             printf("CSV2BIN: This utility program will read in a 3 column csv file and output its contents to"
                    "binary. Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit"
@@ -51,6 +57,8 @@ int main(int argc, char **argv) {
             printf("-f <###> \tFeature Set Size\n");
             printf("-i <file> \tInput filename (assumes csv structure is: sample_id,feature_id,feature_value)\n");
             printf("-o <file path> \tOutput file path\n");
+            printf("-r <feature id> \tSet remove extremely high degree vertices TRUE. <feature id> is the \n\t"
+                   "feature id or list of id's to ignore\n");
             printf("-s <Num splits> \tSplit Count\n");
             printf("-t <0|1> \tSplit Type: 0 = Contiguous row (bin packed), 1 = Feature Partitioned\n");
             exit(0);
@@ -156,7 +164,8 @@ int main(int argc, char **argv) {
     ///      Populate split partitions      ///
     ///////////////////////////////////////////
     for (int64_t i = 0; i < A.size(); i++) {
-        for (int64_t j = 0; j < A[i].size(); j++){
+        if (remove_feature && i == feature_to_remove) continue;
+        for (int64_t j = 0; j < A[i].size(); j++) {
             split_contents[f_assign[A[i][j].first]].push_back(i);
             split_contents[f_assign[A[i][j].first]].push_back(A[i][j].first);
             split_contents[f_assign[A[i][j].first]].push_back(A[i][j].second);

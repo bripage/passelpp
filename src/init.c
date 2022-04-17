@@ -431,20 +431,20 @@ void featpart_node_load_from_n0(long t) {
                 if (sample != current_sample) {
                     for (long s = 0; s < abs(current_sample - sample); s++) {
                         sample_count++;
-                        REMOTE_ADD(&train_s[t][sample_count], j);
-                        REMOTE_ADD(&train_c[t][sample_count], class);
-                        //train_s[t][sample_count] = j;
-                        //train_c[t][sample_count] = class;
+                        //REMOTE_ADD(&train_s[t][sample_count], j);
+                        //REMOTE_ADD(&train_c[t][sample_count], class);
+                        train_s[t][sample_count] = j;
+                        train_c[t][sample_count] = class;
                     }
                     current_sample = sample;
                 }
 
-                REMOTE_ADD(&train_f[t][j], feature);
-                REMOTE_ADD(&train_v[t][j], fixed_value);
-                REMOTE_ADD(&feat_deg_recip[t][feature], 1);
-                //train_f[t][j] = feature;
-                //train_v[t][j] = fixed_value;
-                //feat_deg_recip[t][feature] += 1;
+                //REMOTE_ADD(&train_f[t][j], feature);
+                //REMOTE_ADD(&train_v[t][j], fixed_value);
+                //REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+                train_f[t][j] = feature;
+                train_v[t][j] = fixed_value;
+                feat_deg_recip[t][feature] += 1;
                 j++;
             }
         }
@@ -470,20 +470,20 @@ void featpart_node_load_from_n0(long t) {
             if (sample != current_sample) {
                 for (long s = 0; s < abs(current_sample - sample); s++) {
                     sample_count++;
-                    REMOTE_ADD(&train_s[t][sample_count], j);
-                    REMOTE_ADD(&train_c[t][sample_count], class);
-                    //train_s[t][sample_count] = j;
-                    //train_c[t][sample_count] = class;
+                    //REMOTE_ADD(&train_s[t][sample_count], j);
+                    //REMOTE_ADD(&train_c[t][sample_count], class);
+                    train_s[t][sample_count] = j;
+                    train_c[t][sample_count] = class;
                 }
                 current_sample = sample;
             }
 
-            REMOTE_ADD(&train_f[t][j], feature);
-            REMOTE_ADD(&train_v[t][j], fixed_value);
-            REMOTE_ADD(&feat_deg_recip[t][feature], 1);
-            //train_f[t][j] = feature;
-            //train_v[t][j] = fixed_value;
-            //feat_deg_recip[t][feature] += 1;
+            //REMOTE_ADD(&train_f[t][j], feature);
+            //REMOTE_ADD(&train_v[t][j], fixed_value);
+            //REMOTE_ADD(&feat_deg_recip[t][feature], 1);
+            train_f[t][j] = feature;
+            train_v[t][j] = fixed_value;
+            feat_deg_recip[t][feature] += 1;
             j++;
         }
     }
@@ -864,17 +864,6 @@ void init_cluster(long n) {
         } else {
             token[n] = 0;
         }
-    } else {
-         for (long i = 0; i < samples_per_cluster; i++){
-            train_s[n][i] = 0;
-            train_c[n][i] = 0;
-        }
-        train_s[n][samples_per_cluster] = 0;
-        for (long i = 0; i < non_zeros_per_node; i++){
-            train_f[n][i] = 0;
-            train_v[n][i] = 0;
-        }
-
     }
 }
 
