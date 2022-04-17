@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
         fflush(stdout);
 
         MIGRATE(&model_vec[0]);
-        get_accuracy(0);
+        //get_accuracy(0);
         MIGRATE(&model_vec[0]);
         current_accuracy = (double) accuracies[0] / (double) 16777216;
         printf("Accuracy: %lf\n", current_accuracy);
