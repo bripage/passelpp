@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
             std::vector <std::pair<int64_t,int64_t> > row;
             A.push_back(row);
         }
-        if (remove_feature && i == feature_to_remove) continue;
+        if (remove_feature && feature == feature_to_remove) continue;
         tpair.first = feature;
         tpair.second = value;
         A[sample_count].push_back(tpair);
@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
     fclose(data);
     free(binBuffer);
     std::cout << "Stage 1 COMPLETE" << std::endl;
-
+    
     ///////////////////////////////////////////
     ///       Sort features by degree       ///
     ///////////////////////////////////////////
