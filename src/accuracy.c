@@ -147,6 +147,8 @@ void get_accuracy(long n){
     long feature;
 
     for (long i = 0; i < test_sample_count; i++) {
+        printf("test sample %ld\n", i);
+        fflush(stdout);
         dotProduct = 0;
         start = test_s_stripped[i];
         stop = test_s_stripped[i+1];

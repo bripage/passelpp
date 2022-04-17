@@ -68,6 +68,7 @@ int main(int argc, char **argv) {
         fflush(stdout);
         printf("%ld,%ld,%lf\n", test_id, epochs, (double) total_time / clock_rate);
         fflush(stdout);
+
         MIGRATE(&model_vec[0]);
         for (long n = 0; n < node_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
@@ -76,6 +77,8 @@ int main(int argc, char **argv) {
         cilk_sync;
         printf("--- Node Models Combined ---\n");
         fflush(stdout);
+
+        MIGRATE(&model_vec[0]);
         get_accuracy(0);
         MIGRATE(&model_vec[0]);
         current_accuracy = (double) accuracies[0] / (double) 16777216;
