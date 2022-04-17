@@ -122,6 +122,7 @@ int main(int argc, char **argv) {
             std::vector <std::pair<int64_t,int64_t> > row;
             A.push_back(row);
         }
+        if (remove_feature && i == feature_to_remove) continue;
         tpair.first = feature;
         tpair.second = value;
         A[sample_count].push_back(tpair);
@@ -164,7 +165,6 @@ int main(int argc, char **argv) {
     ///      Populate split partitions      ///
     ///////////////////////////////////////////
     for (int64_t i = 0; i < A.size(); i++) {
-        if (remove_feature && i == feature_to_remove) continue;
         for (int64_t j = 0; j < A[i].size(); j++) {
             split_contents[f_assign[A[i][j].first]].push_back(i);
             split_contents[f_assign[A[i][j].first]].push_back(A[i][j].first);
