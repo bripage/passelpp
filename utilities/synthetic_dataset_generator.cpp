@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     int64_t val, class_id, feature_id;
     int64_t l_tmp;
     double d_tmp;
-    for (int64_t i = 0; i <= sample_count; i++) {
+    for (int64_t i = 0; i < sample_count; i++) {
         if (i % 2 == 0){
             class_id = 1;
         } else {
