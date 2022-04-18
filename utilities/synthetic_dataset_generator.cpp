@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
         }
         std::map<int64_t, int64_t> sample_data;
         while (sample_data.size() != avg_nnz_per_sample){
-            feature = rand()%feature_count;
+            feature_id = rand()%feature_count;
             d_tmp = FLOAT_MIN + (float)(rand()) / ((float)(RAND_MAX/(FLOAT_MAX - FLOAT_MIN)));
             d_tmp *= (16777216 * class_id);
             val = (int64_t) d_tmp;
