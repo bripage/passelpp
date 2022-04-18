@@ -74,6 +74,7 @@ int main(int argc, char **argv) {
     fseek(data, 0, SEEK_END);
     int64_t num_bytes = ftell(data);
     file_points = num_bytes / 8;
+    std::cout << num_bytes << ", " << file_points << std::endl;
     fseek(data, 0, SEEK_SET);
     binBuffer = (int64_t *) malloc(file_points * sizeof(int64_t));
     bytesRead = fread(binBuffer, sizeof(int64_t), file_points, data);

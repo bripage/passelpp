@@ -43,3 +43,5 @@ emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/sp
 "subreddit_type":"public",
 "total_awards_received":0,
 "treatment_tags":[]}
+
+/netscratch/passelpp/utilities/splitgen -i 131072/synth_131072_128.bin -o 131072/128/32/ -s 32

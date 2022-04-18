@@ -19,8 +19,8 @@ int main(int argc, char **argv) {
     beta_gamma = beta;
 
     if (using_clusters) {
-        //printf("--- Starting ---\n");
-        //fflush(stdout);
+        printf("--- Starting ---\n");
+        fflush(stdout);
         start_time = CLOCK();
         for (long epoch = 1; epoch <= epochs; epoch++) {
             //printf("Epoch %ld\n", epoch);
@@ -38,20 +38,24 @@ int main(int argc, char **argv) {
             cilk_sync;
         }
         total_time = CLOCK() - start_time;
+        printf("--- Done ---\n");
+        fflush(stdout);
 
-        for (long n = 0; n < cluster_count; n++) {
-            cilk_migrate_hint(&model_vec[n]);
-            cilk_spawn get_accuracy(n);
-        }
-        cilk_sync;
-        best_model_acc = accuracies[0];
-        for (long n = 1; n < cluster_count; n++) {
-            if (accuracies[n] > best_model_acc) {
-                best_model_acc = accuracies[n];
-                best_cluster_id = n;
+        if (accuracy_test_flag) {
+            for (long n = 0; n < cluster_count; n++) {
+                cilk_migrate_hint(&model_vec[n]);
+                cilk_spawn get_accuracy(n);
             }
+            cilk_sync;
+            best_model_acc = accuracies[0];
+            for (long n = 1; n < cluster_count; n++) {
+                if (accuracies[n] > best_model_acc) {
+                    best_model_acc = accuracies[n];
+                    best_cluster_id = n;
+                }
+            }
+            current_accuracy = (double) best_model_acc / (double) 16777216;
         }
-        current_accuracy = (double) best_model_acc / (double) 16777216;
         printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / clock_rate, current_accuracy);
         fflush(stdout);
     } else {
@@ -66,23 +70,23 @@ int main(int argc, char **argv) {
         total_time = CLOCK() - start_time;
         printf("--- Done ---\n");
         fflush(stdout);
-        printf("%ld,%ld,%lf\n", test_id, epochs, (double) total_time / clock_rate);
-        fflush(stdout);
 
-        MIGRATE(&model_vec[0]);
-        for (long n = 0; n < node_count; n++) {
-            cilk_migrate_hint(&model_vec[n]);
-            cilk_spawn reduce_models(n);
+        if (accuracy_test_flag) {
+            MIGRATE(&model_vec[0]);
+            for (long n = 0; n < node_count; n++) {
+                cilk_migrate_hint(&model_vec[n]);
+                cilk_spawn reduce_models(n);
+            }
+            cilk_sync;
+            printf("--- Node Models Combined ---\n");
+            fflush(stdout);
+            get_accuracy(0);
+            current_accuracy = (double) accuracies[0] / (double) 16777216;
+            printf("Accuracy: %lf\n", current_accuracy);
+            fflush(stdout);
         }
-        cilk_sync;
-        printf("--- Node Models Combined ---\n");
-        fflush(stdout);
 
-        MIGRATE(&model_vec[0]);
-        //get_accuracy(0);
-        MIGRATE(&model_vec[0]);
-        current_accuracy = (double) accuracies[0] / (double) 16777216;
-        printf("Accuracy: %lf\n", current_accuracy);
+        printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / clock_rate, current_accuracy);
         fflush(stdout);
     }
 

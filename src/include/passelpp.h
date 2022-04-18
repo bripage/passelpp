@@ -21,6 +21,7 @@ replicated long beta;
 replicated long gamma;
 replicated long using_clusters;
 replicated long clock_rate;
+replicated long accuracy_test_flag;
 
 /// Data allocation
 extern replicated long* gradients;

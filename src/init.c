@@ -47,6 +47,7 @@ void parse_args(int argc, char * argv[]) {
     long clusters = 0;
     long multi_load = 0;
     long rate = 0;
+    long acc_test = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -123,6 +124,10 @@ void parse_args(int argc, char * argv[]) {
             mw_replicated_init(&clock_rate, num_arg);
             i++;
             rate = 1;
+        } else if (!strcmp(argv[i], "--accuracy-test")) {
+            num_arg = atoi(argv[i + 1]);
+            acc_test = num_arg;
+            i++;
         }
 
     }
@@ -131,6 +136,7 @@ void parse_args(int argc, char * argv[]) {
         fflush(stdout);
         exit(-1);
     }
+    mw_replicated_init(&accuracy_test_flag, acc_test);
     mw_replicated_init(&node_count, NUM_NODES());
     mw_replicated_init(&using_clusters, clusters);
     printf("Using Multiple Clusters: %ld\n", using_clusters);
@@ -959,20 +965,22 @@ void init() {
         mw_replicated_init((long *) &gradients, (long) l1d_ptr);
     }
 
-    l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
-    mw_replicated_init((long *) &accuracies, (long) l1d_ptr);
+    if (accuracy_test_flag) {
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &accuracies, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
-    mw_replicated_init((long *) &test_s_stripped, (long) l1d_ptr);
+        l1d_ptr = (long *) mw_malloc1dlong((test_sample_count + 1));
+        mw_replicated_init((long *) &test_s_stripped, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
-    mw_replicated_init((long *) &test_f_stripped, (long) l1d_ptr);
+        l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
+        mw_replicated_init((long *) &test_f_stripped, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
-    mw_replicated_init((long *) &test_v_stripped, (long) l1d_ptr);
+        l1d_ptr = (long *) mw_malloc1dlong(total_test_points);
+        mw_replicated_init((long *) &test_v_stripped, (long) l1d_ptr);
 
-    l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
-    mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
+        l1d_ptr = (long *) mw_malloc1dlong(test_sample_count);
+        mw_replicated_init((long *) &test_c_stripped, (long) l1d_ptr);
+    }
 
     if (multi_file_load) {
         long ***l3d_ptr = (long ***) mw_malloc2d(NUM_NODES(), cluster_count * sizeof(long *));
@@ -1057,8 +1065,10 @@ void init() {
     printf("F degree dis Done\n");
     fflush(stdout);
 
-    MIGRATE(&model_vec[0]);
-    //populateTestDataStripped();
+    if (accuracy_test_flag) {
+        MIGRATE(&model_vec[0]);
+        populateTestDataStripped();
+    }
 
     printf("--- Initialization Complete ---\n");
     fflush(stdout);
