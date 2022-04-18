@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
     int64_t l_tmp;
     double d_tmp;
     for (int64_t i = 0; i < sample_count; i++) {
-        if (i % 2 == 0){
+        if (i % 3 == 0){
             class_id = 1;
         } else {
             class_id = -1;
@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
         while (sample_data.size() != avg_nnz_per_sample){
             feature_id = rand()%feature_count;
             d_tmp = FLOAT_MIN + (float)(rand()) / ((float)(RAND_MAX/(FLOAT_MAX - FLOAT_MIN)));
-            d_tmp *= (16777216 * class_id);
+            d_tmp *= (16777216);
             val = (int64_t) d_tmp;
             sample_data[feature_id] = val;
         }
