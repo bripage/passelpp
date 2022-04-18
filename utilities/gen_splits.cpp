@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 
     for (i = 0; i < file_points; i += 4) {
         sample = binBuffer[i];
-        feature = binBuffer[i + 1] - 1;
+        feature = binBuffer[i + 1];
         value = binBuffer[i + 2];
         class_val = binBuffer[i + 3];
         assigned_node = feature % splitCount;
