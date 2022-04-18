@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
             d_tmp = FLOAT_MIN + (float)(rand()) / ((float)(RAND_MAX/(FLOAT_MAX - FLOAT_MIN)));
             d_tmp *= (16777216 * class_id);
             val = (int64_t) d_tmp;
-            sample_data[feature] = val;
+            sample_data[feature_id] = val;
         }
         for (mapit = sample_data.begin(); mapit != sample_data.end(); mapit++) {
             feature_id = mapit->first;
