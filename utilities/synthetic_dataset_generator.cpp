@@ -9,6 +9,7 @@
 #include <random>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <map>
 constexpr int FLOAT_MIN = 0;
 constexpr int FLOAT_MAX = 1;
@@ -73,13 +74,13 @@ int main(int argc, char** argv) {
         while (sample_data.size() != avg_nnz_per_sample){
             feature = rand()%feature_count;
             d_tmp = FLOAT_MIN + (float)(rand()) / ((float)(RAND_MAX/(FLOAT_MAX - FLOAT_MIN)));
-            d_tmp *= 16777216 * class_id);
+            d_tmp *= (16777216 * class_id);
             val = (int64_t) d_tmp;
             sample_data[feature] = val;
         }
         for (mapit = sample_data.begin(); mapit != sample_data.end(); mapit++) {
-            feature_id = mapit.first;
-            val = mapit.second;
+            feature_id = mapit->first;
+            val = mapit->second;
             fwrite(&i, sizeof(int64_t), 1, fout);
             fwrite(&feature_id, sizeof(int64_t), 1, fout);
             fwrite(&val, sizeof(int64_t), 1, fout);
