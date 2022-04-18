@@ -13,6 +13,7 @@
 #include <fstream>
 #include <unistd.h>
 #include "stdint.h"
+#include <algorithm>
 
 int main(int argc, char **argv) {
     std::string argTemp;
@@ -74,15 +75,14 @@ int main(int argc, char **argv) {
     fseek(data, 0, SEEK_END);
     int64_t num_bytes = ftell(data);
     file_points = num_bytes / 8;
-    std::cout << num_bytes << ", " << file_points << std::endl;
     fseek(data, 0, SEEK_SET);
     binBuffer = (int64_t *) malloc(file_points * sizeof(int64_t));
-    std::cout << bytesRead << std::endl;
     bytesRead = fread(binBuffer, sizeof(int64_t), file_points, data);
     if (bytesRead != (file_points)) {
         printf("*** Feature File Read Failure ***\n");
         exit(1);
     }
+
     int64_t class_val;
     int64_t feature;
     int64_t value;
@@ -100,12 +100,6 @@ int main(int argc, char **argv) {
         if (sample != current_sample){
             sample_count++;
             current_sample = sample;
-            //for (int64_t s = 0; s < splitCount; s++) {
-            //    split_contents[s].push_back(sample);
-            //    split_contents[s].push_back(0);
-            //    split_contents[s].push_back(0);
-            //    split_contents[s].push_back(class_val);
-            //}
         }
 
         split_contents[assigned_node].push_back(sample);
