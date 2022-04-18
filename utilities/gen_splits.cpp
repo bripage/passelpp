@@ -77,6 +77,7 @@ int main(int argc, char **argv) {
     std::cout << num_bytes << ", " << file_points << std::endl;
     fseek(data, 0, SEEK_SET);
     binBuffer = (int64_t *) malloc(file_points * sizeof(int64_t));
+    std::cout << bytesRead << std::endl;
     bytesRead = fread(binBuffer, sizeof(int64_t), file_points, data);
     if (bytesRead != (file_points)) {
         printf("*** Feature File Read Failure ***\n");
