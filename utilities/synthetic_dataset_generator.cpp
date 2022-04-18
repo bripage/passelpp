@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
             fwrite(&feature_id, sizeof(int64_t), 1, fout);
             fwrite(&val, sizeof(int64_t), 1, fout);
             fwrite(&class_id, sizeof(int64_t), 1, fout);
-            
+
             std::cout << i << ", " << feature_id << ", " << val << ", " << class_id << std::endl;
         }
     }
