@@ -19,7 +19,7 @@ unisplitgen:
 	$(CC) -O3 -o unisplitgen uniform_gen_splits.cpp
 
 synthgen:
-	$(CC) -O3 -o synthgen synthetic_data_generator.cpp
+	$(CC) -O3 -o synthgen synthetic_dataset_generator.cpp
 
 clean:
 	rm -f shuffle
