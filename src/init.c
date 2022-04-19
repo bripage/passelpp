@@ -849,7 +849,9 @@ void populateTraining_featurepartitioned() {
 }
 
 void init_cluster(long n) {
-    accuracies[n] = 0;
+    if (accuracy_test_flag) {
+        accuracies[n] = 0;
+    }
     for (long i = 0; i < featureSetSize; i++) {
         model_vec[n][i] = 0;
         working_vec[n][i] = 0;
