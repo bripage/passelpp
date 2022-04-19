@@ -69,6 +69,7 @@ int main(int argc, char **argv) {
     int64_t i;
     long n;
     long assigned_node;
+    /*
     FILE *data = fopen(fileName, "rb");
     if (data == NULL) {
         printf("Failed to open training feature file.\n");
@@ -163,5 +164,6 @@ int main(int argc, char **argv) {
         }
     }
 	std::cout << "Done!" << std::endl;
+     */
 	return 0;
 }
