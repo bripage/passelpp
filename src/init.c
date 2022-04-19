@@ -54,7 +54,7 @@ void parse_args(int argc, char * argv[]) {
         if (!strcmp(argv[i], "--train-data")) {
             printf("%s\n", argv[i + 1]);
             fflush(stdout);
-            train_data_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
+            train_data_path = (char *) malloc((strlen(argv[i + 1]) + 1) * sizeof(char));
             strcpy(train_data_path, argv[i + 1]);
             printf("%s\n", train_data_path);
             fflush(stdout);
