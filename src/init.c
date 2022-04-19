@@ -292,11 +292,21 @@ void node_load_from_n0(long t) {
                 if (sample != current_sample) {
                     sample_count++;
                     current_sample = sample;
+                    printf("train_s[%ld][%ld] = %ld\n", t, sample_count, j);
+                    fflush(stdout);
                     train_s[t][sample_count] = j;
+                    printf("train_c[%ld][%ld] = %ld\n", t, sample_count, class);
+                    fflush(stdout);
                     train_c[t][sample_count] = class;
                 }
+                printf("train_f[%ld][%ld] = %ld\n", t, j, feature);
+                fflush(stdout);
                 train_f[t][j] = feature;
+                printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
+                fflush(stdout);
                 train_v[t][j] = fixed_value;
+                printf("feat_deg_recip[0][%ld]++\n", feature);
+                fflush(stdout);
                 feat_deg_recip[0][feature]++;
                 j++;
             }
@@ -1063,7 +1073,7 @@ void init() {
             d_temp /= (double) feat_deg_recip[0][i];
             d_temp *= 16777216;
             l_temp = (long) d_temp;
-            for (int n = 0; n < cluster_count; n++) {
+            for (int n = 0; n < 1; n++) {
                 REMOTE_ADD(&feat_deg_recip[n][i], l_temp);
             }
         }
