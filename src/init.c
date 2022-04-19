@@ -202,7 +202,7 @@ void node_load_from_n0(long t) {
 
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
-    char *fname = malloc(strlen(train_data_path) + 10);
+    char *fname = malloc(strlen(train_data_path) + 9);
     sprintf(fname, "%sp%ld.bin", train_data_path, t);
     printf("node%ld filename = %s\n", t, fname);
     fflush(stdout);

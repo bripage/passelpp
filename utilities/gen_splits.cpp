@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
                 printf("-i <file> \tInput filename (assumes csv structure is: sample_id,feature_id,feature_value)\n");
                 printf("-o <file path> \tOutput file path\n");
                 printf("-s <Num splits> \tSplit Count\n");
-                printf("-t <0|1> \tSplit Type: 0 = Contiguous row (bin packed), 1 = Feature Partitioned\n");
+                printf("-t <0|1> \tSplit Type: 0 = Feature Partitioned, 1 = Contiguous row (round robbin)\n");
                 exit(0);
         } else {
             printf("%s Is not a valid parameter. Try --help for more information.\n EXITING!\n", argv[i]);
@@ -163,6 +163,6 @@ int main(int argc, char **argv) {
         }
     }
 	std::cout << "Done!" << std::endl;
-    
+
 	return 0;
 }
