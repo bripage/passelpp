@@ -1042,7 +1042,7 @@ void init() {
     volatile uint64_t start_load_time = CLOCK();
     if (using_clusters) {
         if (multi_file_load) {
-            for (int n = 0; n < cluster_count; n++) {
+            for (int n = 0; n < 1; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn node_load_from_n0(n);
             }
@@ -1073,7 +1073,7 @@ void init() {
             d_temp /= (double) feat_deg_recip[0][i];
             d_temp *= 16777216;
             l_temp = (long) d_temp;
-            for (int n = 0; n < 1; n++) {
+            for (int n = 0; n < cluster_count; n++) {
                 REMOTE_ADD(&feat_deg_recip[n][i], l_temp);
             }
         }
