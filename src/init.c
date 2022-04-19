@@ -52,8 +52,12 @@ void parse_args(int argc, char * argv[]) {
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
+            printf("%s\n", argv[i + 1]);
+            fflush(stdout);
             train_data_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(train_data_path, argv[i + 1]);
+            printf("%s\n", train_data_path);
+            fflush(stdout);
         } else if (!strcmp(argv[i], "--test-data")) {
             test_feature_path = (char *) malloc(strlen(argv[i + 1]) * sizeof(char));
             strcpy(test_feature_path, argv[i + 1]);
@@ -202,7 +206,7 @@ void node_load_from_n0(long t) {
 
     data_read_buffer[0][t] = malloc(16777216 * sizeof(long));
     long* data_buffer = data_read_buffer[0][t];
-    char *fname = malloc(strlen(train_data_path) + 9);
+    char *fname = malloc(strlen(train_data_path) + 10);
     sprintf(fname, "%sp%ld.bin", train_data_path, t);
     printf("node%ld filename = %s\n", t, fname);
     fflush(stdout);
