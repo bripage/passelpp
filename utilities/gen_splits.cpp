@@ -19,8 +19,9 @@ int main(int argc, char **argv) {
     std::string argTemp;
     char* fileName;
     char* splitPath;
-    int splitType;
-    int splitCount;
+    int splitType = 0;
+    int splitCount = 1;
+    int feature_adjustment = 0;
 
     for (int i = 1; i < argc; i = i + 2) {
         argTemp = argv[i];
@@ -38,17 +39,21 @@ int main(int argc, char **argv) {
         } else if (argTemp == "-t") {
             // split type
             splitType = atoi(argv[i + 1]);
+        } else if (argTemp == "-a") {
+            feature_adjustment = atoi(argv[i + 1]);
         } else if (argTemp == "--help") {
-            printf("CSV2BIN: This utility program will read in a 3 column csv file and output its contents to"
-                   "binary. Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit"
-                   "integer (int64_t) datatype.\n\n");
-            printf("Usage: ./csv2bin [OPTION] <argument> ...\n");
-            printf("Options:\n");
-            printf("-i <file> \tInput filename (assumes csv structure is: sample_id,feature_id,feature_value)\n");
-            printf("-o <file path> \tOutput file path\n");
-            printf("-s <Num splits> \tSplit Count\n");
-            printf("-t <0|1> \tSplit Type: 0 = Contiguous row (bin packed), 1 = Feature Partitioned\n");
-            exit(0);
+                printf("CSV2BIN: This utility program will read in a 3 column csv file and output its contents to"
+                       "binary. Note: csv data is expected to be numeric in every column, and binary output uses the 64 bit"
+                       "integer (int64_t) datatype.\n\n");
+                printf("Usage: ./csv2bin [OPTION] <argument> ...\n");
+                printf("Options:\n");
+                printf("-a <[0-9]^*> \tFeature ID adjustment. For features that are not zero based.\n");
+                printf("-i <file> \tInput filename (assumes csv structure is: sample_id,feature_id,feature_value)\n");
+                printf("-o <file path> \tOutput file path\n");
+                printf("-s <Num splits> \tSplit Count\n");
+                printf("-t <0|1> \tSplit Type: 0 = Contiguous row (bin packed), 1 = Feature Partitioned\n");
+                exit(0);
+            }
         } else {
             printf("%s Is not a valid parameter. Try --help for more information.\n EXITING!\n", argv[i]);
             exit(0);
@@ -90,39 +95,73 @@ int main(int argc, char **argv) {
     int64_t sample_count = 0;
     int64_t current_sample = -1;
 
-    for (i = 0; i < file_points; i += 4) {
-        sample = binBuffer[i];
-        feature = binBuffer[i + 1];
-        value = binBuffer[i + 2];
-        class_val = binBuffer[i + 3];
-        assigned_node = feature % splitCount;
+    if (splitType){
+        for (i = 0; i < file_points; i += 4) {
+            sample = binBuffer[i];
+            feature = binBuffer[i + 1] - feature_adjustment;
+            value = binBuffer[i + 2];
+            class_val = binBuffer[i + 3];
 
-        if (sample != current_sample){
-            sample_count++;
-            current_sample = sample;
+            if (sample != current_sample) {
+                sample_count++;
+                assigned_node = sample_count % splitCount;
+                current_sample = sample;
+            }
+
+            split_contents[assigned_node].push_back(sample);
+            split_contents[assigned_node].push_back(feature);
+            split_contents[assigned_node].push_back(value);
+            split_contents[assigned_node].push_back(class_val);
         }
+        fclose(data);
+        free(binBuffer);
+        printf("Sample Count: %ld\n", sample_count);
+        fflush(stdout);
 
-        split_contents[assigned_node].push_back(sample);
-        split_contents[assigned_node].push_back(feature);
-        split_contents[assigned_node].push_back(value);
-        split_contents[assigned_node].push_back(class_val);
-    }
-    fclose(data);
-    free(binBuffer);
-    printf("Sample Count: %ld\n", sample_count);
-    fflush(stdout);
+        char *fname = (char *) malloc(strlen(splitPath) + 10);
+        for (int64_t s = 0; s < splitCount; s++) {
+            sprintf(fname, "%sp%ld.bin", splitPath, s);
+            FILE *split_file = fopen(fname, "ab");
 
-    char *fname = (char*)malloc(strlen(splitPath) + 10);
-    for (int64_t s = 0; s < splitCount; s++) {
-        sprintf(fname, "%sp%ld.bin", splitPath, s);
-        FILE* split_file = fopen(fname, "ab");
-
-        for (i = 0; i < split_contents[s].size(); i++) {
-            fwrite(&split_contents[s][i], sizeof(int64_t), 1, split_file);
+            for (i = 0; i < split_contents[s].size(); i++) {
+                fwrite(&split_contents[s][i], sizeof(int64_t), 1, split_file);
+            }
+            fclose(split_file);
         }
-        fclose(split_file);
-    }
+    } else {
+        for (i = 0; i < file_points; i += 4) {
+            sample = binBuffer[i];
+            feature = binBuffer[i + 1] - feature_adjustment;
+            value = binBuffer[i + 2];
+            class_val = binBuffer[i + 3];
+            assigned_node = feature % splitCount;
 
+            if (sample != current_sample) {
+                sample_count++;
+                current_sample = sample;
+            }
+
+            split_contents[assigned_node].push_back(sample);
+            split_contents[assigned_node].push_back(feature);
+            split_contents[assigned_node].push_back(value);
+            split_contents[assigned_node].push_back(class_val);
+        }
+        fclose(data);
+        free(binBuffer);
+        printf("Sample Count: %ld\n", sample_count);
+        fflush(stdout);
+
+        char *fname = (char *) malloc(strlen(splitPath) + 10);
+        for (int64_t s = 0; s < splitCount; s++) {
+            sprintf(fname, "%sp%ld.bin", splitPath, s);
+            FILE *split_file = fopen(fname, "ab");
+
+            for (i = 0; i < split_contents[s].size(); i++) {
+                fwrite(&split_contents[s][i], sizeof(int64_t), 1, split_file);
+            }
+            fclose(split_file);
+        }
+    }
 	std::cout << "Done!" << std::endl;
 	return 0;
 }

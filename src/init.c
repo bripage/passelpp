@@ -48,6 +48,7 @@ void parse_args(int argc, char * argv[]) {
     long multi_load = 0;
     long rate = 0;
     long acc_test = 0;
+    long feature_adjust = 0;
 
     for (i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--train-data")) {
@@ -128,6 +129,10 @@ void parse_args(int argc, char * argv[]) {
             num_arg = atoi(argv[i + 1]);
             acc_test = num_arg;
             i++;
+        } else if (!strcmp(argv[i], "--feature-adjust")) {
+            num_arg = atoi(argv[i + 1]);
+            feature_adjust = num_arg;
+            i++;
         }
 
     }
@@ -136,6 +141,7 @@ void parse_args(int argc, char * argv[]) {
         fflush(stdout);
         exit(-1);
     }
+    mw_replicated_init(&feature_adjustment, feature_adjust);
     mw_replicated_init(&accuracy_test_flag, acc_test);
     mw_replicated_init(&node_count, NUM_NODES());
     mw_replicated_init(&using_clusters, clusters);
@@ -263,7 +269,7 @@ void node_load_from_n0(long t) {
 
             for (i = 0; i < chunk_points; i += 4) {
                 sample = data_buffer[i];
-                feature = data_buffer[i + 1];
+                feature = data_buffer[i + 1] - feature_adjustment;
                 fixed_value = data_buffer[i + 2];
                 class = data_buffer[i + 3];
 
@@ -299,7 +305,7 @@ void node_load_from_n0(long t) {
 
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
-            feature = data_buffer[i + 1];
+            feature = data_buffer[i + 1] - feature_adjustment;
             fixed_value = data_buffer[i + 2];
             class = data_buffer[i + 3];
 
@@ -419,7 +425,7 @@ void featpart_node_load_from_n0(long t) {
 
             for (i = 0; i < chunk_points; i += 4) {
                 sample = data_buffer[i];
-                feature = data_buffer[i + 1];
+                feature = data_buffer[i + 1] - feature_adjustment;
                 fixed_value = data_buffer[i + 2];
                 class = data_buffer[i + 3];
 
@@ -458,7 +464,7 @@ void featpart_node_load_from_n0(long t) {
         bytesRead = fread(data_buffer, sizeof(long), file_points, file_ptr);
         for (i = 0; i < file_points; i += 4) {
             sample = data_buffer[i];
-            feature = data_buffer[i + 1];
+            feature = data_buffer[i + 1] - feature_adjustment;
             fixed_value = data_buffer[i + 2];
             class = data_buffer[i + 3];
 
@@ -558,7 +564,7 @@ void populateTrainingData() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1];
+                feature = binBuffer[i + 1] - feature_adjustment;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
 
@@ -636,7 +642,7 @@ void populateTrainingData() {
         }
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1];
+            feature = binBuffer[i + 1] - feature_adjustment;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
 
@@ -738,7 +744,7 @@ void populateTraining_featurepartitioned() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1] - 1;
+                feature = binBuffer[i + 1] - feature_adjustment;
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
                 assigned_node = feature % node_count;
@@ -804,7 +810,7 @@ void populateTraining_featurepartitioned() {
         }
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1] - 1;
+            feature = binBuffer[i + 1] - feature_adjustment;
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
             assigned_node = feature % node_count;

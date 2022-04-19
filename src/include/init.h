@@ -23,6 +23,7 @@ extern replicated long gamma;                      // initial step decay
 extern replicated long eta;                        // initial step size
 extern replicated long beta;
 extern replicated long accuracy_test_flag;
+replicated long feature_adjustment;
 replicated long lambda;
 replicated long one_min_lambda;
 replicated long total_train_points;         // non-zeros in training data set
