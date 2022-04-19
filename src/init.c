@@ -558,7 +558,7 @@ void populateTrainingData() {
         for (long c = 0; c < chunk_count; c++) {
             for (i = 0; i < chunk_points; i += 4) {
                 sample = binBuffer[i];
-                feature = binBuffer[i + 1] - 1;
+                feature = binBuffer[i + 1];
                 fixed_value = binBuffer[i + 2];
                 class = binBuffer[i + 3];
 
@@ -636,7 +636,7 @@ void populateTrainingData() {
         }
         for (i = 0; i < points; i += 4) {
             sample = binBuffer[i];
-            feature = binBuffer[i + 1] - 1;
+            feature = binBuffer[i + 1];
             fixed_value = binBuffer[i + 2];
             class = binBuffer[i + 3];
 
