@@ -1042,7 +1042,7 @@ void init() {
     volatile uint64_t start_load_time = CLOCK();
     if (using_clusters) {
         if (multi_file_load) {
-            for (int n = 0; n < 1; n++) {
+            for (int n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&data_read_buffer[0]);
                 cilk_spawn node_load_from_n0(n);
             }
