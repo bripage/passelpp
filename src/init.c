@@ -292,21 +292,21 @@ void node_load_from_n0(long t) {
                 if (sample != current_sample) {
                     sample_count++;
                     current_sample = sample;
-                    printf("train_s[%ld][%ld] = %ld\n", t, sample_count, j);
-                    fflush(stdout);
+                    //printf("train_s[%ld][%ld] = %ld\n", t, sample_count, j);
+                    //fflush(stdout);
                     train_s[t][sample_count] = j;
-                    printf("train_c[%ld][%ld] = %ld\n", t, sample_count, class);
-                    fflush(stdout);
+                    //printf("train_c[%ld][%ld] = %ld\n", t, sample_count, class);
+                    //fflush(stdout);
                     train_c[t][sample_count] = class;
                 }
-                printf("train_f[%ld][%ld] = %ld\n", t, j, feature);
-                fflush(stdout);
+                //printf("train_f[%ld][%ld] = %ld\n", t, j, feature);
+                //fflush(stdout);
                 train_f[t][j] = feature;
-                printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
-                fflush(stdout);
+                //printf("train_v[%ld][%ld] = %ld\n", t, j, fixed_value);
+                //fflush(stdout);
                 train_v[t][j] = fixed_value;
-                printf("feat_deg_recip[0][%ld]++\n", feature);
-                fflush(stdout);
+                //printf("feat_deg_recip[0][%ld]++\n", feature);
+                //fflush(stdout);
                 feat_deg_recip[0][feature]++;
                 j++;
             }
