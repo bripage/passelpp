@@ -47,3 +47,11 @@ emu_multinode_exec 0 -- passelpp.mwx --train-data /netscratch/sgd_data/news20/sp
 /netscratch/passelpp/utilities/splitgen -i 131072/synth_131072_128.bin -o 131072/128/32/ -s 32
 
 emu_multinode_exec 0 -- passelpp.mwx --train-data /net/netscratch/sgd_data/synth/131072/128/32/ --train-samples 10000000 --train-points 1280000000 --test-data /net/netscratch/sgd_data/ --test-samples 0 --test-points 0 -f 131072 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 32 --test-id 1 --multi-load -r 225000000
+
+
+/netscratch/passelpp/utilities/splitgen -i 262144/synth_262144_128.bin -o splits/cluster_partitioned/262144/128/ -s 32 -t 1 -a 0
+
+emu_multinode_exec 0 -- passelpp.mwx --train-data /net/netscratch/sgd_data/synth/splits/cluster_partitioned/524288/512/32/ --train-samples 2500000 --train-points 1280000000 --test-data /net/netscratch/sgd_data/ --test-samples 0 --test-points 0 -f 524288 -e 10 --initial-step-size 0.5 --initial-step-decay 0.8 --threads-per-cluster 1024 -c 32 --test-id 1 --multi-load -r 225000000 --using-clusters --update-period 100
+
+Passel++    1,10,29.454174,0.000000
+Passel      1,10,8.647947,0.000000

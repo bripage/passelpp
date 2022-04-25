@@ -1034,7 +1034,6 @@ void init() {
         cilk_sync;
     }
 
-
     printf("--- Memmory Initialization Complete ---\n");
     fflush(stdout);
     MIGRATE(&model_vec[0]);
