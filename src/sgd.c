@@ -163,17 +163,20 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
     }
 }
 
-void featured_partitioned_train(long tid) {
-    long* local_train_c = train_c[NODE_ID()];
+void featured_partitioned_train(long tid, long start_node) {
+
     long eta_gamma = eta;
     long class;
     long di;
     unsigned long rand_state = 1337 + (1337 * tid);
     unsigned long sample;
     long thread_id = tid;
+    long gradient;
+    long current_node = start_node;
 
     for (long e = 0; e < epochs; e++) {
         while (thread_id < train_sample_count) {
+            gradient = 0;
             sample = rand_state;
             sample ^= sample >> 12; // a
             sample ^= sample << 25; // b
@@ -182,29 +185,40 @@ void featured_partitioned_train(long tid) {
             sample *= UINT64_C(0x2545F4914F6CDD1D);
             sample %= train_sample_count;
 
-            class = local_train_c[sample];
-            for (long n = 0; n < node_count; n++) {
-                cilk_migrate_hint(&train_v[n]);
-                cilk_spawn get_partial_gradient(n, tid, sample);
-            }
-            cilk_sync;
-            gradients[tid] *= class;
+            class = train_c[sample];
+            do {
+                for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
+                    feature = train_f[current_node][i];
+                    gradient += (train_v[current_node][i] * mvec[feature]) >> 24;
+                }
+                current_node = up[current_node];
+            } while(current_node != start_node);
+            MIGRATE(&model_vec[start_node]);
+            gradient *= class;
 
-            if (gradients[tid] < 16777216) {
+            if (gradient < 16777216) {
                 di = eta_gamma * class;
-                for (long n = 0; n < node_count; n++) {
-                    cilk_migrate_hint(&train_v[n]);
-                    cilk_spawn child_train_neg(n, sample, eta_gamma, di);
-                }
+                do {
+                    for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
+                        feature = train_f[current_node][i];
+                        l_temp = (di * train_v[current_node][i]) >> 24;
+                        wv_temp = mvec[feature] + l_temp;
+                        l_temp = (eta_gamma * fddr[feature]) >> 24;
+                        mvec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                    }
+                    current_node = up[current_node];
+                } while(current_node != start_node);
             } else {
-                for (long n = 0; n < node_count; n++) {
-                    cilk_migrate_hint(&train_v[n]);
-                    cilk_spawn child_train_pos(n, sample, eta_gamma);
-                }
+                do {
+                    for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
+                        feature = train_f[current_node][i];
+                        wv_temp = mvec[feature];
+                        l_temp = (eta_gamma * fddr[feature]) >> 24;
+                        mvec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                    }
+                    current_node = up[current_node];
+                } while(current_node != start_node);
             }
-            cilk_sync;
-
-            gradients[tid] = 0;
             thread_id += threads_per_cluster;
         }
 
@@ -213,7 +227,7 @@ void featured_partitioned_train(long tid) {
         thread_id = tid;
     }
 }
-
+/*
 void get_partial_gradient(long n, long tid, long sample){
     long feature;
     long* local_train_f = train_f[n];
@@ -258,5 +272,5 @@ void child_train_neg(long n, long sample, long eta_gamma, long di) {
         l_temp = (eta_gamma * fddr[feature]) >> 24;
         mvec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
     }
-
 }
+ */

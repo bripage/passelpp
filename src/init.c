@@ -869,6 +869,11 @@ void populateTraining_featurepartitioned() {
 }
 
 void init_cluster(long n) {
+    if (n != NUM_NODES()) {
+        up[n] = n+1;
+    } else {
+        up[n] = 0;
+    }
     if (accuracy_test_flag) {
         accuracies[n] = 0;
     }
@@ -983,8 +988,8 @@ void init() {
         l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
         mw_replicated_init((long *) &samples_since_token, (long) l1d_ptr);
     } else {
-        l1d_ptr = (long *) mw_malloc1dlong(threads_per_cluster);
-        mw_replicated_init((long *) &gradients, (long) l1d_ptr);
+        l1d_ptr = (long *) mw_malloc1dlong(NUM_NODES());
+        mw_replicated_init((long *) &up, (long) l1d_ptr);
     }
 
     if (accuracy_test_flag) {
