@@ -869,7 +869,7 @@ void populateTraining_featurepartitioned() {
 }
 
 void init_cluster(long n) {
-    if (n != NUM_NODES()) {
+    if (n != NUM_NODES()-1) {
         up[n] = n+1;
     } else {
         up[n] = 0;
