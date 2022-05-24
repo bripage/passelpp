@@ -32,8 +32,6 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 }
 
 void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
-    printf("%ld, %ld, %ld, %ld, %ld\n", n, token[n], total_evaluated_sample_count[n], samples_since_token[n], cluster_samples[n] );
-    fflush(stdout);
     if (type){ // type 0 = using_clusters
         for (long i = 0; i < threads_per_cluster; i++) {
             cilk_migrate_hint(&model_vec[n]);
@@ -45,9 +43,7 @@ void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
             cilk_spawn featured_partitioned_train(i, n);
         }
     }
-
     cilk_sync;
-    ATOMIC_SWAP(&total_evaluated_sample_count[n], 0);
 }
 
 void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
