@@ -185,9 +185,9 @@ void featured_partitioned_train(long tid, long start_node) {
             sample *= UINT64_C(0x2545F4914F6CDD1D);
             sample %= train_sample_count;
 
-            class = train_c[sample];
+            class = train_c[current_node][sample];
             do {
-                long l_temp, wv_temp, feature;
+                long feature;
                 for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                     feature = train_f[current_node][i];
                     gradient += (train_v[current_node][i] * model_vec[current_node][feature]) >> 24;
@@ -205,7 +205,7 @@ void featured_partitioned_train(long tid, long start_node) {
                         feature = train_f[current_node][i];
                         l_temp = (di * train_v[current_node][i]) >> 24;
                         wv_temp = model_vec[current_node][feature] + l_temp;
-                        l_temp = (eta_gamma * fddr[feature]) >> 24;
+                        l_temp = (eta_gamma * feat_deg_recip[current_node][feature]) >> 24;
                         model_vec[current_node][feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
                     current_node = up[current_node];
@@ -216,7 +216,7 @@ void featured_partitioned_train(long tid, long start_node) {
                     for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                         feature = train_f[current_node][i];
                         wv_temp = model_vec[current_node][feature];
-                        l_temp = (eta_gamma * fddr[feature]) >> 24;
+                        l_temp = (eta_gamma * feat_deg_recip[current_node][feature]) >> 24;
                         model_vec[current_node][feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
                     current_node = up[current_node];
