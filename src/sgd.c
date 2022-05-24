@@ -32,7 +32,7 @@ void upstream_update(long i, long n, long u, long beta_gamma){
 }
 
 void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
-    if (type){ // type 0 = using_clusters
+    if (!type){ // type 0 = using_clusters
         for (long i = 0; i < threads_per_cluster; i++) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn train(i, n, eta_gamma, beta_gamma);
