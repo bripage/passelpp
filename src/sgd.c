@@ -38,11 +38,11 @@ void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
             cilk_spawn train(i, n, eta_gamma, beta_gamma);
         }
     } else { // type 0 = clusterless feature partitioned
-        printf("clusterless spawning on %ld\n", n);
-        fflush(stdout);
+        //printf("clusterless spawning on %ld\n", n);
+        //fflush(stdout);
         for (long i = n * threads_per_cluster; i < (n + 1) * threads_per_cluster; i++) {
-            printf("spawning thread %ld\n", i);
-            fflush(stdout);
+            //printf("spawning thread %ld\n", i);
+            //fflush(stdout);
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn featured_partitioned_train(i, n);
         }
@@ -172,8 +172,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 }
 
 void featured_partitioned_train(long tid, long start_node) {
-    printf("Thread %ld on %ld STARTING\n", tid, start_node);
-    fflush(stdout);
+    //printf("Thread %ld on %ld STARTING\n", tid, start_node);
+    //fflush(stdout);
     long eta_gamma = eta;
     long class;
     long di;
@@ -184,11 +184,11 @@ void featured_partitioned_train(long tid, long start_node) {
     long current_node = start_node;
 
     for (long e = 0; e < epochs; e++) {
-        printf("Starting Epoch %ld\n", e);
-        fflush(stdout);
+        //printf("Starting Epoch %ld\n", e);
+        //fflush(stdout);
         while (thread_id < train_sample_count) {
-            printf("e = %ld, count = %ld\n", e, thread_id);
-            fflush(stdout);
+            //printf("e = %ld, count = %ld\n", e, thread_id);
+            //fflush(stdout);
             gradient = 0;
             sample = rand_state;
             sample ^= sample >> 12; // a
@@ -199,26 +199,26 @@ void featured_partitioned_train(long tid, long start_node) {
             sample %= train_sample_count;
 
             class = train_c[current_node][sample];
-            printf("train_c[%ld][%ld] = %ld\n", current_node, sample, class);
-            fflush(stdout);
+            //printf("train_c[%ld][%ld] = %ld\n", current_node, sample, class);
+            //fflush(stdout);
             do {
                 long feature;
                 for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                     feature = train_f[current_node][i];
                     gradient += (train_v[current_node][i] * model_vec[current_node][feature]) >> 24;
                 }
-                printf("gradient_%ld = %ld\n", current_node, gradient);
-                fflush(stdout);
+                //printf("gradient_%ld = %ld\n", current_node, gradient);
+                //fflush(stdout);
                 current_node = up[current_node];
-                printf("current_node = %ld\n", current_node);
-                fflush(stdout);
+                //printf("current_node = %ld\n", current_node);
+                //fflush(stdout);
             } while(current_node != start_node);
             MIGRATE(&model_vec[start_node]);
-            printf("back at start node %ld\n", start_node);
-            fflush(stdout);
+            //printf("back at start node %ld\n", start_node);
+            //fflush(stdout);
             gradient *= class;
-            printf("gradient = %ld\n", gradient);
-            fflush(stdout);
+            //printf("gradient = %ld\n", gradient);
+            //fflush(stdout);
 
             if (gradient < 16777216) {
                 di = eta_gamma * class;

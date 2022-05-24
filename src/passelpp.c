@@ -19,7 +19,6 @@ int main(int argc, char **argv) {
     beta_gamma = beta;
 
     if (using_clusters) {
-        /*
         printf("--- Starting ---\n");
         fflush(stdout);
         start_time = CLOCK();
@@ -59,7 +58,6 @@ int main(int argc, char **argv) {
         }
         printf("%ld,%ld,%lf,%lf\n", test_id, epochs, (double) total_time / clock_rate, current_accuracy);
         fflush(stdout);
-        */
     } else {
         printf("--- Starting ---\n");
         fflush(stdout);
