@@ -38,7 +38,11 @@ void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
             cilk_spawn train(i, n, eta_gamma, beta_gamma);
         }
     } else { // type 0 = clusterless feature partitioned
+        printf("clusterless spawning on %ld\n", n);
+        fflush(stdout);
         for (long i = n * threads_per_cluster; i < (n + 1) * threads_per_cluster; i++) {
+            printf("spawning thread %ld\n", i);
+            fflush(stdout);
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn featured_partitioned_train(i, n);
         }
@@ -168,6 +172,8 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 }
 
 void featured_partitioned_train(long tid, long start_node) {
+    printf("Thread %ld on %ld STARTING\n", i, start_node);
+    fflush(stdout);
     long eta_gamma = eta;
     long class;
     long di;
