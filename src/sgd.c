@@ -172,7 +172,7 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 }
 
 void featured_partitioned_train(long tid, long start_node) {
-    printf("Thread %ld on %ld STARTING\n", i, start_node);
+    printf("Thread %ld on %ld STARTING\n", tid, start_node);
     fflush(stdout);
     long eta_gamma = eta;
     long class;
