@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
         printf("--- Starting ---\n");
         fflush(stdout);
         start_time = CLOCK();
-        for (long n = 0; n < cluster_count; n++) {
+        for (long n = 0; n < 1; n++) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn train_spawn(n, 1, eta_gamma, beta_gamma);
         }

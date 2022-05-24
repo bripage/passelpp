@@ -182,7 +182,11 @@ void featured_partitioned_train(long tid, long start_node) {
     long current_node = start_node;
 
     for (long e = 0; e < epochs; e++) {
+        printf("Starting Epoch %ld\n", e);
+        fflush(stdout);
         while (thread_id < train_sample_count) {
+            printf("e = %ld, count = %ld\n", e, thread_id);
+            fflush(stdout);
             gradient = 0;
             sample = rand_state;
             sample ^= sample >> 12; // a
@@ -193,16 +197,24 @@ void featured_partitioned_train(long tid, long start_node) {
             sample %= train_sample_count;
 
             class = train_c[current_node][sample];
+            printf("train_c[%ld][%ld] = %ld\n", current_node, sample, class);
+            fflush(stdout);
             do {
                 long feature;
                 for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                     feature = train_f[current_node][i];
                     gradient += (train_v[current_node][i] * model_vec[current_node][feature]) >> 24;
                 }
+                printf("gradient_%ld = %ld\n", current_node, gradient);
+                fflush(stdout);
                 current_node = up[current_node];
             } while(current_node != start_node);
             MIGRATE(&model_vec[start_node]);
+            printf("back at start node %ld\n", start_node);
+            fflush(stdout);
             gradient *= class;
+            printf("gradient = %ld\n", gradient);
+            fflush(stdout);
 
             if (gradient < 16777216) {
                 di = eta_gamma * class;
