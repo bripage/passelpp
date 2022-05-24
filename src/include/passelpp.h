@@ -22,6 +22,7 @@ replicated long gamma;
 replicated long using_clusters;
 replicated long clock_rate;
 replicated long accuracy_test_flag;
+replicated long node_count;
 
 /// Data allocation
 extern replicated long* gradients;

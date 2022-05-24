@@ -37,7 +37,7 @@ replicated long class2;
 replicated long samples_per_cluster;
 replicated long update_period;
 extern replicated long using_clusters;
-replicated long node_count;
+extern replicated long node_count;
 replicated long multi_file_load;
 extern replicated long clock_rate;
 replicated long non_zeros_per_node;
