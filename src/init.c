@@ -1021,11 +1021,6 @@ void init() {
     fflush(stdout);
 
     if (!using_clusters) {
-        for (long i = 0; i < threads_per_cluster; i++) {
-            gradients[i] = 0;
-        }
-        printf("--- Gradient Array Initialized ---\n");
-        fflush(stdout);
         for (long n = 0; n < node_count; n++) {
             cilk_migrate_hint(&model_vec[n]);
             cilk_spawn init_cluster(n);
