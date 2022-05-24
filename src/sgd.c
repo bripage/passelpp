@@ -210,6 +210,8 @@ void featured_partitioned_train(long tid, long start_node) {
                 printf("gradient_%ld = %ld\n", current_node, gradient);
                 fflush(stdout);
                 current_node = up[current_node];
+                printf("current_node = %ld\n", current_node);
+                fflush(stdout);
             } while(current_node != start_node);
             MIGRATE(&model_vec[start_node]);
             printf("back at start node %ld\n", start_node);
