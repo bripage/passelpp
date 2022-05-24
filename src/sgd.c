@@ -182,7 +182,7 @@ void featured_partitioned_train(long tid, long start_node) {
     long thread_id = tid;
     long gradient;
     long current_node = start_node;
-
+    long l_temp, wv_temp, feature;
     for (long e = 0; e < epochs; e++) {
         //printf("Starting Epoch %ld\n", e);
         //fflush(stdout);
@@ -202,7 +202,7 @@ void featured_partitioned_train(long tid, long start_node) {
             //printf("train_c[%ld][%ld] = %ld\n", current_node, sample, class);
             //fflush(stdout);
             do {
-                long feature;
+                //long feature;
                 for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                     feature = train_f[current_node][i];
                     gradient += (train_v[current_node][i] * model_vec[current_node][feature]) >> 24;
@@ -223,7 +223,7 @@ void featured_partitioned_train(long tid, long start_node) {
             if (gradient < 16777216) {
                 di = eta_gamma * class;
                 do {
-                    long l_temp, wv_temp, feature;
+                    //long l_temp, wv_temp, feature;
                     for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                         feature = train_f[current_node][i];
                         l_temp = (di * train_v[current_node][i]) >> 24;
@@ -235,7 +235,7 @@ void featured_partitioned_train(long tid, long start_node) {
                 } while(current_node != start_node);
             } else {
                 do {
-                    long l_temp, wv_temp, feature;
+                    //long l_temp, wv_temp, feature;
                     for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                         feature = train_f[current_node][i];
                         wv_temp = model_vec[current_node][feature];
