@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
             }
             for (long n = 0; n < cluster_count; n++) {
                 cilk_migrate_hint(&model_vec[n]);
-                cilk_spawn train_spawn(n, eta_gamma, beta_gamma);
+                cilk_spawn train_spawn(n, 0, eta_gamma, beta_gamma);
             }
             cilk_sync;
         }
@@ -62,9 +62,9 @@ int main(int argc, char **argv) {
         printf("--- Starting ---\n");
         fflush(stdout);
         start_time = CLOCK();
-        for (long t = 0; t < threads_per_cluster; t++) {
-            cilk_migrate_hint(&model_vec[t]);
-            cilk_spawn featured_partitioned_train(t);
+        for (long n = 0; n < cluster_count; n++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn train_spawn(n, 1, eta_gamma, beta_gamma);
         }
         cilk_sync;
         total_time = CLOCK() - start_time;

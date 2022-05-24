@@ -45,7 +45,7 @@ void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
             cilk_spawn featured_partitioned_train(i, n);
         }
     }
-    
+
     cilk_sync;
     ATOMIC_SWAP(&total_evaluated_sample_count[n], 0);
 }
