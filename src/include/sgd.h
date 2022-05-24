@@ -53,7 +53,7 @@ extern replicated long* up;
 
 void train_spawn(long n, long eta_gamma, long beta_gamma);
 void train(long thread_id, long n, long eta_gamma, long beta_gamma);
-void featured_partitioned_train(long tid);
+void featured_partitioned_train(long tid, , long start_node);
 void get_partial_gradient(long n, long tid, long sample);
 void child_train_pos(long n, long sample, long eta_gamma);
 void child_train_neg(long n, long sample, long eta_gamma, long di);

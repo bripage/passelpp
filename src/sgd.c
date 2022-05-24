@@ -31,13 +31,21 @@ void upstream_update(long i, long n, long u, long beta_gamma){
     }
 }
 
-void train_spawn(long n, long eta_gamma, long beta_gamma){
+void train_spawn(long n, long type, long eta_gamma, long beta_gamma){
     printf("%ld, %ld, %ld, %ld, %ld\n", n, token[n], total_evaluated_sample_count[n], samples_since_token[n], cluster_samples[n] );
     fflush(stdout);
-    for (long i = 0; i < threads_per_cluster; i++) {
-        cilk_migrate_hint(&model_vec[n]);
-        cilk_spawn train(i, n, eta_gamma, beta_gamma);
+    if (type){ // type 0 = using_clusters
+        for (long i = 0; i < threads_per_cluster; i++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn train(i, n, eta_gamma, beta_gamma);
+        }
+    } else { // type 0 = clusterless feature partitioned
+        for (long i = n * threads_per_cluster; i < (n + 1) * threads_per_cluster; i++) {
+            cilk_migrate_hint(&model_vec[n]);
+            cilk_spawn featured_partitioned_train(i, n);
+        }
     }
+    
     cilk_sync;
     ATOMIC_SWAP(&total_evaluated_sample_count[n], 0);
 }
@@ -164,7 +172,6 @@ void train(long thread_id, long n, long eta_gamma, long beta_gamma) {
 }
 
 void featured_partitioned_train(long tid, long start_node) {
-
     long eta_gamma = eta;
     long class;
     long di;
