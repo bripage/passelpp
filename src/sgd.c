@@ -190,7 +190,7 @@ void featured_partitioned_train(long tid, long start_node) {
                 long l_temp, wv_temp, feature;
                 for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                     feature = train_f[current_node][i];
-                    gradient += (train_v[current_node][i] * model_vec[feature]) >> 24;
+                    gradient += (train_v[current_node][i] * model_vec[current_node][feature]) >> 24;
                 }
                 current_node = up[current_node];
             } while(current_node != start_node);
@@ -204,9 +204,9 @@ void featured_partitioned_train(long tid, long start_node) {
                     for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                         feature = train_f[current_node][i];
                         l_temp = (di * train_v[current_node][i]) >> 24;
-                        wv_temp = model_vec[feature] + l_temp;
+                        wv_temp = model_vec[current_node][feature] + l_temp;
                         l_temp = (eta_gamma * fddr[feature]) >> 24;
-                        model_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                        model_vec[current_node][feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
                     current_node = up[current_node];
                 } while(current_node != start_node);
@@ -215,9 +215,9 @@ void featured_partitioned_train(long tid, long start_node) {
                     long l_temp, wv_temp, feature;
                     for (long i = train_s[current_node][sample]; i < train_s[current_node][sample+1]; i++) {
                         feature = train_f[current_node][i];
-                        wv_temp = model_vec[feature];
+                        wv_temp = model_vec[current_node][feature];
                         l_temp = (eta_gamma * fddr[feature]) >> 24;
-                        model_vec[feature] = (wv_temp * (16777216 - l_temp)) >> 24;
+                        model_vec[current_node][feature] = (wv_temp * (16777216 - l_temp)) >> 24;
                     }
                     current_node = up[current_node];
                 } while(current_node != start_node);
